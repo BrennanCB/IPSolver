@@ -474,7 +474,7 @@ ________________________________________________________________________________
                 Console.Write("Row\tW\tZ\t");
             }
 
-            for (int i = 1; i <= lp.GetCountX(); i++)
+            for (int i = 1; i <= lp.CountX; i++)
             {
                 //Checks it the X changes to a Y
                 isY = false;
@@ -498,12 +498,12 @@ ________________________________________________________________________________
 
             }
 
-            for (int i = 1; i <= lp.GetCountS(); i++)
+            for (int i = 1; i <= lp.CountS; i++)
             {
                 Console.Write("S" + i + "\t");
             }
 
-            for (int i = 1; i <= lp.GetCountE(); i++)
+            for (int i = 1; i <= lp.CountE; i++)
             {
                 Console.Write("E" + i + "\t");
             }
@@ -522,7 +522,7 @@ ________________________________________________________________________________
 
                 for (int j = 0; j < lp.ColumnCount; j++)
                 {
-                    Console.Write(Math.Round(lp.GetLinearProgram()[i, j], 2) + "\t");
+                    Console.Write(Math.Round(lp.LinearProgramArray[i, j], 2) + "\t");
                 }
 
                 Console.WriteLine();
