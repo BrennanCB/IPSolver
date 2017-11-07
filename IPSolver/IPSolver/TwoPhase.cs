@@ -12,20 +12,13 @@ namespace IPSolver
         //public static int countX = 0, countS = 0, countA = 0, countE = 0;
         //public static List<int> listOfA = new List<int>();
         //public static List<int> colOfA = new List<int>();
-        private int countA;
-        private int countS;
-        private int countE;
-        private int countX;
-        private double[,] formattedLp;
+       
+        LinearProgram linearProgram;
         private double[,] twoPhaseLP;
 
-        public TwoPhase(int countX, int countA, int countS, int countE, double[,] formattedLp)
+        public TwoPhase(LinearProgram linearProgram)
         {
-            this.countA = countA;
-            this.countS = countS;
-            this.countE = countE;
-            this.countX = countX;
-            this.formattedLp = formattedLp;
+            this.linearProgram = linearProgram;
         }
 
 
@@ -33,7 +26,8 @@ namespace IPSolver
         private void FormatTwoPhase()
         {
             //Makes the twoPhase array larger
-            twoPhaseLP = new double[formattedLp.GetLength(0) + 1, formattedLp.GetLength(1) + 1];
+            twoPhaseLP = new double[linearProgram.GetLinearProgram().GetLength(0) + 1,
+                linearProgram.GetLinearProgram().GetLength(1) + 1];
 
             //Adds the w and z
             twoPhaseLP[0, 0] = 1;
@@ -42,14 +36,14 @@ namespace IPSolver
             int counterW = 2;
 
             //Adds 0's to the X, S and E columns
-            for (int i = 2; i < (countX + countS + countE) + 2; i++)
+            for (int i = 2; i < (linearProgram.GetCountX() + linearProgram.GetCountS() + linearProgram.GetCountE()) + 2; i++)
             {
                 twoPhaseLP[0, i] = 0;
                 counterW++;
             }
 
             //Adds -1 to the A column
-            for (int i = 0; i < countA; i++)
+            for (int i = 0; i < linearProgram.GetCountA(); i++)
             {
                 twoPhaseLP[0, counterW] = -1;
                 counterW++;
@@ -64,11 +58,11 @@ namespace IPSolver
             }
 
             //FIlls the rest of thw array with the simplex array amounts
-            for (int i = 0; i < formattedLp.GetLength(0); i++)
+            for (int i = 0; i < linearProgram.GetLinearProgram().GetLength(0); i++)
             {
-                for (int j = 0; j < formattedLp.GetLength(1); j++)
+                for (int j = 0; j < linearProgram.GetLinearProgram().GetLength(1); j++)
                 {
-                    twoPhaseLP[i + 1, j + 1] = formattedLp[i, j];
+                    twoPhaseLP[i + 1, j + 1] = linearProgram.GetLinearProgram()[i, j];
                 }
             }
         }
@@ -90,6 +84,7 @@ namespace IPSolver
             bool done = false;
 
             //Calculates the New W row
+
             foreach (var item in listOfA)
             {
                 for (int i = 0; i < twoPhaseLP.GetLength(1); i++)
@@ -267,7 +262,7 @@ namespace IPSolver
                 bool deleteNegatives = false;
 
                 //If A is BV, delete Negatives
-                foreach (var item in colOfA)
+                foreach (var item in linearProgram.GetColOfA())
                 {
                     foreach (var item1 in bvCols)
                     {
