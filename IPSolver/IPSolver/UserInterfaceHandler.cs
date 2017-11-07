@@ -9,15 +9,18 @@ namespace IPSolver
 {
     static class UserInterfaceHandler
     {
-        enum AlgorithimType
+        //Enum for Algorithm selection
+        enum menu
         {
-            Primal = 0,
-            TwoPhase,
-            Dual,
-            BranchAndBound,
-            CuttingPlane
+            primal = 0,
+            twophase,
+            dual,
+            branch,
+            ctplane
         }
 
+
+        //Enum for Sensitivity Analysis
         enum SensitivityMenu
         {
             display1 = 0,
@@ -33,10 +36,13 @@ namespace IPSolver
             display11,
             display12
         }
-        public static void Menu()
+
+        //New Main Menu with file,Alg& sensitivity ananlysis selection
+        public static void newMenu()
         {
             while (true)
             {
+                //Displays Menu For entering File Name
                 Console.WriteLine(String.Format(@"
                                                 
                                               IP SOLVER
@@ -45,6 +51,8 @@ ________________________________________________________________________________
                                         PLEASE ENTER A FILE "));
                 string filename = Console.ReadLine();
                 Console.Clear();
+
+                //Menu For Selecting Algorithm
                 Console.WriteLine(@"
                 IP SOLVER
 ________________________________________________________
@@ -59,16 +67,19 @@ ________________________________________________________
                 ");
 
                 int userinput = int.Parse(Console.ReadLine());
-                AlgorithimType menu = (AlgorithimType)userinput;
+                menu menu = (menu)userinput;
 
                 switch (menu)
                 {
-                    case AlgorithimType.Primal:
+                    case menu.primal:
+
 
                         //TODO Insert method return solved Primal Simplex
 
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -95,41 +106,55 @@ ________________________________________________________________________________
                         switch (smenu)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //TODO
                                 break;
                             default:
                                 break;
                         }
 
                         break;
-                    case AlgorithimType.TwoPhase:
+                    case menu.twophase:
 
 
                         //TODO Insert Method to return solved Two Phase Simplex
 
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -156,40 +181,54 @@ ________________________________________________________________________________
                         switch (smenu1)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //RODO
                                 break;
                             default:
                                 break;
                         }
 
                         break;
-                    case AlgorithimType.Dual:
+                    case menu.dual:
 
 
-                        //TODO Insert Method to Return solved Dual Simplex
+                        ////TODO Insert Method to Return solved Dual Simplex
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -216,40 +255,54 @@ ________________________________________________________________________________
                         switch (smenu2)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //RODO
                                 break;
                             default:
                                 break;
                         }
 
                         break;
-                    case AlgorithimType.BranchAndBound:
+                    case menu.branch:
 
 
                         //TODO Insert Method to return solved Branch & Bound Simplex
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -276,40 +329,54 @@ ________________________________________________________________________________
                         switch (smenu3)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //RODO
                                 break;
                             default:
                                 break;
                         }
 
                         break;
-                    case AlgorithimType.CuttingPlane:
+                    case menu.ctplane:
 
 
                         //TODO Insert Method to Return solved Cutting Plane Simpelex
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -336,28 +403,40 @@ ________________________________________________________________________________
                         switch (smenu4)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //RODO
                                 break;
                             default:
                                 break;
