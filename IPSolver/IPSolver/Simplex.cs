@@ -8,25 +8,25 @@ namespace IPSolver
 {
     public class Simplex
     {
-        LinearProgram lp;
+        LinearProgram linearProgram;
 
-        public Simplex(LinearProgram lp)
+        public Simplex(LinearProgram linearProgram)
         {
-            this.lp = lp;
+            this.linearProgram = linearProgram;
         }
 
         //Returns the Basic Variables
         public LinearProgram Solve(LPType type)
         {
             int tableauNumber = 0;
-            int colAmount = lp.ColumnCount;
-            int rowAmount = lp.RowCount;
+            int colAmount = linearProgram.ColumnCount;
+            int rowAmount = linearProgram.RowCount;
 
             //Lists to hold BV and Ratios
             List<int> posFinalBV = new List<int>();
 
             bool done = false;
-            bool answerFound = true; 
+            bool answerFound = true;
 
             //Loops till final table
             do
@@ -44,22 +44,22 @@ namespace IPSolver
                 List<double> ratios = new List<double>();
 
                 //Loops through the rows to choose the winning column
-                for (int i = 1; i < lp.LinearProgramArray.GetLength(1) - 1; i++)
+                for (int i = 1; i < linearProgram.LinearProgramArray.GetLength(1) - 1; i++)
                 {
                     if (type == LPType.Max)
                     {
-                        if (Math.Round(lp.LinearProgramArray[0, i], 10) < winningColAmount)
+                        if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) < winningColAmount)
                         {
                             winningCol = i;
-                            winningColAmount = Math.Round(lp.LinearProgramArray[0, i], 10);
+                            winningColAmount = Math.Round(linearProgram.LinearProgramArray[0, i], 10);
                         }
                     }
                     else
                     {
-                        if (Math.Round(lp.LinearProgramArray[0, i], 10) > winningColAmount)
+                        if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) > winningColAmount)
                         {
                             winningCol = i;
-                            winningColAmount = Math.Round(lp.LinearProgramArray[0, i], 10);
+                            winningColAmount = Math.Round(linearProgram.LinearProgramArray[0, i], 10);
                         }
                     }
                 }
@@ -71,116 +71,116 @@ namespace IPSolver
                     break;
                 }
 
-                    //Calculates the ratios
-                    for (int i = 1; i < lp.LinearProgramArray.GetLength(0); i++)
+                //Calculates the ratios
+                for (int i = 1; i < linearProgram.LinearProgramArray.GetLength(0); i++)
+                {
+                    //Makes sure that cannot divide by zero
+                    try
                     {
-                        //Makes sure that cannot divide by zero
-                        try
-                        {
-                            double tempRatio = Math.Round(lp.LinearProgramArray[i, lp.ColumnCount - 1] / lp.LinearProgramArray[i, winningCol], 10);
+                        double tempRatio = Math.Round(linearProgram.LinearProgramArray[i, linearProgram.ColumnCount - 1] / linearProgram.LinearProgramArray[i, winningCol], 10);
 
-                            ratios.Add(tempRatio);
-                        }
-                        catch (DivideByZeroException)
-                        {
-                            ratios.Add(-1);
-                        }
+                        ratios.Add(tempRatio);
                     }
-
-                    //Chooses the winning row
-                    for (int i = 0; i < ratios.Count(); i++)
+                    catch (DivideByZeroException)
                     {
-                        if (ratios[i] < winningRatio && ratios[i] > 0)
+                        ratios.Add(-1);
+                    }
+                }
+
+                //Chooses the winning row
+                for (int i = 0; i < ratios.Count(); i++)
+                {
+                    if (ratios[i] < winningRatio && ratios[i] > 0)
+                    {
+                        winningRatio = ratios[i];
+                        winningRow = i + 1;
+                    }
+                    else if (ratios[i] == 0)
+                    {
+                        if (linearProgram.LinearProgramArray[i + 1, winningCol] > 0)
                         {
-                            winningRatio = ratios[i];
+                            winningRatio = 0;
                             winningRow = i + 1;
                         }
-                        else if (ratios[i] == 0)
-                        {
-                            if (lp.LinearProgramArray[i + 1, winningCol] > 0)
-                            {
-                                winningRatio = 0;
-                                winningRow = i + 1;
-                            }
-                        }
                     }
+                }
 
-                    //Makes sure the winning row isnt the top row
-                    if (winningRow == 0)
+                //Makes sure the winning row isnt the top row
+                if (winningRow == 0)
+                {
+                    done = true;
+                    break;
+                }
+
+                double winningNumber = linearProgram.LinearProgramArray[winningRow, winningCol];
+
+                //Calculates the new values of winning row
+                for (int i = 0; i < colAmount; i++)
+                {
+                    double newAmount = linearProgram.LinearProgramArray[winningRow, i] / winningNumber;
+
+                    linearProgram.LinearProgramArray[winningRow, i] = newAmount;
+                }
+
+                //Calculates the new amounts of the remaining rows
+                for (int i = 0; i < rowAmount; i++)
+                {
+                    double subtractAmount = linearProgram.LinearProgramArray[i, winningCol];
+                    for (int j = 0; j < colAmount; j++)
                     {
-                        done = true;
-                        break;
+                        if (i != winningRow)
+                            linearProgram.LinearProgramArray[i, j] = linearProgram.LinearProgramArray[i, j] - subtractAmount * linearProgram.LinearProgramArray[winningRow, j];
                     }
-                    
-                        double winningNumber = lp.LinearProgramArray[winningRow, winningCol];
+                }
 
-                        //Calculates the new values of winning row
-                        for (int i = 0; i < colAmount; i++)
+                //Displays the table
+                Console.WriteLine("\nTable " + tableauNumber);
+                UserInterfaceHandler.DisplayTable(linearProgram);
+
+                done = true;
+
+                answerFound = true;
+
+                if (type == LPType.Max)
+                {
+                    //Checks if there are any negatives in the top row, to see if it must continue
+                    for (int i = 0; i < colAmount; i++)
+                    {
+                        if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) < 0)
                         {
-                            double newAmount = lp.LinearProgramArray[winningRow, i] / winningNumber;
-
-                            lp.LinearProgramArray[winningRow, i] = newAmount;
+                            done = false;
+                            answerFound = false;
+                            break;
                         }
-
-                        //Calculates the new amounts of the remaining rows
-                        for (int i = 0; i < rowAmount; i++)
+                    }
+                }
+                else
+                {
+                    //Checks if there are any positives in the top row, to see if it must continue
+                    for (int i = 0; i < colAmount; i++)
+                    {
+                        if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) > 0)
                         {
-                            double subtractAmount = lp.LinearProgramArray[i, winningCol];
-                            for (int j = 0; j < colAmount; j++)
-                            {
-                                if (i != winningRow)
-                                    lp.LinearProgramArray[i, j] = lp.LinearProgramArray[i, j] - subtractAmount * lp.LinearProgramArray[winningRow, j];  
-                            }
+                            done = false;
+                            answerFound = false;
+                            break;
                         }
-
-                        //Displays the table
-                        Console.WriteLine("\nTable " + tableauNumber);
-                        UserInterfaceHandler.DisplayTable(lp);
-
-                        done = true;
-
-                        answerFound = true;
-
-                        if (type == LPType.Max)
-                        {
-                            //Checks if there are any negatives in the top row, to see if it must continue
-                            for (int i = 0; i < colAmount; i++)
-                            {
-                                if (Math.Round(lp.LinearProgramArray[0, i], 10) < 0)
-                                {
-                                    done = false;
-                                    answerFound = false;
-                                    break;
-                                }
-                            }
-                        } 
-                        else
-                        {
-                            //Checks if there are any positives in the top row, to see if it must continue
-                            for (int i = 0; i < colAmount; i++)
-                            {
-                                if (Math.Round(lp.LinearProgramArray[0, i], 10) > 0)
-                                {
-                                    done = false;
-                                    answerFound = false;
-                                    break;
-                                }
-                            }
-                        }   
+                    }
+                }
             } while (done == false);
 
             //Checks if there is an answer
             //TODO Handle the case when there is no solution found, as currently it will display no solution but still return the lp
             if (answerFound == true)
             {
-                
+
             }
             else
             {
                 Console.WriteLine("No Solution");
             }
 
-            return lp;
+            return linearProgram;
         }
 
         #region redactedCode

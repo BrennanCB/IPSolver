@@ -8,21 +8,15 @@ namespace IPSolver
 {
     public class LinearProgram
     {
-        private int countS = 0;
-        private int countE = 0;
-        private int countA = 0;
-        private int countX = 0;
+        private int countS, countE, countA, countX;
 
-        private double[,] arrayA;
-        private double[,] arrayS;
-        private double[,] arrayE;
+        private double[,] arrayA, arrayS, arrayE;
 
         private List<int> listOfA;
         private List<int> colOfA;
 
         private List<String> canonicalForm;
         private double[,] linearProgramArray;
-
         
         public LinearProgram(int countS, int countE, int countA, int countX, double[,] arrayA, double[,] arrayS,
             double[,] arrayE, List<int> listOfA, List<int> colOfA, List<String> canonicalForm, double[,] linearProgram)
@@ -43,58 +37,57 @@ namespace IPSolver
             this.linearProgramArray = linearProgram;
         }
 
+        public List<String> CanonicalForm => canonicalForm;
+
+        public bool IsTwoPhase => countA > 0;
+
+        public int StartOfS => countX;
+        public int StartOfA => StartOfE + countE;
+        public int StartOfE => StartOfS + countS;
+
+        public int ColumnCount => linearProgramArray.GetLength(1);
+        public int RowCount => linearProgramArray.GetLength(0);
+
         public double[,] LinearProgramArray
         {
             get => linearProgramArray;
             set => linearProgramArray = value;
         }
 
-        public List<String> CanonicalForm => canonicalForm;
-
-        public bool IsTwoPhase() { return countA > 0; }
-
-        public int StartOfS
+        public int CountA
         {
-            get => countX;
+            get => countA;
+            set => countA = value;
         }
 
-        public int StartOfA
+        public int CountS
         {
-            get => GetStartOfE + countE;
-        }
-        public int GetStartOfE
-        {
-            get => StartOfS + countS;
+            get => countS;
+            set => countS = value;
         }
 
-        public int GetCountA() { return countA; }
-
-        public void SetCountA(int countA) { this.countA = countA; }
-
-        public int GetCountS() { return countS; }
-
-        public void SetCountS(int countS) { this.countA = countS; }
-
-        public int GetCountE() { return countE; }
-
-        public void SetCountE(int countE) { this.countE = countE; }
+        public int CountE
+        {
+            get => countE;
+            set => countE = value;
+        }
 
         public int CountX {
             get => countX;
             set => countX = value;
         }
 
-        public List<int> GetListOfA() { return listOfA; }
+        public List<int> ListOfA
+        {
+            get => listOfA;
+            set => listOfA = value;
+        }
 
-        public void SetListOfA(List<int> listOfA) { this.listOfA = listOfA; }
-
-        public List<int> GetColOfA() { return colOfA; }
-
-        public void SetColOfA(List<int> colOfA) { this.colOfA = colOfA; }
-
-        public int ColumnCount => linearProgramArray.GetLength(1);
-
-        public int RowCount => linearProgramArray.GetLength(0);
+        public List<int> ColOfA
+        {
+            get => colOfA;
+            set => colOfA = value;
+        }
 
         public double[] GetBasicVariables()
         {
