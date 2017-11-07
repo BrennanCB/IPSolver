@@ -72,9 +72,7 @@ namespace IPSolver
             //TODO check if this is where we call this method
             FormatTwoPhase();
 
-
-
-        int counter = 1;
+            int counter = 1;
             int colAmount = twoPhaseLP.GetLength(1), rowAmount = twoPhaseLP.GetLength(0);
 
             bool done = false;
@@ -183,9 +181,7 @@ namespace IPSolver
                     for (int j = 0; j < colAmount; j++)
                     {
                         if (i != winningRow)
-                        {
                             twoPhaseLP[i, j] = twoPhaseLP[i, j] - subtractAmount * twoPhaseLP[winningRow, j];
-                        }
                     }
                 }
 
@@ -243,9 +239,7 @@ namespace IPSolver
                             countOne++;
 
                             if (countOne > 1)
-                            {
                                 bv = false;
-                            }
                         }
                     }
 
@@ -267,9 +261,7 @@ namespace IPSolver
                     foreach (var item1 in bvCols)
                     {
                         if (item + 1 == item1)
-                        {
                             deleteNegatives = true;
-                        }
                     }
                 }
 
@@ -311,7 +303,6 @@ namespace IPSolver
                     }
 
                     //TODO check if this is needed
-
                     //twoPhase = false;
 
                     Console.WriteLine();

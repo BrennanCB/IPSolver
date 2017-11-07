@@ -9,55 +9,34 @@ namespace IPSolver
 {
     public class FileHandler
     {
-        public static string docLocation, input, output;
+        private static string  docLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Linear Program Solver";
+        private static string inputLocation, outputLocation;
 
-        public static bool DirectoryExists()
-        {
-            docLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Linear Program Solver";
+        public static bool DirectoryExists => Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Linear Program Solver");
 
-            if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Linear Program Solver"))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
         public static void CreateDirectory()
         {
-            if (!Directory.Exists(docLocation))
-            {
+            if (!DirectoryExists)
                 Directory.CreateDirectory(docLocation);
-            }
         }
         
-        public static bool CheckInputFile(string inputLocal)
+        public static bool CheckInputFile(string inputPath)
         {
             //Formats the input path
-            input = docLocation + "/" + inputLocal + ".txt";
+            inputLocation = docLocation + "/" + inputPath + ".txt";
 
-            if (File.Exists(input))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return File.Exists(inputLocation);
         }
-        
-        public static void CreateOutputFile(string outputLocal)
+
+        public static string SetOutputFile
         {
-            //Formats the output file path
-            output = docLocation + "/" + outputLocal + ".txt";
+            set => outputLocation = docLocation + "/" + value + ".txt";
         }
-        
+
         public static List<string> ReadLP()
         {
             //Checks if the file still exists
-            if (!File.Exists(input))
+            if (!File.Exists(inputLocation))
             {
                 Console.WriteLine("The input file can no longer be located");
                 Console.WriteLine();
@@ -68,7 +47,7 @@ namespace IPSolver
                 Environment.Exit(0);
             }
             
-            FileStream file = new FileStream(input, FileMode.Open, FileAccess.Read);
+            FileStream file = new FileStream(inputLocation, FileMode.Open, FileAccess.Read);
             StreamReader read = new StreamReader(file);
 
             List<string> unformattedLP = new List<string>();
@@ -86,9 +65,10 @@ namespace IPSolver
             return unformattedLP;
         }
         
+        //Saves the basic variables ofr optimal solution
         public static void SaveSolution(double zValue, List<double> solutions)
         {
-            FileStream file = new FileStream(output, FileMode.Create, FileAccess.Write);
+            FileStream file = new FileStream(outputLocation, FileMode.Create, FileAccess.Write);
             StreamWriter write = new StreamWriter(file);
             
             write.WriteLine("Z - Value: " + zValue);
@@ -106,6 +86,5 @@ namespace IPSolver
             write.Close();
             file.Close();
         }
-
     }
 }
