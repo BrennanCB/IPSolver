@@ -37,7 +37,7 @@ namespace IPSolver
                 return true;
             if (IsUnbounded(LinearProgram))
                 return true;
-
+            //TODO: CHECK DEGENERATES. HOW ARE WE HANDELING NULL VALUES?
             return false;
         }
 
@@ -109,5 +109,7 @@ namespace IPSolver
                 throw new SpecialCaseException(SpecialCaseException.Type.Unbounded);
             return false;
         }
+
+        
     }
 }
