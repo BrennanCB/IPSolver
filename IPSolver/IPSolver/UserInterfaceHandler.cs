@@ -8,6 +8,7 @@ namespace IPSolver
 {
     static class UserInterfaceHandler
     {
+
        //Enum for Algorithm selection
         enum menu{
             primal=0,
