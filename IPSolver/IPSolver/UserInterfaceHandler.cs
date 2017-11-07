@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +8,18 @@ namespace IPSolver
 {
     static class UserInterfaceHandler
     {
-        enum AlgorithimType
-        {
-            Primal=0,
-            TwoPhase,
-            Dual,
-            BranchAndBound,
-            CuttingPlane
+       //Enum for Algorithm selection
+        enum menu{
+            primal=0,
+            twophase,
+            dual,
+            branch,
+            ctplane
+
+
         }
 
+        //Enum for Sensitivity Analysis
         enum SensitivityMenu
         {
             display1=0,
@@ -32,11 +34,16 @@ namespace IPSolver
             display10,
             display11,
             display12
+
+
         }
-        public static void Menu()
+
+        //New Main Menu with file,Alg& sensitivity ananlysis selection
+        public static void newMenu()
         {
             while (true)
             {
+                //Displays Menu For entering File Name
                 Console.WriteLine(String.Format(@"
                                                 
                                               IP SOLVER
@@ -45,6 +52,8 @@ ________________________________________________________________________________
                                         PLEASE ENTER A FILE "));
                 string filename = Console.ReadLine();
                 Console.Clear();
+
+                //Menu For Selecting Algorithm
                 Console.WriteLine(@"
                 IP SOLVER
 ________________________________________________________
@@ -59,16 +68,19 @@ ________________________________________________________
                 ");
 
                 int userinput = int.Parse(Console.ReadLine());
-                AlgorithimType menu = (AlgorithimType)userinput;
+                menu menu = (menu)userinput;
 
                 switch (menu)
                 {
-                    case AlgorithimType.Primal:
+                    case menu.primal:
+
 
                         //TODO Insert method return solved Primal Simplex
 
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -95,41 +107,55 @@ ________________________________________________________________________________
                         switch (smenu)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //TODO
                                 break;
                             default:
                                 break;
                         }
 
                         break;
-                    case AlgorithimType.TwoPhase:
+                    case menu.twophase:
 
 
                         //TODO Insert Method to return solved Two Phase Simplex
 
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -156,40 +182,54 @@ ________________________________________________________________________________
                         switch (smenu1)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //RODO
                                 break;
                             default:
                                 break;
                         }
 
                         break;
-                    case AlgorithimType.Dual:
+                    case menu.dual:
 
 
-                        //TODO Insert Method to Return solved Dual Simplex
+                        ////TODO Insert Method to Return solved Dual Simplex
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -216,40 +256,54 @@ ________________________________________________________________________________
                         switch (smenu2)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //RODO
                                 break;
                             default:
                                 break;
                         }
 
                         break;
-                    case AlgorithimType.BranchAndBound:
+                    case menu.branch:
 
 
                         //TODO Insert Method to return solved Branch & Bound Simplex
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -276,40 +330,54 @@ ________________________________________________________________________________
                         switch (smenu3)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //RODO
                                 break;
                             default:
                                 break;
                         }
 
                         break;
-                    case AlgorithimType.CuttingPlane:
+                    case menu.ctplane:
 
 
                         //TODO Insert Method to Return solved Cutting Plane Simpelex
 
                         Console.Clear();
+
+                        //Sensitivity Analysis Menu
                         Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
@@ -336,28 +404,40 @@ ________________________________________________________________________________
                         switch (smenu4)
                         {
                             case SensitivityMenu.display1:
+                                //TODO
                                 break;
                             case SensitivityMenu.display2:
+                                //TODO
                                 break;
                             case SensitivityMenu.display3:
+                                //TODO
                                 break;
                             case SensitivityMenu.display4:
+                                //TODO
                                 break;
                             case SensitivityMenu.display5:
+                                //TODO
                                 break;
                             case SensitivityMenu.display6:
+                                //TODO
                                 break;
                             case SensitivityMenu.display7:
+                                //TODO
                                 break;
                             case SensitivityMenu.display8:
+                                //TODO
                                 break;
                             case SensitivityMenu.display9:
+                                //TODO
                                 break;
                             case SensitivityMenu.display10:
+                                //TODO
                                 break;
                             case SensitivityMenu.display11:
+                                //TODO
                                 break;
                             case SensitivityMenu.display12:
+                                //RODO
                                 break;
                             default:
                                 break;
@@ -372,8 +452,7 @@ ________________________________________________________________________________
         }
 
         //Main Menu
-        //TODO Check if anything from here can be added into the new menu
-        public static void OldMenu()
+        public static void Menu()
         {
             bool directoryExists = false, isValid = false;
 
@@ -458,76 +537,131 @@ ________________________________________________________________________________
 
 
         //Displays the table
-        //TODO Rework this to better use the Linear Programming Object instead of parameter
-        public static void DisplayTable(LinearProgram lp)
+        public static void DisplayTable()
         {
             bool isY = false;
 
             //Checks if two phase
-            if (!lp.IsTwoPhase())
+            if (twoPhase == false)
             {
                 //Adds the top row
                 Console.Write("Row\tZ\t");
+
+                for (int i = 1; i < countX + 1; i++)
+                {
+                    //Checks it the X changes to a Y
+                    isY = false;
+                    foreach (var item in colY)
+                    {
+                        if (item == i)
+                        {
+                            isY = true;
+                        }
+                    }
+
+                    //Displays Y if true
+                    if (isY == true)
+                    {
+                        Console.Write("Y" + i + "\t");
+                    }
+                    else
+                    {
+                        Console.Write("X" + i + "\t");
+                    }
+
+                }
+
+                for (int i = 1; i < countS + 1; i++)
+                {
+                    Console.Write("S" + i + "\t");
+                }
+
+                for (int i = 1; i < countE + 1; i++)
+                {
+                    Console.Write("E" + i + "\t");
+                }
+
+                for (int i = 1; i < countA + 1; i++)
+                {
+                    Console.Write("A" + i + "\t");
+                }
+                Console.Write("RHS");
+                Console.WriteLine();
+
+                //Displays the data
+                for (int i = 0; i < finalLP.GetLength(0); i++)
+                {
+                    Console.Write(i + "\t");
+
+                    for (int j = 0; j < finalLP.GetLength(1); j++)
+                    {
+                        Console.Write(Math.Round(finalLP[i, j], 2) + "\t");
+                    }
+
+                    Console.WriteLine();
+                }
             }
             else
             {
                 //Adds the top row
                 Console.Write("Row\tW\tZ\t");
-            }
 
-            for (int i = 1; i <= lp.GetCountX(); i++)
-            {
-                //Checks it the X changes to a Y
-                isY = false;
-                foreach (var item in colY)
+                for (int i = 1; i < countX + 1; i++)
                 {
-                    if (item == i)
+                    //Checks it the X changes to a Y
+                    isY = false;
+                    foreach (var item in colY)
                     {
-                        isY = true;
+                        if (item == i)
+                        {
+                            isY = true;
+                        }
+
+                    }
+
+                    //Displays Y if true
+                    if (isY == true)
+                    {
+                        Console.Write("Y" + i + "\t");
+                    }
+                    else
+                    {
+                        Console.Write("X" + i + "\t");
                     }
                 }
 
-                //Displays Y if true
-                if (isY == true)
+                for (int i = 1; i < countS + 1; i++)
                 {
-                    Console.Write("Y" + i + "\t");
-                }
-                else
-                {
-                    Console.Write("X" + i + "\t");
+                    Console.Write("S" + i + "\t");
                 }
 
-            }
-
-            for (int i = 1; i <= lp.GetCountS(); i++)
-            {
-                Console.Write("S" + i + "\t");
-            }
-
-            for (int i = 1; i <= lp.GetCountE(); i++)
-            {
-                Console.Write("E" + i + "\t");
-            }
-
-            for (int i = 1; i <= lp.GetCountA(); i++)
-            {
-                Console.Write("A" + i + "\t");
-            }
-            Console.Write("RHS");
-            Console.WriteLine();
-
-            //Displays the data
-            for (int i = 0; i < lp.RowCount; i++)
-            {
-                Console.Write(i + "\t");
-
-                for (int j = 0; j < lp.ColumnCount; j++)
+                for (int i = 1; i < countE + 1; i++)
                 {
-                    Console.Write(Math.Round(lp.GetLinearProgram()[i, j], 2) + "\t");
+                    Console.Write("E" + i + "\t");
                 }
 
+                for (int i = 1; i < countA + 1; i++)
+                {
+                    Console.Write("A" + i + "\t");
+                }
+                Console.Write("RHS");
                 Console.WriteLine();
-            } 
+
+                //Displays the data
+                for (int i = 0; i < twoPhaseLP.GetLength(0); i++)
+                {
+                    Console.Write(i + " \t");
+
+                    for (int j = 0; j < twoPhaseLP.GetLength(1); j++)
+                    {
+                        Console.Write(Math.Round(twoPhaseLP[i, j], 2) + "\t");
+                    }
+
+                    Console.WriteLine();
+                }
+            }
         }
+
+
     }
 }
