@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace IPSolver
 {
     static class UserInterfaceHandler
     {
-        enum Menu
+        enum AlgorithimType
         {
             Primal=0,
             TwoPhase,
@@ -32,7 +33,7 @@ namespace IPSolver
             display11,
             display12
         }
-        public static void newMenu()
+        public static void Menu()
         {
             while (true)
             {
@@ -58,11 +59,11 @@ ________________________________________________________
                 ");
 
                 int userinput = int.Parse(Console.ReadLine());
-                Menu menu = (Menu)userinput;
+                AlgorithimType menu = (AlgorithimType)userinput;
 
                 switch (menu)
                 {
-                    case Menu.Primal:
+                    case AlgorithimType.Primal:
 
                         //TODO Insert method return solved Primal Simplex
 
@@ -122,7 +123,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case Menu.TwoPhase:
+                    case AlgorithimType.TwoPhase:
 
 
                         //TODO Insert Method to return solved Two Phase Simplex
@@ -183,7 +184,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case Menu.Dual:
+                    case AlgorithimType.Dual:
 
 
                         //TODO Insert Method to Return solved Dual Simplex
@@ -243,7 +244,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case Menu.BranchAndBound:
+                    case AlgorithimType.BranchAndBound:
 
 
                         //TODO Insert Method to return solved Branch & Bound Simplex
@@ -303,7 +304,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case Menu.CuttingPlane:
+                    case AlgorithimType.CuttingPlane:
 
 
                         //TODO Insert Method to Return solved Cutting Plane Simpelex
