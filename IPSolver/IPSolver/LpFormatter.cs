@@ -24,6 +24,7 @@ namespace IPSolver
         private int countS = 0;
         private int countE = 0;
         private int countA = 0;
+        private int countX = 0;
         private double[,] arrayA;
         private double[,] arrayS;
         private double[,] arrayE;
@@ -40,6 +41,26 @@ namespace IPSolver
         public List<String> GetCanonicalForm()
         {
             return canonicalForm;
+        }
+
+        public bool isTwoPhase()
+        {
+            return countA > 0;
+        }
+
+        public int getStartOfS()
+        {
+            return countX;
+        }
+
+        public int getStartOfA()
+        {
+            return getStartOfE() + countE;
+        }
+
+        public int getStartOfE()
+        {
+            return getStartOfS() + countS;
         }
 
         public LpFormatter(List<String> unformattedLP)
@@ -73,7 +94,7 @@ namespace IPSolver
             formatedLp[0, 0] = 1;
 
             //Gets the number of X's
-            int countX = tempZ.Count() - 1;
+            countX = tempZ.Count() - 1;
 
             try
             {
