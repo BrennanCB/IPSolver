@@ -517,11 +517,11 @@ ________________________________________________________________________________
             Console.WriteLine();
 
             //Displays the data
-            for (int i = 0; i < lp.getRowCount(); i++)
+            for (int i = 0; i < lp.RowCount; i++)
             {
                 Console.Write(i + "\t");
 
-                for (int j = 0; j < lp.getColumnCount(); j++)
+                for (int j = 0; j < lp.ColumnCount; j++)
                 {
                     Console.Write(Math.Round(lp.GetLinearProgram()[i, j], 2) + "\t");
                 }

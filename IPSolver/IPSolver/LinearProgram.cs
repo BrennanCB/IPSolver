@@ -12,6 +12,7 @@ namespace IPSolver
         private int countE = 0;
         private int countA = 0;
         private int countX = 0;
+
         private double[,] arrayA;
         private double[,] arrayS;
         private double[,] arrayE;
@@ -20,7 +21,7 @@ namespace IPSolver
         private List<int> colOfA;
 
         private List<String> canonicalForm;
-        private double[,] linearProgram;
+        private double[,] linearProgramArray;
 
         
         public LinearProgram(int countS, int countE, int countA, int countX, double[,] arrayA, double[,] arrayS,
@@ -39,26 +40,32 @@ namespace IPSolver
             this.colOfA = colOfA;
 
             this.canonicalForm = canonicalForm;
-            this.linearProgram = linearProgram;
+            this.linearProgramArray = linearProgram;
         }
 
-        public double[,] GetLinearProgram()
+        public double[,] LinearProgramArray
         {
-            return linearProgram;
+            get => linearProgramArray;
+            set => linearProgramArray = value;
         }
-        public void SetLinearProgram(double[,] linearProgram)
-        {
-            this.linearProgram = linearProgram;
-        }
-        public List<String> GetCanonicalForm() { return canonicalForm; }
+
+        public List<String> CanonicalForm => canonicalForm;
 
         public bool IsTwoPhase() { return countA > 0; }
 
-        public int GetStartOfS() { return countX; }
+        public int StartOfS
+        {
+            get => countX;
+        }
 
-        public int GetStartOfA() { return GetStartOfE() + countE; }
-
-        public int GetStartOfE() { return GetStartOfS() + countS; }
+        public int StartOfA
+        {
+            get => GetStartOfE + countE;
+        }
+        public int GetStartOfE
+        {
+            get => StartOfS + countS;
+        }
 
         public int GetCountA() { return countA; }
 
@@ -72,9 +79,10 @@ namespace IPSolver
 
         public void SetCountE(int countE) { this.countE = countE; }
 
-        public int GetCountX() { return countX; }
-
-        public void SetCountX(int countX) { this.countX = countX; }
+        public int CountX {
+            get => countX;
+            set => countX = value;
+        }
 
         public List<int> GetListOfA() { return listOfA; }
 
@@ -84,20 +92,14 @@ namespace IPSolver
 
         public void SetColOfA(List<int> colOfA) { this.colOfA = colOfA; }
 
-        public int getColumnCount()
-        {
-            return linearProgram.GetLength(1);
-        }
+        public int ColumnCount => linearProgramArray.GetLength(1);
 
-        public int getRowCount()
-        {
-            return linearProgram.GetLength(0);
-        }
+        public int RowCount => linearProgramArray.GetLength(0);
 
-        public double[] getBasicVariables()
+        public double[] GetBasicVariables()
         {
-            int colAmount = getColumnCount();
-            int rowAmount = getRowCount();
+            int colAmount = ColumnCount;
+            int rowAmount = RowCount;
 
             double[] basicVariableValues = new double[colAmount - 1];
 
@@ -109,35 +111,27 @@ namespace IPSolver
 
                 for (int i = 0; i < rowAmount; i++)
                 {
-                    double currentNumber = linearProgram[i, j];
+                    double currentNumber = linearProgramArray[i, j];
 
                     if (currentNumber != 0 && currentNumber != 1)
                     {
                         bv = false;
                     }
-                    else if (linearProgram[i, j] == 1)
+                    else if (linearProgramArray[i, j] == 1)
                     {
                         countOne++;
 
                         if (countOne > 1)
-                        {
                             bv = false;
-                        }
                         else
-                        {
-                            optimalSolution = linearProgram[i, colAmount - 1];
-                        }
+                            optimalSolution = linearProgramArray[i, colAmount - 1];
                     }
                 }
 
                 if (bv == false)
-                {
                     basicVariableValues[j] = 0;
-                }
                 else if (bv == true && countOne == 1)
-                {
                     basicVariableValues[j] = optimalSolution;
-                }
             }
 
             return basicVariableValues;
