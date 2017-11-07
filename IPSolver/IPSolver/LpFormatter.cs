@@ -28,6 +28,8 @@ namespace IPSolver
         private double[,] arrayA;
         private double[,] arrayS;
         private double[,] arrayE;
+        private List<int> listOfA = new List<int>();
+        private List<int> colOfA = new List<int>();
 
         private List<String> unformattedLP;
         private List<String> canonicalForm;
@@ -38,21 +40,11 @@ namespace IPSolver
             return formattedLp;
         }
 
-        public List<String> GetCanonicalForm() { return canonicalForm; }
-
-        public bool IsTwoPhase() { return countA > 0; }
-
-        public int GetStartOfS() { return countX; }
-
-        public int GetStartOfA() { return GetStartOfE() + countE; }
-
-        public int GetStartOfE() { return GetStartOfS() + countS; }
-
-        public int GetCountA() { return countA; }
-
-        public int GetCountS() { return countS; }
-
-        public int GetCountE() { return countE; }
+        public LinearProgram GetLinearProgram()
+        {
+            return new LinearProgram(countS, countE, countA, countX, arrayA, arrayS,
+                arrayE, listOfA, colOfA, canonicalForm, formattedLp);
+        }
 
         public LpFormatter(List<String> unformattedLP)
         {
@@ -60,6 +52,8 @@ namespace IPSolver
             countA = 0;
             countS = 0;
             countE = 0;
+            listOfA = new List<int>();
+            colOfA = new List<int>();
             FormatSimplxLP();
         }
 
@@ -313,8 +307,6 @@ namespace IPSolver
                 }
 
                 //Saves the A's
-                List<int> listOfA = new List<int>();
-                List<int> colOfA = new List<int>();
 
                 for (int aCol = 0; aCol < countA; aCol++)
                 {
