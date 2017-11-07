@@ -11,10 +11,8 @@ namespace IPSolver
     {
         public static string docLocation, input, output;
 
-        //Checks if the directory exists
         public static bool DirectoryExists()
         {
-            //Sets the location of the folder
             docLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Linear Program Solver";
 
             if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Linear Program Solver"))
@@ -26,8 +24,7 @@ namespace IPSolver
                 return false;
             }
         }
-
-        //Creates the directory
+        
         public static void CreateDirectory()
         {
             if (!Directory.Exists(docLocation))
@@ -35,8 +32,7 @@ namespace IPSolver
                 Directory.CreateDirectory(docLocation);
             }
         }
-
-        //Checks if the input file is valid
+        
         public static bool CheckInputFile(string inputLocal)
         {
             //Formats the input path
@@ -51,15 +47,13 @@ namespace IPSolver
                 return false;
             }
         }
-
-        //Formats the output file path
+        
         public static void CreateOutputFile(string outputLocal)
         {
             //Formats the output file path
             output = docLocation + "/" + outputLocal + ".txt";
         }
-
-        //Reads the LP from the file
+        
         public static List<string> ReadLP()
         {
             //Checks if the file still exists
@@ -73,37 +67,30 @@ namespace IPSolver
 
                 Environment.Exit(0);
             }
-
-            //Opens the file stream
+            
             FileStream file = new FileStream(input, FileMode.Open, FileAccess.Read);
             StreamReader read = new StreamReader(file);
 
             List<string> unformattedLP = new List<string>();
 
             string line = null;
-
-            //Reads the file
+            
             while (!string.IsNullOrWhiteSpace((line = read.ReadLine())))
             {
                 unformattedLP.Add(line);
             }
-
-            //Closes the file stream
+            
             read.Close();
             file.Close();
-
-            //Returns the LP
+            
             return unformattedLP;
         }
-
-        //Saves the solution
+        
         public static void SaveSolution(double zValue, List<double> solutions)
         {
-            //Opens/Creates the file
             FileStream file = new FileStream(output, FileMode.Create, FileAccess.Write);
             StreamWriter write = new StreamWriter(file);
-
-            //Writes Z
+            
             write.WriteLine("Z - Value: " + zValue);
 
             string line = null;
@@ -113,11 +100,9 @@ namespace IPSolver
             {
                 line += item + " ";
             }
-
-            //Writes the solution
+            
             write.WriteLine(line);
-
-            //Closes the file
+            
             write.Close();
             file.Close();
         }
