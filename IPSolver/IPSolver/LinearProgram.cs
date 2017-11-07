@@ -45,8 +45,8 @@ namespace IPSolver
         public int StartOfA => StartOfE + countE;
         public int StartOfE => StartOfS + countS;
 
-        public int ColumnCount => linearProgramArray.GetLength(1);
         public int RowCount => linearProgramArray.GetLength(0);
+        public int ColumnCount => linearProgramArray.GetLength(1);
 
         public double[,] LinearProgramArray
         {
