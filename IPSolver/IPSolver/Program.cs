@@ -49,6 +49,9 @@ namespace IPSolver
             //Checks if twophase or not
             if (twoPhase == false)
             {
+
+
+
                 //Runs Max Method
                 if (LPType == "MAX")
                 {

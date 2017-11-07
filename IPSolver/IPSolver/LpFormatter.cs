@@ -13,7 +13,7 @@ namespace IPSolver
         //public static double[,] originalLP, arrayS, arrayE, arrayA, formattedLP, finalLP, twoPhaseLP;
         //public static double[] answers;
         //public static List<string> canonicalForm = new List<string>();
-        
+
         //public static int countX = 0, countS = 0, countA = 0, countE = 0;
         ////public static List<string> sign = new List<string>();
         //public static bool twoPhase = false, answerFound = false;
@@ -21,46 +21,60 @@ namespace IPSolver
         //public static List<int> colY = new List<int>();
         //public static string LPType;
 
-        private int countS = 0;
-        private int countE = 0;
-        private int countA = 0;
-        private int countX = 0;
+        //private int countS = 0;
+        //private int countE = 0;
+        //private int countA = 0;
+        //private int countX = 0;
+
+        LinearProgram linearProgram;
 
         private double[,] arrayA;
         private double[,] arrayS;
         private double[,] arrayE;
-
-        private List<int> listOfA = new List<int>();
-        private List<int> colOfA = new List<int>();
-
-        private List<String> unformattedLP;
-        private List<String> canonicalForm;
-        private double[,] formattedLp;
         
-        public double[,] GetFormattedLp()
-        {
-            return formattedLp;
-        }
+        private List<String> unformattedLP;
+        //private List<String> canonicalForm;
+        //private double[,] formattedLp;
+        
+        //public double[,] GetFormattedLp()
+        //{
+        //    return formattedLp;
+        //}
 
+
+        //TODO Check this method, see why its here and if its needed
         public LinearProgram GetLinearProgram()
         {
-            return new LinearProgram(countS, countE, countA, countX, arrayA, arrayS,
-                arrayE, listOfA, colOfA, canonicalForm, formattedLp);
+            if (linearProgram == null)
+            {
+                return new LinearProgram();
+            }
+
+            return linearProgram;
+
+            //return new LinearProgram(countS, countE, countA, countX, arrayA, arrayS,
+            //    arrayE, listOfA, colOfA, canonicalForm, formattedLp);
         }
 
         public LpFormatter(List<String> unformattedLP)
         {
             this.unformattedLP = unformattedLP;
-            countA = 0;
-            countS = 0;
-            countE = 0;
-            listOfA = new List<int>();
-            colOfA = new List<int>();
+
+            //linearProgram = new LinearProgram(0, 0, 0, 0, new double[0, 0], new double[0, 0], new double[0, 0], new List<int>(), new List<int>(), new List<string>(), new double[0, 0]);
+            linearProgram = new LinearProgram();
+
+            linearProgram.CountA = 0;
+            linearProgram.CountS = 0;
+            linearProgram.CountE = 0;
+            linearProgram.ListOfA = new List<int>();
+            linearProgram.ColOfA = new List<int>();
+
+
             FormatSimplxLP();
         }
 
         //Formats the LP, by adding the S, E and A, and creating the canonical form
-        private void FormatSimplxLP()
+        private LinearProgram FormatSimplxLP()
         {
             //Gets z equation
             string zEquation = unformattedLP[0];
@@ -81,7 +95,7 @@ namespace IPSolver
             formatedLp[0, 0] = 1;
 
             //Gets the number of X's
-            countX = tempZ.Count() - 1;
+            linearProgram.CountX = tempZ.Count() - 1;
 
             try
             {
@@ -119,7 +133,7 @@ namespace IPSolver
 
                 //Adds the Equation to the canonical form list
                 
-                canonicalForm.Add(tempCanonicalForm + "= 0");
+                linearProgram.CanonicalForm.Add(tempCanonicalForm + "= 0");
 
                 bool changeNeg = false;
 
@@ -197,42 +211,44 @@ namespace IPSolver
                    
                     if (tempConstraint[tempConstraint.Count() - 2] == "<=")
                     {
-                        arrayS[i, countS] = 1;
-                        countS++;
+                        arrayS[i, linearProgram.CountS] = 1;
+                        linearProgram.CountS++;
                         
-                        tempCanonicalForm += "S" + countS + " ";
+                        tempCanonicalForm += "S" + linearProgram.CountS + " ";
                     }
                     else if (tempConstraint[tempConstraint.Count() - 2] == ">=")
                     {
-                        arrayE[i, countE] = -1;
-                        countE++;
+                        arrayE[i, linearProgram.CountE] = -1;
+                        linearProgram.CountE++;
                         
-                        arrayA[i, countA] = 1;
-                        countA++;
+                        arrayA[i, linearProgram.CountA] = 1;
+                        linearProgram.CountA++;
                         
-                        tempCanonicalForm += "-E" + countE + " " + "A" + countA + " ";
+                        tempCanonicalForm += "-E" + linearProgram.CountE + " " + "A" + linearProgram.CountA + " ";
                     }
                     else
                     {
-                        arrayA[i, countA] = 1;
-                        countA++;
+                        arrayA[i, linearProgram.CountA] = 1;
+                        linearProgram.CountA++;
                         
-                        tempCanonicalForm += "A" + countA + " ";
+                        tempCanonicalForm += "A" + linearProgram.CountA + " ";
                     }
 
                     //Changes the RHS
                     if (changeNeg == true)
                     {
                         //Adds it to the canonical form list
-                        canonicalForm.Add(tempCanonicalForm + "= " + (formatedLp[i, formatedLp.GetLength(1) - 1]) * -1);
+                        linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + (formatedLp[i, formatedLp.GetLength(1) - 1]) * -1);
                     }
                     else
                     {
                         //Adds it to the canonical form list
-                        canonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i, formatedLp.GetLength(1) - 1]);
+                        linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i, formatedLp.GetLength(1) - 1]);
                     }
                 }
-                this.formattedLp =  CreateLPFinalForm(formatedLp);
+                linearProgram.LinearProgramArray =  CreateLPFinalForm(formatedLp);
+
+                return linearProgram;
             }
             catch (FormatException) //Checks if data is valid
             {
@@ -268,13 +284,17 @@ namespace IPSolver
                 Console.ReadKey();
                 Environment.Exit(0);
             }
+
+
+            //TODO handle this
+            return null;
         }
 
         //Puts the LP, S, E and A arrays into 1 big array
         private double[,] CreateLPFinalForm(double[,] originalLP)
         {
             //Gets the number of columns of the final array
-            int finalLPLength = originalLP.GetLength(1) + countA + countE + countS;
+            int finalLPLength = originalLP.GetLength(1) + linearProgram.CountA + linearProgram.CountE + linearProgram.CountS;
 
             //Sets the rows and columns for the final array
             double[,] finalLP = new double[originalLP.GetLength(0), finalLPLength];
@@ -293,7 +313,7 @@ namespace IPSolver
                 }
 
                 //Saves the S's
-                for (int sCol = 0; sCol < countS; sCol++)
+                for (int sCol = 0; sCol < linearProgram.CountS; sCol++)
                 {
                     finalLP[i, mainCol] = arrayS[i, sCol];
 
@@ -301,7 +321,7 @@ namespace IPSolver
                 }
 
                 //Saves the E's
-                for (int eCol = 0; eCol < countE; eCol++)
+                for (int eCol = 0; eCol < linearProgram.CountE; eCol++)
                 {
                     finalLP[i, mainCol] = arrayE[i, eCol];
 
@@ -310,14 +330,14 @@ namespace IPSolver
 
                 //Saves the A's
 
-                for (int aCol = 0; aCol < countA; aCol++)
+                for (int aCol = 0; aCol < linearProgram.CountA; aCol++)
                 {
                     finalLP[i, mainCol] = arrayA[i, aCol];
 
                     if (finalLP[i, mainCol] == 1)
                     {
-                        listOfA.Add(i);
-                        colOfA.Add(mainCol);
+                        linearProgram.ListOfA.Add(i);
+                        linearProgram.ColOfA.Add(mainCol);
                     }
 
                     mainCol++;
@@ -328,6 +348,5 @@ namespace IPSolver
             }
             return finalLP;
         }
-
     }
 }
