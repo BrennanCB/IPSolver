@@ -20,6 +20,365 @@ namespace IPSolver
         //
         //
         //
+        enum menu{
+            primal=0,
+            twophase,
+            dual,
+            branch,
+            ctplane
+
+
+        }
+        enum SensitivityMenu
+        {
+            display1=0,
+            display2,
+            display3,
+            display4,
+            display5,
+            display6,
+            display7,
+            display8,
+            display9,
+            display10,
+            display11,
+            display12
+
+
+        }
+        public static void newMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine(String.Format(@"
+                                                
+                                              IP SOLVER
+                                       _________________________
+
+                                        PLEASE ENTER A FILE "));
+                string filename = Console.ReadLine();
+                Console.Clear();
+                Console.WriteLine(@"
+                IP SOLVER
+__________________________________________________
+
+                PLEASE SELECT AN ALGORITHM
+
+                1.PRIMAL 
+                2.TWO PHASE
+                3.DUAL
+                4.BRANCH & BOUND
+                5.CUTTING PLANE
+                ");
+
+                int userinput = int.Parse(Console.ReadLine());
+                menu menu = (menu)userinput;
+
+                switch (menu)
+                {
+                    case menu.primal:
+
+
+                        //Insert method return solved Primal Simplex
+
+
+                        Console.Clear();
+                        Console.WriteLine(@"
+                                  IP SOLVER
+________________________________________________________________________________________
+                                                                                        
+                           SENSITIVITY ANALYSIS
+
+                       
+             1. Display the range of a selected Non-Basic Variable.
+             2. Apply and display a change of a selected Non-Basic Variable.
+             3. Display the range of a selected Basic Variable.
+             4. Apply and display a change of a selected Basic Variable.
+             5. Display the range of a selected constraint right-hand-side value.
+             6. Apply and display a change of a selected constraint right-hand-side value.
+             7. Display the range of a selected variable in a Non-Basic Variable column.
+             8. Apply and display a change of a selected variable in a Non-Basic Variable column.
+             9. Add a new activity to an optimal solution.
+             10. Add a new constraint to an optimal solution.
+             11. Display the shadow prices.
+             12. Duality");
+                        int userInputSensitivityAnalysis = int.Parse(Console.ReadLine());
+
+                        SensitivityMenu smenu = (SensitivityMenu)userInputSensitivityAnalysis;
+                        switch (smenu)
+                        {
+                            case SensitivityMenu.display1:
+                                break;
+                            case SensitivityMenu.display2:
+                                break;
+                            case SensitivityMenu.display3:
+                                break;
+                            case SensitivityMenu.display4:
+                                break;
+                            case SensitivityMenu.display5:
+                                break;
+                            case SensitivityMenu.display6:
+                                break;
+                            case SensitivityMenu.display7:
+                                break;
+                            case SensitivityMenu.display8:
+                                break;
+                            case SensitivityMenu.display9:
+                                break;
+                            case SensitivityMenu.display10:
+                                break;
+                            case SensitivityMenu.display11:
+                                break;
+                            case SensitivityMenu.display12:
+                                break;
+                            default:
+                                break;
+                        }
+
+                        break;
+                    case menu.twophase:
+
+
+                        //Insert Method to return solved Two Phase Simplex
+
+
+                        Console.Clear();
+                        Console.WriteLine(@"
+                                  IP SOLVER
+________________________________________________________________________________________
+                                                                                        
+                           SENSITIVITY ANALYSIS
+
+                       
+             1. Display the range of a selected Non-Basic Variable.
+             2. Apply and display a change of a selected Non-Basic Variable.
+             3. Display the range of a selected Basic Variable.
+             4. Apply and display a change of a selected Basic Variable.
+             5. Display the range of a selected constraint right-hand-side value.
+             6. Apply and display a change of a selected constraint right-hand-side value.
+             7. Display the range of a selected variable in a Non-Basic Variable column.
+             8. Apply and display a change of a selected variable in a Non-Basic Variable column.
+             9. Add a new activity to an optimal solution.
+             10. Add a new constraint to an optimal solution.
+             11. Display the shadow prices.
+             12. Duality");
+                        int userInputSensitivityAnalysis1 = int.Parse(Console.ReadLine());
+
+                        SensitivityMenu smenu1 = (SensitivityMenu)userInputSensitivityAnalysis1;
+                        switch (smenu1)
+                        {
+                            case SensitivityMenu.display1:
+                                break;
+                            case SensitivityMenu.display2:
+                                break;
+                            case SensitivityMenu.display3:
+                                break;
+                            case SensitivityMenu.display4:
+                                break;
+                            case SensitivityMenu.display5:
+                                break;
+                            case SensitivityMenu.display6:
+                                break;
+                            case SensitivityMenu.display7:
+                                break;
+                            case SensitivityMenu.display8:
+                                break;
+                            case SensitivityMenu.display9:
+                                break;
+                            case SensitivityMenu.display10:
+                                break;
+                            case SensitivityMenu.display11:
+                                break;
+                            case SensitivityMenu.display12:
+                                break;
+                            default:
+                                break;
+                        }
+
+                        break;
+                    case menu.dual:
+
+
+                        //Insert Method to Return solved Dual Simplex
+
+                        Console.Clear();
+                        Console.WriteLine(@"
+                                  IP SOLVER
+________________________________________________________________________________________
+                                                                                        
+                           SENSITIVITY ANALYSIS
+
+                       
+             1. Display the range of a selected Non-Basic Variable.
+             2. Apply and display a change of a selected Non-Basic Variable.
+             3. Display the range of a selected Basic Variable.
+             4. Apply and display a change of a selected Basic Variable.
+             5. Display the range of a selected constraint right-hand-side value.
+             6. Apply and display a change of a selected constraint right-hand-side value.
+             7. Display the range of a selected variable in a Non-Basic Variable column.
+             8. Apply and display a change of a selected variable in a Non-Basic Variable column.
+             9. Add a new activity to an optimal solution.
+             10. Add a new constraint to an optimal solution.
+             11. Display the shadow prices.
+             12. Duality");
+                        int userInputSensitivityAnalysis2 = int.Parse(Console.ReadLine());
+
+                        SensitivityMenu smenu2 = (SensitivityMenu)userInputSensitivityAnalysis2;
+                        switch (smenu2)
+                        {
+                            case SensitivityMenu.display1:
+                                break;
+                            case SensitivityMenu.display2:
+                                break;
+                            case SensitivityMenu.display3:
+                                break;
+                            case SensitivityMenu.display4:
+                                break;
+                            case SensitivityMenu.display5:
+                                break;
+                            case SensitivityMenu.display6:
+                                break;
+                            case SensitivityMenu.display7:
+                                break;
+                            case SensitivityMenu.display8:
+                                break;
+                            case SensitivityMenu.display9:
+                                break;
+                            case SensitivityMenu.display10:
+                                break;
+                            case SensitivityMenu.display11:
+                                break;
+                            case SensitivityMenu.display12:
+                                break;
+                            default:
+                                break;
+                        }
+
+                        break;
+                    case menu.branch:
+
+
+                        //Insert Method to return solved Branch & Bound Simplex
+
+                        Console.Clear();
+                        Console.WriteLine(@"
+                                  IP SOLVER
+________________________________________________________________________________________
+                                                                                        
+                           SENSITIVITY ANALYSIS
+
+                       
+             1. Display the range of a selected Non-Basic Variable.
+             2. Apply and display a change of a selected Non-Basic Variable.
+             3. Display the range of a selected Basic Variable.
+             4. Apply and display a change of a selected Basic Variable.
+             5. Display the range of a selected constraint right-hand-side value.
+             6. Apply and display a change of a selected constraint right-hand-side value.
+             7. Display the range of a selected variable in a Non-Basic Variable column.
+             8. Apply and display a change of a selected variable in a Non-Basic Variable column.
+             9. Add a new activity to an optimal solution.
+             10. Add a new constraint to an optimal solution.
+             11. Display the shadow prices.
+             12. Duality");
+                        int userInputSensitivityAnalysis3 = int.Parse(Console.ReadLine());
+
+                        SensitivityMenu smenu3 = (SensitivityMenu)userInputSensitivityAnalysis3;
+                        switch (smenu3)
+                        {
+                            case SensitivityMenu.display1:
+                                break;
+                            case SensitivityMenu.display2:
+                                break;
+                            case SensitivityMenu.display3:
+                                break;
+                            case SensitivityMenu.display4:
+                                break;
+                            case SensitivityMenu.display5:
+                                break;
+                            case SensitivityMenu.display6:
+                                break;
+                            case SensitivityMenu.display7:
+                                break;
+                            case SensitivityMenu.display8:
+                                break;
+                            case SensitivityMenu.display9:
+                                break;
+                            case SensitivityMenu.display10:
+                                break;
+                            case SensitivityMenu.display11:
+                                break;
+                            case SensitivityMenu.display12:
+                                break;
+                            default:
+                                break;
+                        }
+
+                        break;
+                    case menu.ctplane:
+
+
+                        //Insert Method to Return solved Cutting Plane Simpelex
+
+                        Console.Clear();
+                        Console.WriteLine(@"
+                                  IP SOLVER
+________________________________________________________________________________________
+                                                                                        
+                           SENSITIVITY ANALYSIS
+
+                       
+             1. Display the range of a selected Non-Basic Variable.
+             2. Apply and display a change of a selected Non-Basic Variable.
+             3. Display the range of a selected Basic Variable.
+             4. Apply and display a change of a selected Basic Variable.
+             5. Display the range of a selected constraint right-hand-side value.
+             6. Apply and display a change of a selected constraint right-hand-side value.
+             7. Display the range of a selected variable in a Non-Basic Variable column.
+             8. Apply and display a change of a selected variable in a Non-Basic Variable column.
+             9. Add a new activity to an optimal solution.
+             10. Add a new constraint to an optimal solution.
+             11. Display the shadow prices.
+             12. Duality");
+                        int userInputSensitivityAnalysis4= int.Parse(Console.ReadLine());
+
+                        SensitivityMenu smenu4 = (SensitivityMenu)userInputSensitivityAnalysis4;
+                        switch (smenu4)
+                        {
+                            case SensitivityMenu.display1:
+                                break;
+                            case SensitivityMenu.display2:
+                                break;
+                            case SensitivityMenu.display3:
+                                break;
+                            case SensitivityMenu.display4:
+                                break;
+                            case SensitivityMenu.display5:
+                                break;
+                            case SensitivityMenu.display6:
+                                break;
+                            case SensitivityMenu.display7:
+                                break;
+                            case SensitivityMenu.display8:
+                                break;
+                            case SensitivityMenu.display9:
+                                break;
+                            case SensitivityMenu.display10:
+                                break;
+                            case SensitivityMenu.display11:
+                                break;
+                            case SensitivityMenu.display12:
+                                break;
+                            default:
+                                break;
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        }
 
         //Main Menu
         public static void Menu()
