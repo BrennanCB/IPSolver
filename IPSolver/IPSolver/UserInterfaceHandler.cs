@@ -106,40 +106,52 @@ ________________________________________________________________________________
                         switch (smenu)
                         {
                             case SensitivityMenu.display1:
-                                //TODO Explain what to do
+                                //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display2:
                                 //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display3:
                                 //TODO
+                                //Display the range of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display4:
                                 //TODO
+                                //Apply and display a change of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display5:
                                 //TODO
+                                //Display the range of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display6:
                                 //TODO
+                                //Apply and display a change of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display7:
                                 //TODO
+                                //Display the range of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display8:
                                 //TODO
+                                //Apply and display a change of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display9:
                                 //TODO
+                                //Add a new activity to an optimal solution.
                                 break;
                             case SensitivityMenu.display10:
                                 //TODO
+                                // Add a new constraint to an optimal solution.
                                 break;
                             case SensitivityMenu.display11:
                                 //TODO
+                                //Display the shadow prices.
                                 break;
                             case SensitivityMenu.display12:
                                 //TODO
+                                //Duality
                                 break;
                             default:
                                 break;
@@ -182,39 +194,51 @@ ________________________________________________________________________________
                         {
                             case SensitivityMenu.display1:
                                 //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display2:
                                 //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display3:
                                 //TODO
+                                //Display the range of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display4:
                                 //TODO
+                                //Apply and display a change of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display5:
                                 //TODO
+                                //Display the range of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display6:
                                 //TODO
+                                //Apply and display a change of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display7:
                                 //TODO
+                                //Display the range of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display8:
                                 //TODO
+                                //Apply and display a change of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display9:
                                 //TODO
+                                //Add a new activity to an optimal solution.
                                 break;
                             case SensitivityMenu.display10:
                                 //TODO
+                                // Add a new constraint to an optimal solution.
                                 break;
                             case SensitivityMenu.display11:
                                 //TODO
+                                //Display the shadow prices.
                                 break;
                             case SensitivityMenu.display12:
-                                //RODO
+                                //TODO
+                                //Duality
                                 break;
                             default:
                                 break;
@@ -256,39 +280,51 @@ ________________________________________________________________________________
                         {
                             case SensitivityMenu.display1:
                                 //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display2:
                                 //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display3:
                                 //TODO
+                                //Display the range of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display4:
                                 //TODO
+                                //Apply and display a change of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display5:
                                 //TODO
+                                //Display the range of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display6:
                                 //TODO
+                                //Apply and display a change of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display7:
                                 //TODO
+                                //Display the range of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display8:
                                 //TODO
+                                //Apply and display a change of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display9:
                                 //TODO
+                                //Add a new activity to an optimal solution.
                                 break;
                             case SensitivityMenu.display10:
                                 //TODO
+                                // Add a new constraint to an optimal solution.
                                 break;
                             case SensitivityMenu.display11:
                                 //TODO
+                                //Display the shadow prices.
                                 break;
                             case SensitivityMenu.display12:
-                                //RODO
+                                //TODO
+                                //Duality
                                 break;
                             default:
                                 break;
@@ -330,39 +366,51 @@ ________________________________________________________________________________
                         {
                             case SensitivityMenu.display1:
                                 //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display2:
                                 //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display3:
                                 //TODO
+                                //Display the range of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display4:
                                 //TODO
+                                //Apply and display a change of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display5:
                                 //TODO
+                                //Display the range of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display6:
                                 //TODO
+                                //Apply and display a change of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display7:
                                 //TODO
+                                //Display the range of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display8:
                                 //TODO
+                                //Apply and display a change of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display9:
                                 //TODO
+                                //Add a new activity to an optimal solution.
                                 break;
                             case SensitivityMenu.display10:
                                 //TODO
+                                // Add a new constraint to an optimal solution.
                                 break;
                             case SensitivityMenu.display11:
                                 //TODO
+                                //Display the shadow prices.
                                 break;
                             case SensitivityMenu.display12:
-                                //RODO
+                                //TODO
+                                //Duality
                                 break;
                             default:
                                 break;
@@ -404,39 +452,51 @@ ________________________________________________________________________________
                         {
                             case SensitivityMenu.display1:
                                 //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display2:
                                 //TODO
+                                //Display the range of a selected Non-Basic Variable.
                                 break;
                             case SensitivityMenu.display3:
                                 //TODO
+                                //Display the range of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display4:
                                 //TODO
+                                //Apply and display a change of a selected Basic Variable.
                                 break;
                             case SensitivityMenu.display5:
                                 //TODO
+                                //Display the range of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display6:
                                 //TODO
+                                //Apply and display a change of a selected constraint right-hand-side value.
                                 break;
                             case SensitivityMenu.display7:
                                 //TODO
+                                //Display the range of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display8:
                                 //TODO
+                                //Apply and display a change of a selected variable in a Non-Basic Variable column.
                                 break;
                             case SensitivityMenu.display9:
                                 //TODO
+                                //Add a new activity to an optimal solution.
                                 break;
                             case SensitivityMenu.display10:
                                 //TODO
+                                // Add a new constraint to an optimal solution.
                                 break;
                             case SensitivityMenu.display11:
                                 //TODO
+                                //Display the shadow prices.
                                 break;
                             case SensitivityMenu.display12:
-                                //RODO
+                                //TODO
+                                //Duality
                                 break;
                             default:
                                 break;
