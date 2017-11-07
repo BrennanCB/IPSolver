@@ -129,5 +129,11 @@ namespace IPSolver
 
             return basicVariableValues;
         }
+
+        public void AddConstraint(String Constraint)
+        {
+            //TODO Add constraint to the LP
+        } 
+
     }
 }

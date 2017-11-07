@@ -37,7 +37,5 @@ namespace IPSolver
                     break;
             }
         }
-        
-      
     }
 }

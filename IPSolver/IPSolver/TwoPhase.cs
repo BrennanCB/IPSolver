@@ -67,7 +67,7 @@ namespace IPSolver
         }
 
         //Solves Two phase problems
-        public void TwoPhase(LPType type)
+        public LinearProgram Solve(LPType type)
         {
             FormatTwoPhase();
 
@@ -321,7 +321,6 @@ namespace IPSolver
                     //Calls the appropriate simplex method
                     linearProgram = simplex.Solve(type);
 
-
                     ///TODO handle what happens if theres no solution
                 }
                 else
@@ -340,6 +339,8 @@ namespace IPSolver
 
                 Console.WriteLine("");
             }
+
+            return linearProgram;
         }
     }
 }
