@@ -26,8 +26,8 @@ namespace IPSolver
         private void FormatTwoPhase()
         {
             //Makes the twoPhase array larger
-            twoPhaseLP = new double[linearProgram.GetLinearProgram().GetLength(0) + 1,
-                linearProgram.GetLinearProgram().GetLength(1) + 1];
+            twoPhaseLP = new double[linearProgram.LinearProgramArray.GetLength(0) + 1,
+                linearProgram.LinearProgramArray.GetLength(1) + 1];
 
             //Adds the w and z
             twoPhaseLP[0, 0] = 1;
@@ -36,7 +36,7 @@ namespace IPSolver
             int counterW = 2;
 
             //Adds 0's to the X, S and E columns
-            for (int i = 2; i < (linearProgram.GetCountX() + linearProgram.GetCountS() + linearProgram.GetCountE()) + 2; i++)
+            for (int i = 2; i < (linearProgram.CountX + linearProgram.GetCountS() + linearProgram.GetCountE()) + 2; i++)
             {
                 twoPhaseLP[0, i] = 0;
                 counterW++;

@@ -15,7 +15,6 @@ namespace IPSolver
             this.lp = lp;
         }
 
-
         //Returns the Basic Variables
         public LinearProgram Solve(LPType type)
         {
