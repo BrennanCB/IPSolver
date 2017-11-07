@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LPType.cs" />
     <Compile Include="FileHandler.cs" />
     <Compile Include="LinearProgram.cs" />
     <Compile Include="LpFormatter.cs" />
