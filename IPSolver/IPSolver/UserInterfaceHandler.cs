@@ -16,8 +16,6 @@ namespace IPSolver
             dual,
             branch,
             ctplane
-
-
         }
 
 
