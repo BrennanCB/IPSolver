@@ -15,20 +15,29 @@ namespace IPSolver
         private double[,] arrayA;
         private double[,] arrayS;
         private double[,] arrayE;
-        
+
+        private List<int> listOfA;
+        private List<int> colOfA;
+
         private List<String> canonicalForm;
         private double[,] linearProgram;
 
+        
         public LinearProgram(int countS, int countE, int countA, int countX, double[,] arrayA, double[,] arrayS,
-            double[,] arrayE, List<String> canonicalForm, double[,] linearProgram)
+            double[,] arrayE, List<int> listOfA, List<int> colOfA, List<String> canonicalForm, double[,] linearProgram)
         {
             this.countS = countS;
             this.countE = countE;
             this.countA = countA;
             this.countX = countX;
+
             this.arrayA = arrayA;
             this.arrayS = arrayS;
             this.arrayE = arrayE;
+
+            this.listOfA = listOfA;
+            this.colOfA = colOfA;
+
             this.canonicalForm = canonicalForm;
             this.linearProgram = linearProgram;
         }
@@ -62,5 +71,17 @@ namespace IPSolver
         public int GetCountE() { return countE; }
 
         public void SetCountE(int countE) { this.countE = countE; }
+
+        public int GetCountX() { return countX; }
+
+        public void SetCountX(int countX) { this.countX = countX; }
+
+        public List<int> GetListOfA() { return listOfA; }
+
+        public void SetListOfA(List<int> listOfA) { this.listOfA = listOfA; }
+
+        public List<int> GetColOfA() { return colOfA; }
+
+        public void SetColOfA(List<int> colOfA) { this.colOfA = colOfA; }
     }
 }
