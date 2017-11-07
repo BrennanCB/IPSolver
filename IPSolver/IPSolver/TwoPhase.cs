@@ -69,9 +69,12 @@ namespace IPSolver
         //Solves Two phase problems
         public LinearProgram Solve(LPType type)
         {
+            //TODO check if this is where we call this method
             FormatTwoPhase();
 
-            int counter = 1;
+
+
+        int counter = 1;
             int colAmount = twoPhaseLP.GetLength(1), rowAmount = twoPhaseLP.GetLength(0);
 
             bool done = false;
@@ -80,7 +83,7 @@ namespace IPSolver
             int winningRow = 0;
 
             //Calculates the New W row
-            foreach (var item in listOfA)
+            foreach (var item in linearProgram.ListOfA)
             {
                 for (int i = 0; i < twoPhaseLP.GetLength(1); i++)
                 {
@@ -259,7 +262,7 @@ namespace IPSolver
                 bool deleteNegatives = false;
 
                 //If A is BV, delete Negatives
-                foreach (var item in colOfA)
+                foreach (var item in linearProgram.ColOfA)
                 {
                     foreach (var item1 in bvCols)
                     {
@@ -296,7 +299,7 @@ namespace IPSolver
                     }
 
                     //Sets the Amounts in the A coulmns to 0
-                    foreach (var item in colOfA)
+                    foreach (var item in linearProgram.ColOfA)
                     {
                         if (!bvCols.Contains(item + 1))
                         {

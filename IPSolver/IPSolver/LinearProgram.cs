@@ -10,14 +10,21 @@ namespace IPSolver
     {
         private int countS, countE, countA, countX;
 
-        private double[,] arrayA, arrayS, arrayE;
+        //Removed to see if needed
+        //private double[,] arrayA, arrayS, arrayE;
 
         private List<int> listOfA;
         private List<int> colOfA;
 
         private List<String> canonicalForm;
         private double[,] linearProgramArray;
-        
+
+        //TODO Temporary Default constructor
+        public LinearProgram()
+        {
+
+        }
+
         public LinearProgram(int countS, int countE, int countA, int countX, double[,] arrayA, double[,] arrayS,
             double[,] arrayE, List<int> listOfA, List<int> colOfA, List<String> canonicalForm, double[,] linearProgram)
         {
@@ -26,9 +33,9 @@ namespace IPSolver
             this.countA = countA;
             this.countX = countX;
 
-            this.arrayA = arrayA;
-            this.arrayS = arrayS;
-            this.arrayE = arrayE;
+            //this.arrayA = arrayA;
+            //this.arrayS = arrayS;
+            //this.arrayE = arrayE;
 
             this.listOfA = listOfA;
             this.colOfA = colOfA;
@@ -37,7 +44,11 @@ namespace IPSolver
             this.linearProgramArray = linearProgram;
         }
 
-        public List<String> CanonicalForm => canonicalForm;
+        public List<String> CanonicalForm
+        {
+            get => canonicalForm;
+            set => canonicalForm = value;
+        }
 
         public bool IsTwoPhase => countA > 0;
 
