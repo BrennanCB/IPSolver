@@ -61,14 +61,15 @@ namespace IPSolver
             this.unformattedLP = unformattedLP;
 
             //linearProgram = new LinearProgram(0, 0, 0, 0, new double[0, 0], new double[0, 0], new double[0, 0], new List<int>(), new List<int>(), new List<string>(), new double[0, 0]);
-            linearProgram = new LinearProgram();
-
-            linearProgram.CountA = 0;
-            linearProgram.CountS = 0;
-            linearProgram.CountE = 0;
-            linearProgram.ListOfA = new List<int>();
-            linearProgram.ColOfA = new List<int>();
-
+            linearProgram = new LinearProgram
+            {
+                CountA = 0,
+                CountS = 0,
+                CountE = 0,
+                ListOfA = new List<int>(),
+                ColOfA = new List<int>(),
+                ColY = new List<int>()
+            };
 
             FormatSimplxLP();
         }
@@ -145,7 +146,7 @@ namespace IPSolver
                     tempCanonicalForm = null;
 
                     //Changes RHS to positive
-                    List<int> colY = new List<int>();
+                    //
                     if (Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]) < 0)
                     {
                         for (int j = 1; j < tempConstraint.Count() - 1; j++)
@@ -154,7 +155,7 @@ namespace IPSolver
                             if (sign[j - 1] == "-")
                             {
                                 //Changes the column to negative
-                                colY.Add(j);
+                                linearProgram.ColY.Add(j);
 
                                 formatedLp[i, j] = Convert.ToDouble(tempConstraint[j - 1]);
 
@@ -191,7 +192,7 @@ namespace IPSolver
                             if (sign[j - 1] == "-")
                             {
                                 //Changes the column to negative
-                                colY.Add(j);
+                                linearProgram.ColY.Add(j);
 
                                 formatedLp[i, j] = Convert.ToDouble(tempConstraint[j - 1]) * -1;
 

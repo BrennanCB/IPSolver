@@ -16,6 +16,8 @@ namespace IPSolver
         private List<int> listOfA;
         private List<int> colOfA;
 
+        private List<int> colY;
+
         private List<String> canonicalForm;
         private double[,] linearProgramArray;
 
@@ -25,23 +27,24 @@ namespace IPSolver
 
         }
 
-        public LinearProgram(int countS, int countE, int countA, int countX, double[,] arrayA, double[,] arrayS,
-            double[,] arrayE, List<int> listOfA, List<int> colOfA, List<String> canonicalForm, double[,] linearProgram)
+        //TODO, if the above arrays arent needed, ctor needs to be simplified
+        public LinearProgram(int countS, int countE, int countA, int countX, List<int> listOfA, List<int> colOfA, List<int> colY, List<String> canonicalForm, double[,] linearProgramArray)
         {
-            this.countS = countS;
-            this.countE = countE;
-            this.countA = countA;
-            this.countX = countX;
+            CountS = countS;
+            CountE = countE;
+            CountA = countA;
+            CountX = countX;
 
             //this.arrayA = arrayA;
             //this.arrayS = arrayS;
             //this.arrayE = arrayE;
 
-            this.listOfA = listOfA;
-            this.colOfA = colOfA;
+            ListOfA = listOfA;
+            ColOfA = colOfA;
+            ColY = colY;
 
-            this.canonicalForm = canonicalForm;
-            this.linearProgramArray = linearProgram;
+            CanonicalForm = canonicalForm;
+            LinearProgramArray = linearProgramArray;
         }
 
         public List<String> CanonicalForm
@@ -98,6 +101,12 @@ namespace IPSolver
         {
             get => colOfA;
             set => colOfA = value;
+        }
+
+        public List<int> ColY
+        {
+            get => colY;
+            set => colY = value;
         }
 
         public double[] GetBasicVariables()

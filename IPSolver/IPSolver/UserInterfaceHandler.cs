@@ -459,13 +459,10 @@ ________________________________________________________________________________
         //TODO Check if anything from here can be added into the new menu
         public static void OldMenu()
         {
-            bool directoryExists = false, isValid = false;
-
-            //Checks if the directory exists
-            directoryExists = FileHandler.DirectoryExists();
+            bool isValid = false;
 
             //Creates the directory if it doesnt exist
-            if (directoryExists != true)
+            if (!FileHandler.DirectoryExists)
             {
                 //Creates the directory
                 FileHandler.CreateDirectory();
@@ -512,7 +509,7 @@ ________________________________________________________________________________
                     bool fileFound = FileHandler.CheckInputFile(splitCommand[1]);
 
                     //Gives error if not found
-                    if (fileFound == false)
+                    if (!fileFound)
                     {
                         Console.WriteLine("The input file you listed cannot be found. Please ensure that:");
                         Console.WriteLine("\tThe name is spelt correctly");
@@ -524,7 +521,7 @@ ________________________________________________________________________________
                     else
                     {
                         //Creates the output file
-                        FileHandler.CreateOutputFile(splitCommand[2]);
+                        FileHandler.SetOutputFile = splitCommand[2];
 
                         Console.WriteLine("Output file created, this is where you will find the solution saved");
 
@@ -543,12 +540,12 @@ ________________________________________________________________________________
 
         //Displays the table
         //TODO Rework this to better use the Linear Programming Object instead of parameter
-        public static void DisplayTable(LinearProgram lp)
+        public static void DisplayTable(LinearProgram linearProgram)
         {
             bool isY = false;
 
             //Checks if two phase
-            if (!lp.IsTwoPhase)
+            if (!linearProgram.IsTwoPhase)
             {
                 //Adds the top row
                 Console.Write("Row\tZ\t");
@@ -559,55 +556,49 @@ ________________________________________________________________________________
                 Console.Write("Row\tW\tZ\t");
             }
 
-            for (int i = 1; i <= lp.CountX; i++)
+            for (int i = 1; i <= linearProgram.CountX; i++)
             {
                 //Checks it the X changes to a Y
                 isY = false;
-                foreach (var item in colY)
+                foreach (var item in linearProgram.ColY)
                 {
                     if (item == i)
-                    {
                         isY = true;
-                    }
                 }
 
                 //Displays Y if true
                 if (isY == true)
-                {
                     Console.Write("Y" + i + "\t");
-                }
                 else
-                {
                     Console.Write("X" + i + "\t");
-                }
-
             }
 
-            for (int i = 1; i <= lp.CountS; i++)
+            for (int i = 1; i <= linearProgram.CountS; i++)
             {
                 Console.Write("S" + i + "\t");
             }
 
-            for (int i = 1; i <= lp.CountE; i++)
+            for (int i = 1; i <= linearProgram.CountE; i++)
             {
                 Console.Write("E" + i + "\t");
             }
 
-            for (int i = 1; i <= lp.CountA; i++)
+            for (int i = 1; i <= linearProgram.CountA; i++)
             {
                 Console.Write("A" + i + "\t");
             }
+
             Console.Write("RHS");
             Console.WriteLine();
 
             //Displays the data
-            for (int i = 0; i < lp.RowCount; i++)
+            for (int i = 0; i < linearProgram.RowCount; i++)
             {
                 Console.Write(i + "\t");
 
-                for (int j = 0; j < lp.ColumnCount; j++)
+                for (int j = 0; j < linearProgram.ColumnCount; j++)
                 {
-                    Console.Write(Math.Round(lp.LinearProgramArray[i, j], 2) + "\t");
+                    Console.Write(Math.Round(linearProgram.LinearProgramArray[i, j], 2) + "\t");
                 }
 
                 Console.WriteLine();
