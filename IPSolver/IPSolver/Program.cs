@@ -8,28 +8,27 @@ namespace IPSolver
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
             UserInterfaceHandler.Menu();
             
-            unformatedLP = FileHandler.ReadLP();
+            List<String> unformatedLP = FileHandler.ReadLP();
+            LpFormatter LpFormatter = new LpFormatter(unformatedLP);
             
             foreach (var item in unformatedLP)
             {
                 Console.WriteLine(item);
             }
             
-            LpSolver.FormatSimplxLP(unformatedLP);
-
-            //Puts all variables into one array
-            LpSolver.CreateLPFinalForm();
+            double[,] formattedLp = LpFormatter.GetFormattedLp();
 
             //Displays the canonical form
             Console.WriteLine();
             Console.WriteLine("Canonical Form");
             Console.WriteLine("--------------");
 
-            foreach (var item in canonicalForm)
+            foreach (var item in LpFormatter.GetCanonicalForm())
             {
                 Console.WriteLine(item);
             }
