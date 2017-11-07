@@ -36,10 +36,8 @@ namespace IPSolver
             Console.WriteLine();
 
             //Sets where it is two pahse or not
-            if (countA > 0)
+            if (LpFormatter.IsTwoPhase())
             {
-                twoPhase = true;
-
                 FormatTwoPhase();
             }
 
