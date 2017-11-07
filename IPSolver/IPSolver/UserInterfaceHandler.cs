@@ -10,7 +10,7 @@ namespace IPSolver
     static class UserInterfaceHandler
     {
         //Enum for Algorithm selection
-        enum menu
+        enum Algorithm
         {
             primal = 0,
             twophase,
@@ -38,7 +38,7 @@ namespace IPSolver
         }
 
         //New Main Menu with file,Alg& sensitivity ananlysis selection
-        public static void newMenu()
+        public static void Menu()
         {
             while (true)
             {
@@ -67,11 +67,11 @@ ________________________________________________________
                 ");
 
                 int userinput = int.Parse(Console.ReadLine());
-                menu menu = (menu)userinput;
+                Algorithm menu = (Algorithm)userinput;
 
                 switch (menu)
                 {
-                    case menu.primal:
+                    case Algorithm.primal:
 
 
                         //TODO Insert method return solved Primal Simplex
@@ -106,7 +106,7 @@ ________________________________________________________________________________
                         switch (smenu)
                         {
                             case SensitivityMenu.display1:
-                                //TODO
+                                //TODO Explain what to do
                                 break;
                             case SensitivityMenu.display2:
                                 //TODO
@@ -146,7 +146,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case menu.twophase:
+                    case Algorithm.twophase:
 
 
                         //TODO Insert Method to return solved Two Phase Simplex
@@ -221,7 +221,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case menu.dual:
+                    case Algorithm.dual:
 
 
                         ////TODO Insert Method to Return solved Dual Simplex
@@ -295,7 +295,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case menu.branch:
+                    case Algorithm.branch:
 
 
                         //TODO Insert Method to return solved Branch & Bound Simplex
@@ -369,7 +369,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case menu.ctplane:
+                    case Algorithm.ctplane:
 
 
                         //TODO Insert Method to Return solved Cutting Plane Simpelex

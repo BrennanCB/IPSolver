@@ -25,9 +25,11 @@ namespace IPSolver
         private int countE = 0;
         private int countA = 0;
         private int countX = 0;
+
         private double[,] arrayA;
         private double[,] arrayS;
         private double[,] arrayE;
+
         private List<int> listOfA = new List<int>();
         private List<int> colOfA = new List<int>();
 
