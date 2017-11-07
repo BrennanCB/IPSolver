@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IPSolver
 {
-    class LinearProgram
+    public class LinearProgram
     {
         private int countS = 0;
         private int countE = 0;
@@ -83,5 +83,64 @@ namespace IPSolver
         public List<int> GetColOfA() { return colOfA; }
 
         public void SetColOfA(List<int> colOfA) { this.colOfA = colOfA; }
+
+        public int getColumnCount()
+        {
+            return linearProgram.GetLength(1);
+        }
+
+        public int getRowCount()
+        {
+            return linearProgram.GetLength(0);
+        }
+
+        public double[] getBasicVariables()
+        {
+            int colAmount = getColumnCount();
+            int rowAmount = getRowCount();
+
+            double[] basicVariableValues = new double[colAmount - 1];
+
+            for (int j = 0; j < colAmount - 1; j++)
+            {
+                bool bv = true;
+                int countOne = 0;
+                double optimalSolution = 0;
+
+                for (int i = 0; i < rowAmount; i++)
+                {
+                    double currentNumber = linearProgram[i, j];
+
+                    if (currentNumber != 0 && currentNumber != 1)
+                    {
+                        bv = false;
+                    }
+                    else if (linearProgram[i, j] == 1)
+                    {
+                        countOne++;
+
+                        if (countOne > 1)
+                        {
+                            bv = false;
+                        }
+                        else
+                        {
+                            optimalSolution = linearProgram[i, colAmount - 1];
+                        }
+                    }
+                }
+
+                if (bv == false)
+                {
+                    basicVariableValues[j] = 0;
+                }
+                else if (bv == true && countOne == 1)
+                {
+                    basicVariableValues[j] = optimalSolution;
+                }
+            }
+
+            return basicVariableValues;
+        }
     }
 }

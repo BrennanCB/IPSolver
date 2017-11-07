@@ -8,27 +8,15 @@ namespace IPSolver
 {
     static class UserInterfaceHandler
     {
-
-        //     *COMMENT*
-        //kkkkkkk
-        //_____________________
-        //    ...........
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        enum menu{
-            primal=0,
-            twophase,
-            dual,
-            branch,
-            ctplane
-
-
+        enum Menu
+        {
+            Primal=0,
+            TwoPhase,
+            Dual,
+            BranchAndBound,
+            CuttingPlane
         }
+
         enum SensitivityMenu
         {
             display1=0,
@@ -43,8 +31,6 @@ namespace IPSolver
             display10,
             display11,
             display12
-
-
         }
         public static void newMenu()
         {
@@ -72,14 +58,13 @@ ________________________________________________________
                 ");
 
                 int userinput = int.Parse(Console.ReadLine());
-                menu menu = (menu)userinput;
+                Menu menu = (Menu)userinput;
 
                 switch (menu)
                 {
-                    case menu.primal:
+                    case Menu.Primal:
 
-
-                        //Insert method return solved Primal Simplex
+                        //TODO Insert method return solved Primal Simplex
 
 
                         Console.Clear();
@@ -101,7 +86,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis = int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu = (SensitivityMenu)userInputSensitivityAnalysis;
@@ -136,10 +122,10 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case menu.twophase:
+                    case Menu.TwoPhase:
 
 
-                        //Insert Method to return solved Two Phase Simplex
+                        //TODO Insert Method to return solved Two Phase Simplex
 
 
                         Console.Clear();
@@ -161,7 +147,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis1 = int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu1 = (SensitivityMenu)userInputSensitivityAnalysis1;
@@ -196,10 +183,10 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case menu.dual:
+                    case Menu.Dual:
 
 
-                        //Insert Method to Return solved Dual Simplex
+                        //TODO Insert Method to Return solved Dual Simplex
 
                         Console.Clear();
                         Console.WriteLine(@"
@@ -220,7 +207,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis2 = int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu2 = (SensitivityMenu)userInputSensitivityAnalysis2;
@@ -255,10 +243,10 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case menu.branch:
+                    case Menu.BranchAndBound:
 
 
-                        //Insert Method to return solved Branch & Bound Simplex
+                        //TODO Insert Method to return solved Branch & Bound Simplex
 
                         Console.Clear();
                         Console.WriteLine(@"
@@ -279,7 +267,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis3 = int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu3 = (SensitivityMenu)userInputSensitivityAnalysis3;
@@ -314,10 +303,10 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case menu.ctplane:
+                    case Menu.CuttingPlane:
 
 
-                        //Insert Method to Return solved Cutting Plane Simpelex
+                        //TODO Insert Method to Return solved Cutting Plane Simpelex
 
                         Console.Clear();
                         Console.WriteLine(@"
@@ -338,7 +327,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis4= int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu4 = (SensitivityMenu)userInputSensitivityAnalysis4;
@@ -381,7 +371,8 @@ ________________________________________________________________________________
         }
 
         //Main Menu
-        public static void Menu()
+        //TODO Check if anything from here can be added into the new menu
+        public static void OldMenu()
         {
             bool directoryExists = false, isValid = false;
 
@@ -466,131 +457,76 @@ ________________________________________________________________________________
 
 
         //Displays the table
-        public static void DisplayTable()
+        //TODO Rework this to better use the Linear Programming Object instead of parameter
+        public static void DisplayTable(LinearProgram lp)
         {
             bool isY = false;
 
             //Checks if two phase
-            if (twoPhase == false)
+            if (!lp.IsTwoPhase())
             {
                 //Adds the top row
                 Console.Write("Row\tZ\t");
-
-                for (int i = 1; i < countX + 1; i++)
-                {
-                    //Checks it the X changes to a Y
-                    isY = false;
-                    foreach (var item in colY)
-                    {
-                        if (item == i)
-                        {
-                            isY = true;
-                        }
-                    }
-
-                    //Displays Y if true
-                    if (isY == true)
-                    {
-                        Console.Write("Y" + i + "\t");
-                    }
-                    else
-                    {
-                        Console.Write("X" + i + "\t");
-                    }
-
-                }
-
-                for (int i = 1; i < countS + 1; i++)
-                {
-                    Console.Write("S" + i + "\t");
-                }
-
-                for (int i = 1; i < countE + 1; i++)
-                {
-                    Console.Write("E" + i + "\t");
-                }
-
-                for (int i = 1; i < countA + 1; i++)
-                {
-                    Console.Write("A" + i + "\t");
-                }
-                Console.Write("RHS");
-                Console.WriteLine();
-
-                //Displays the data
-                for (int i = 0; i < finalLP.GetLength(0); i++)
-                {
-                    Console.Write(i + "\t");
-
-                    for (int j = 0; j < finalLP.GetLength(1); j++)
-                    {
-                        Console.Write(Math.Round(finalLP[i, j], 2) + "\t");
-                    }
-
-                    Console.WriteLine();
-                }
             }
             else
             {
                 //Adds the top row
                 Console.Write("Row\tW\tZ\t");
-
-                for (int i = 1; i < countX + 1; i++)
-                {
-                    //Checks it the X changes to a Y
-                    isY = false;
-                    foreach (var item in colY)
-                    {
-                        if (item == i)
-                        {
-                            isY = true;
-                        }
-
-                    }
-
-                    //Displays Y if true
-                    if (isY == true)
-                    {
-                        Console.Write("Y" + i + "\t");
-                    }
-                    else
-                    {
-                        Console.Write("X" + i + "\t");
-                    }
-                }
-
-                for (int i = 1; i < countS + 1; i++)
-                {
-                    Console.Write("S" + i + "\t");
-                }
-
-                for (int i = 1; i < countE + 1; i++)
-                {
-                    Console.Write("E" + i + "\t");
-                }
-
-                for (int i = 1; i < countA + 1; i++)
-                {
-                    Console.Write("A" + i + "\t");
-                }
-                Console.Write("RHS");
-                Console.WriteLine();
-
-                //Displays the data
-                for (int i = 0; i < twoPhaseLP.GetLength(0); i++)
-                {
-                    Console.Write(i + " \t");
-
-                    for (int j = 0; j < twoPhaseLP.GetLength(1); j++)
-                    {
-                        Console.Write(Math.Round(twoPhaseLP[i, j], 2) + "\t");
-                    }
-
-                    Console.WriteLine();
-                }
             }
+
+            for (int i = 1; i <= lp.GetCountX(); i++)
+            {
+                //Checks it the X changes to a Y
+                isY = false;
+                foreach (var item in colY)
+                {
+                    if (item == i)
+                    {
+                        isY = true;
+                    }
+                }
+
+                //Displays Y if true
+                if (isY == true)
+                {
+                    Console.Write("Y" + i + "\t");
+                }
+                else
+                {
+                    Console.Write("X" + i + "\t");
+                }
+
+            }
+
+            for (int i = 1; i <= lp.GetCountS(); i++)
+            {
+                Console.Write("S" + i + "\t");
+            }
+
+            for (int i = 1; i <= lp.GetCountE(); i++)
+            {
+                Console.Write("E" + i + "\t");
+            }
+
+            for (int i = 1; i <= lp.GetCountA(); i++)
+            {
+                Console.Write("A" + i + "\t");
+            }
+            Console.Write("RHS");
+            Console.WriteLine();
+
+            //Displays the data
+            for (int i = 0; i < lp.getRowCount(); i++)
+            {
+                Console.Write(i + "\t");
+
+                for (int j = 0; j < lp.getColumnCount(); j++)
+                {
+                    Console.Write(Math.Round(lp.GetLinearProgram()[i, j], 2) + "\t");
+                }
+
+                Console.WriteLine();
+            } 
         }
-
-
     }
 }
