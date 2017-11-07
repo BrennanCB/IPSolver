@@ -17,9 +17,10 @@ namespace IPSolver
         private double[,] arrayE;
         
         private List<String> canonicalForm;
-        private double[,] formattedLp;
+        private double[,] linearProgram;
 
-        public LinearProgram(int countS, int countE, int countA, int countX, double[,] arrayA, double[,] arrayS, double[,] arrayE, List<String> canonicalForm, double[,] formattedLp)
+        public LinearProgram(int countS, int countE, int countA, int countX, double[,] arrayA, double[,] arrayS,
+            double[,] arrayE, List<String> canonicalForm, double[,] linearProgram)
         {
             this.countS = countS;
             this.countE = countE;
@@ -29,14 +30,17 @@ namespace IPSolver
             this.arrayS = arrayS;
             this.arrayE = arrayE;
             this.canonicalForm = canonicalForm;
-            this.formattedLp = formattedLp;
+            this.linearProgram = linearProgram;
         }
 
-        public double[,] GetFormattedLp()
+        public double[,] GetLinearProgram()
         {
-            return formattedLp;
+            return linearProgram;
         }
-
+        public void SetLinearProgram(double[,] linearProgram)
+        {
+            this.linearProgram = linearProgram;
+        }
         public List<String> GetCanonicalForm() { return canonicalForm; }
 
         public bool IsTwoPhase() { return countA > 0; }
