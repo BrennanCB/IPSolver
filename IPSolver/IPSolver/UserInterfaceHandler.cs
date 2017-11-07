@@ -36,8 +36,6 @@ namespace IPSolver
             display10,
             display11,
             display12
-
-
         }
 
         //New Main Menu with file,Alg& sensitivity ananlysis selection
