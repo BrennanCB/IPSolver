@@ -6,18 +6,34 @@ using System.Threading.Tasks;
 
 namespace IPSolver
 {
-    static class TwoPhase
+    class TwoPhase
     {
-        public static double[,] originalLP, arrayS, arrayE, arrayA, formattedLP, finalLP, twoPhaseLP;
-        public static int countX = 0, countS = 0, countA = 0, countE = 0;
-        public static List<int> listOfA = new List<int>();
-        public static List<int> colOfA = new List<int>();
+        //public static double[,] originalLP, arrayS, arrayE, arrayA, formattedLP, finalLP, twoPhaseLP;
+        //public static int countX = 0, countS = 0, countA = 0, countE = 0;
+        //public static List<int> listOfA = new List<int>();
+        //public static List<int> colOfA = new List<int>();
+        private int countA;
+        private int countS;
+        private int countE;
+        private int countX;
+        private double[,] formattedLp;
+        private double[,] twoPhaseLP;
+
+        public TwoPhase(int countX, int countA, int countS, int countE, double[,] formattedLp)
+        {
+            this.countA = countA;
+            this.countS = countS;
+            this.countE = countE;
+            this.countX = countX;
+            this.formattedLp = formattedLp;
+        }
+
 
         //Formats the table for two phase
-        public static void FormatTwoPhase()
+        private void FormatTwoPhase()
         {
             //Makes the twoPhase array larger
-            twoPhaseLP = new double[finalLP.GetLength(0) + 1, finalLP.GetLength(1) + 1];
+            twoPhaseLP = new double[formattedLp.GetLength(0) + 1, formattedLp.GetLength(1) + 1];
 
             //Adds the w and z
             twoPhaseLP[0, 0] = 1;
@@ -48,17 +64,17 @@ namespace IPSolver
             }
 
             //FIlls the rest of thw array with the simplex array amounts
-            for (int i = 0; i < finalLP.GetLength(0); i++)
+            for (int i = 0; i < formattedLp.GetLength(0); i++)
             {
-                for (int j = 0; j < finalLP.GetLength(1); j++)
+                for (int j = 0; j < formattedLp.GetLength(1); j++)
                 {
-                    twoPhaseLP[i + 1, j + 1] = finalLP[i, j];
+                    twoPhaseLP[i + 1, j + 1] = formattedLp[i, j];
                 }
             }
         }
 
         //Solves Two phase problems
-        public static void Solve()
+        public void Solve()
         {
             bool answerFound = false ; //TODO: review change
             int counter = 1;
