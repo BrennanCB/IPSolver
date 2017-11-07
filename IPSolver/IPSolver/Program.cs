@@ -11,7 +11,7 @@ namespace IPSolver
         
         static void Main(string[] args)
         {
-            UserInterfaceHandler.Menu();
+            UserInterfaceHandler.AlgorithimType();
             
             List<String> unformatedLP = FileHandler.ReadLP();
             LpFormatter LpFormatter = new LpFormatter(unformatedLP);

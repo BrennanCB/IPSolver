@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace IPSolver
 {
-    class LinearProgram
+    public class LinearProgram
     {
         private int countS = 0;
         private int countE = 0;
         private int countA = 0;
         private int countX = 0;
+
         private double[,] arrayA;
         private double[,] arrayS;
         private double[,] arrayE;
@@ -20,7 +21,7 @@ namespace IPSolver
         private List<int> colOfA;
 
         private List<String> canonicalForm;
-        private double[,] linearProgram;
+        private double[,] linearProgramArray;
 
         
         public LinearProgram(int countS, int countE, int countA, int countX, double[,] arrayA, double[,] arrayS,
@@ -39,26 +40,32 @@ namespace IPSolver
             this.colOfA = colOfA;
 
             this.canonicalForm = canonicalForm;
-            this.linearProgram = linearProgram;
+            this.linearProgramArray = linearProgram;
         }
 
-        public double[,] GetLinearProgram()
+        public double[,] LinearProgramArray
         {
-            return linearProgram;
+            get => linearProgramArray;
+            set => linearProgramArray = value;
         }
-        public void SetLinearProgram(double[,] linearProgram)
-        {
-            this.linearProgram = linearProgram;
-        }
-        public List<String> GetCanonicalForm() { return canonicalForm; }
+
+        public List<String> CanonicalForm => canonicalForm;
 
         public bool IsTwoPhase() { return countA > 0; }
 
-        public int GetStartOfS() { return countX; }
+        public int StartOfS
+        {
+            get => countX;
+        }
 
-        public int GetStartOfA() { return GetStartOfE() + countE; }
-
-        public int GetStartOfE() { return GetStartOfS() + countS; }
+        public int StartOfA
+        {
+            get => GetStartOfE + countE;
+        }
+        public int GetStartOfE
+        {
+            get => StartOfS + countS;
+        }
 
         public int GetCountA() { return countA; }
 
@@ -72,9 +79,10 @@ namespace IPSolver
 
         public void SetCountE(int countE) { this.countE = countE; }
 
-        public int GetCountX() { return countX; }
-
-        public void SetCountX(int countX) { this.countX = countX; }
+        public int CountX {
+            get => countX;
+            set => countX = value;
+        }
 
         public List<int> GetListOfA() { return listOfA; }
 
@@ -83,5 +91,50 @@ namespace IPSolver
         public List<int> GetColOfA() { return colOfA; }
 
         public void SetColOfA(List<int> colOfA) { this.colOfA = colOfA; }
+
+        public int ColumnCount => linearProgramArray.GetLength(1);
+
+        public int RowCount => linearProgramArray.GetLength(0);
+
+        public double[] GetBasicVariables()
+        {
+            int colAmount = ColumnCount;
+            int rowAmount = RowCount;
+
+            double[] basicVariableValues = new double[colAmount - 1];
+
+            for (int j = 0; j < colAmount - 1; j++)
+            {
+                bool bv = true;
+                int countOne = 0;
+                double optimalSolution = 0;
+
+                for (int i = 0; i < rowAmount; i++)
+                {
+                    double currentNumber = linearProgramArray[i, j];
+
+                    if (currentNumber != 0 && currentNumber != 1)
+                    {
+                        bv = false;
+                    }
+                    else if (linearProgramArray[i, j] == 1)
+                    {
+                        countOne++;
+
+                        if (countOne > 1)
+                            bv = false;
+                        else
+                            optimalSolution = linearProgramArray[i, colAmount - 1];
+                    }
+                }
+
+                if (bv == false)
+                    basicVariableValues[j] = 0;
+                else if (bv == true && countOne == 1)
+                    basicVariableValues[j] = optimalSolution;
+            }
+
+            return basicVariableValues;
+        }
     }
 }

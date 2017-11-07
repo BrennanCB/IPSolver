@@ -6,55 +6,61 @@ using System.Threading.Tasks;
 
 namespace IPSolver
 {
-    static class Simplex
+    public class Simplex
     {
-        public static double[] Solve(String type)
+        LinearProgram lp;
+
+        public Simplex(LinearProgram lp)
         {
-            int counter = 0;
-            int colAmount = finalLP.GetLength(1), rowAmount = finalLP.GetLength(0);
+            this.lp = lp;
+        }
+
+
+        //Returns the Basic Variables
+        public LinearProgram Solve(LPType type)
+        {
+            int tableauNumber = 0;
+            int colAmount = lp.ColumnCount;
+            int rowAmount = lp.RowCount;
 
             //Lists to hold BV and Ratios
             List<int> posFinalBV = new List<int>();
-            List<double> ratios = new List<double>();
 
-            //Array for final answers
-            double[] optimalSolutions = new double[colAmount - 1];
-
-            int winningCol = 0;
-            int winningRow = 0;
-            double winningRatio = double.MaxValue;
-            double winningColAmount = 0;
             bool done = false;
+            bool answerFound = true; 
 
             //Loops till final table
             do
             {
-                counter++;
+                tableauNumber++;
 
                 //Resets the variables
-                winningCol = 0;
-                winningColAmount = 0;
-                winningRow = 0;
-                winningRatio = double.MaxValue;
-                ratios.Clear();
+                int winningCol = 0;
+                double winningColAmount = 0;
+
+                int winningRow = 0;
+
+                double winningRatio = double.MaxValue;
+
+                List<double> ratios = new List<double>();
 
                 //Loops through the rows to choose the winning column
-                for (int i = 1; i < finalLP.GetLength(1) - 1; i++)
+                for (int i = 1; i < lp.LinearProgramArray.GetLength(1) - 1; i++)
                 {
-                    if (type == "MAX")
+                    if (type == LPType.Max)
                     {
-                        if (Math.Round(finalLP[0, i], 10) < winningColAmount)
+                        if (Math.Round(lp.LinearProgramArray[0, i], 10) < winningColAmount)
                         {
                             winningCol = i;
-                            winningColAmount = Math.Round(finalLP[0, i], 10);
+                            winningColAmount = Math.Round(lp.LinearProgramArray[0, i], 10);
                         }
                     }
                     else
                     {
-                        if (Math.Round(finalLP[0, i], 10) > winningColAmount)
+                        if (Math.Round(lp.LinearProgramArray[0, i], 10) > winningColAmount)
                         {
                             winningCol = i;
-                            winningColAmount = Math.Round(finalLP[0, i], 10);
+                            winningColAmount = Math.Round(lp.LinearProgramArray[0, i], 10);
                         }
                     }
                 }
@@ -63,16 +69,16 @@ namespace IPSolver
                 if (winningCol == 0)
                 {
                     done = true;
+                    break;
                 }
-                else
-                {
+
                     //Calculates the ratios
-                    for (int i = 1; i < finalLP.GetLength(0); i++)
+                    for (int i = 1; i < lp.LinearProgramArray.GetLength(0); i++)
                     {
                         //Makes sure that cannot divide by zero
                         try
                         {
-                            double tempRatio = Math.Round(finalLP[i, finalLP.GetLength(1) - 1] / finalLP[i, winningCol], 10);
+                            double tempRatio = Math.Round(lp.LinearProgramArray[i, lp.ColumnCount - 1] / lp.LinearProgramArray[i, winningCol], 10);
 
                             ratios.Add(tempRatio);
                         }
@@ -92,7 +98,7 @@ namespace IPSolver
                         }
                         else if (ratios[i] == 0)
                         {
-                            if (finalLP[i + 1, winningCol] > 0)
+                            if (lp.LinearProgramArray[i + 1, winningCol] > 0)
                             {
                                 winningRatio = 0;
                                 winningRow = i + 1;
@@ -104,110 +110,78 @@ namespace IPSolver
                     if (winningRow == 0)
                     {
                         done = true;
+                        break;
                     }
-                    else
-                    {
-                        double winningNumber = finalLP[winningRow, winningCol];
+                    
+                        double winningNumber = lp.LinearProgramArray[winningRow, winningCol];
 
                         //Calculates the new values of winning row
                         for (int i = 0; i < colAmount; i++)
                         {
-                            double newAmount = finalLP[winningRow, i] / winningNumber;
+                            double newAmount = lp.LinearProgramArray[winningRow, i] / winningNumber;
 
-                            finalLP[winningRow, i] = newAmount;
+                            lp.LinearProgramArray[winningRow, i] = newAmount;
                         }
 
                         //Calculates the new amounts of the remaining rows
                         for (int i = 0; i < rowAmount; i++)
                         {
-                            double subtractAmount = finalLP[i, winningCol];
+                            double subtractAmount = lp.LinearProgramArray[i, winningCol];
                             for (int j = 0; j < colAmount; j++)
                             {
                                 if (i != winningRow)
-                                {
-                                    finalLP[i, j] = finalLP[i, j] - subtractAmount * finalLP[winningRow, j];
-                                }
+                                    lp.LinearProgramArray[i, j] = lp.LinearProgramArray[i, j] - subtractAmount * lp.LinearProgramArray[winningRow, j];  
                             }
                         }
 
                         //Displays the table
-                        Console.WriteLine();
-                        Console.WriteLine("Table " + counter);
-                        DisplayTable();
+                        Console.WriteLine("\nTable " + tableauNumber);
+                        UserInterfaceHandler.DisplayTable(lp);
 
                         done = true;
+
                         answerFound = true;
 
-                        //Checks if there are any negatives in the top row, to see if it must continue
-                        for (int i = 0; i < colAmount; i++)
+                        if (type == LPType.Max)
                         {
-                            if (Math.Round(finalLP[0, i], 10) < 0)
+                            //Checks if there are any negatives in the top row, to see if it must continue
+                            for (int i = 0; i < colAmount; i++)
                             {
-                                done = false;
-                                answerFound = false;
+                                if (Math.Round(lp.LinearProgramArray[0, i], 10) < 0)
+                                {
+                                    done = false;
+                                    answerFound = false;
+                                    break;
+                                }
                             }
-                        }
-                    }
-                }
+                        } 
+                        else
+                        {
+                            //Checks if there are any positives in the top row, to see if it must continue
+                            for (int i = 0; i < colAmount; i++)
+                            {
+                                if (Math.Round(lp.LinearProgramArray[0, i], 10) > 0)
+                                {
+                                    done = false;
+                                    answerFound = false;
+                                    break;
+                                }
+                            }
+                        }   
             } while (done == false);
 
             //Checks if there is an answer
+            //TODO Handle the case when there is no solution found, as currently it will display no solution but still return the lp
             if (answerFound == true)
             {
-                //Finds all the BVs
-                for (int j = 0; j < colAmount - 1; j++)
-                {
-                    bool bv = true;
-                    int countOne = 0;
-                    double optimalSolution = 0;
-
-                    for (int i = 0; i < rowAmount; i++)
-                    {
-                        double currentNumber = finalLP[i, j];
-
-                        if (currentNumber != 0 && currentNumber != 1)
-                        {
-                            bv = false;
-                        }
-                        else if (finalLP[i, j] == 1)
-                        {
-                            countOne++;
-
-                            if (countOne > 1)
-                            {
-                                bv = false;
-                            }
-                            else
-                            {
-                                optimalSolution = finalLP[i, colAmount - 1];
-                            }
-                        }
-                    }
-
-                    if (bv == false)
-                    {
-                        optimalSolutions[j] = 0;
-                    }
-                    else if (bv == true && countOne == 1)
-                    {
-                        optimalSolutions[j] = optimalSolution;
-                    }
-                }
-
-                //Returns the optimal solutions
-                return optimalSolutions;
+                
             }
             else
             {
                 Console.WriteLine("No Solution");
             }
 
-            foreach (var item in optimalSolutions)
-            {
-                Console.WriteLine(item);
-            }
-
-            return optimalSolutions;
+            return lp;
         }
 
         #region redactedCode
@@ -216,7 +190,7 @@ namespace IPSolver
         //public static double[] MaxSimplex()
         //{
         //    int counter = 0;
-        //    int colAmount = finalLP.GetLength(1), rowAmount = finalLP.GetLength(0);
+        //    int colAmount = lp.GetLinearProgram().GetLength(1), rowAmount = lp.GetLinearProgram().GetLength(0);
 
         //    //Lists to hold BV and Ratios
         //    List<int> posFinalBV = new List<int>();
@@ -244,12 +218,12 @@ namespace IPSolver
         //        ratios.Clear();
 
         //        //Loops through the rows to choose the winning column
-        //        for (int i = 1; i < finalLP.GetLength(1) - 1; i++)
+        //        for (int i = 1; i < lp.GetLinearProgram().GetLength(1) - 1; i++)
         //        {
-        //            if (Math.Round(finalLP[0, i], 10) < winningColAmount)
+        //            if (Math.Round(lp.GetLinearProgram()[0, i], 10) < winningColAmount)
         //            {
         //                winningCol = i;
-        //                winningColAmount = Math.Round(finalLP[0, i], 10);
+        //                winningColAmount = Math.Round(lp.GetLinearProgram()[0, i], 10);
         //            }
         //        }
 
@@ -261,12 +235,12 @@ namespace IPSolver
         //        else
         //        {
         //            //Calculates the ratios
-        //            for (int i = 1; i < finalLP.GetLength(0); i++)
+        //            for (int i = 1; i < lp.GetLinearProgram().GetLength(0); i++)
         //            {
         //                //Makes sure that cannot divide by zero
         //                try
         //                {
-        //                    double tempRatio = Math.Round(finalLP[i, finalLP.GetLength(1) - 1] / finalLP[i, winningCol], 10);
+        //                    double tempRatio = Math.Round(lp.GetLinearProgram()[i, lp.GetLinearProgram().GetLength(1) - 1] / lp.GetLinearProgram()[i, winningCol], 10);
 
         //                    ratios.Add(tempRatio);
         //                }
@@ -286,7 +260,7 @@ namespace IPSolver
         //                }
         //                else if (ratios[i] == 0)
         //                {
-        //                    if (finalLP[i + 1, winningCol] > 0)
+        //                    if (lp.GetLinearProgram()[i + 1, winningCol] > 0)
         //                    {
         //                        winningRatio = 0;
         //                        winningRow = i + 1;
@@ -301,25 +275,25 @@ namespace IPSolver
         //            }
         //            else
         //            {
-        //                double winningNumber = finalLP[winningRow, winningCol];
+        //                double winningNumber = lp.GetLinearProgram()[winningRow, winningCol];
 
         //                //Calculates the new values of winning row
         //                for (int i = 0; i < colAmount; i++)
         //                {
-        //                    double newAmount = finalLP[winningRow, i] / winningNumber;
+        //                    double newAmount = lp.GetLinearProgram()[winningRow, i] / winningNumber;
 
-        //                    finalLP[winningRow, i] = newAmount;
+        //                    lp.GetLinearProgram()[winningRow, i] = newAmount;
         //                }
 
         //                //Calculates the new amounts of the remaining rows
         //                for (int i = 0; i < rowAmount; i++)
         //                {
-        //                    double subtractAmount = finalLP[i, winningCol];
+        //                    double subtractAmount = lp.GetLinearProgram()[i, winningCol];
         //                    for (int j = 0; j < colAmount; j++)
         //                    {
         //                        if (i != winningRow)
         //                        {
-        //                            finalLP[i, j] = finalLP[i, j] - subtractAmount * finalLP[winningRow, j];
+        //                            lp.GetLinearProgram()[i, j] = lp.GetLinearProgram()[i, j] - subtractAmount * lp.GetLinearProgram()[winningRow, j];
         //                        }
         //                    }
         //                }
@@ -335,7 +309,7 @@ namespace IPSolver
         //                //Checks if there are any negatives in the top row, to see if it must continue
         //                for (int i = 0; i < colAmount; i++)
         //                {
-        //                    if (Math.Round(finalLP[0, i], 10) < 0)
+        //                    if (Math.Round(lp.GetLinearProgram()[0, i], 10) < 0)
         //                    {
         //                        done = false;
         //                        answerFound = false;
@@ -357,13 +331,13 @@ namespace IPSolver
 
         //            for (int i = 0; i < rowAmount; i++)
         //            {
-        //                double currentNumber = finalLP[i, j];
+        //                double currentNumber = lp.GetLinearProgram()[i, j];
 
         //                if (currentNumber != 0 && currentNumber != 1)
         //                {
         //                    bv = false;
         //                }
-        //                else if (finalLP[i, j] == 1)
+        //                else if (lp.GetLinearProgram()[i, j] == 1)
         //                {
         //                    countOne++;
 
@@ -373,7 +347,7 @@ namespace IPSolver
         //                    }
         //                    else
         //                    {
-        //                        optimalSolution = finalLP[i, colAmount - 1];
+        //                        optimalSolution = lp.GetLinearProgram()[i, colAmount - 1];
         //                    }
         //                }
         //            }
@@ -408,7 +382,7 @@ namespace IPSolver
         //public static double[] MinSimplex()
         //{
         //    int counter = 0;
-        //    int colAmount = finalLP.GetLength(1), rowAmount = finalLP.GetLength(0);
+        //    int colAmount = lp.GetLinearProgram().GetLength(1), rowAmount = lp.GetLinearProgram().GetLength(0);
 
         //    //Lists to hold BV and Ratios
         //    List<int> posFinalBV = new List<int>();
@@ -436,12 +410,12 @@ namespace IPSolver
         //        ratios.Clear();
 
         //        //Loops through the rows t choose the winning column
-        //        for (int i = 1; i < finalLP.GetLength(1) - 1; i++)
+        //        for (int i = 1; i < lp.GetLinearProgram().GetLength(1) - 1; i++)
         //        {
-        //            if (Math.Round(finalLP[0, i], 10) > winningColAmount)
+        //            if (Math.Round(lp.GetLinearProgram()[0, i], 10) > winningColAmount)
         //            {
         //                winningCol = i;
-        //                winningColAmount = Math.Round(finalLP[0, i], 10);
+        //                winningColAmount = Math.Round(lp.GetLinearProgram()[0, i], 10);
         //            }
         //        }
 
@@ -454,12 +428,12 @@ namespace IPSolver
         //        else
         //        {
         //            //Calculates the ratios
-        //            for (int i = 1; i < finalLP.GetLength(0); i++)
+        //            for (int i = 1; i < lp.GetLinearProgram().GetLength(0); i++)
         //            {
         //                //Makes sure that cannot divide by zero
         //                try
         //                {
-        //                    ratios.Add(Math.Round(finalLP[i, finalLP.GetLength(1) - 1] / finalLP[i, winningCol]));
+        //                    ratios.Add(Math.Round(lp.GetLinearProgram()[i, lp.GetLinearProgram().GetLength(1) - 1] / lp.GetLinearProgram()[i, winningCol]));
         //                }
         //                catch (DivideByZeroException)
         //                {
@@ -477,7 +451,7 @@ namespace IPSolver
         //                }
         //                else if (ratios[i] == 0)
         //                {
-        //                    if (finalLP[i + 1, winningCol] > 0)
+        //                    if (lp.GetLinearProgram()[i + 1, winningCol] > 0)
         //                    {
         //                        winningRatio = 0;
         //                        winningRow = i + 1;
@@ -493,25 +467,25 @@ namespace IPSolver
         //            }
         //            else
         //            {
-        //                double winningNumber = finalLP[winningRow, winningCol];
+        //                double winningNumber = lp.GetLinearProgram()[winningRow, winningCol];
 
         //                //Calculates the new values of winning row
         //                for (int i = 0; i < colAmount; i++)
         //                {
-        //                    double newAmount = finalLP[winningRow, i] / winningNumber;
+        //                    double newAmount = lp.GetLinearProgram()[winningRow, i] / winningNumber;
 
-        //                    finalLP[winningRow, i] = newAmount;
+        //                    lp.GetLinearProgram()[winningRow, i] = newAmount;
         //                }
 
         //                //Calculates the new amounts of the remaining rows
         //                for (int i = 0; i < rowAmount; i++)
         //                {
-        //                    double subtractAmount = finalLP[i, winningCol];
+        //                    double subtractAmount = lp.GetLinearProgram()[i, winningCol];
         //                    for (int j = 0; j < colAmount; j++)
         //                    {
         //                        if (i != winningRow)
         //                        {
-        //                            finalLP[i, j] = finalLP[i, j] - subtractAmount * finalLP[winningRow, j];
+        //                            lp.GetLinearProgram()[i, j] = lp.GetLinearProgram()[i, j] - subtractAmount * lp.GetLinearProgram()[winningRow, j];
         //                        }
         //                    }
         //                }
@@ -527,7 +501,7 @@ namespace IPSolver
         //                //Checks if there are any positives in the top row, to see if it must continue
         //                for (int i = 0; i < colAmount; i++)
         //                {
-        //                    if (Math.Round(finalLP[0, i], 10) > 0)
+        //                    if (Math.Round(lp.GetLinearProgram()[0, i], 10) > 0)
         //                    {
         //                        done = false;
         //                        answerFound = false;
@@ -549,13 +523,13 @@ namespace IPSolver
 
         //            for (int i = 0; i < rowAmount; i++)
         //            {
-        //                double currentNumber = finalLP[i, j];
+        //                double currentNumber = lp.GetLinearProgram()[i, j];
 
         //                if (currentNumber != 0 && currentNumber != 1)
         //                {
         //                    bv = false;
         //                }
-        //                else if (finalLP[i, j] == 1)
+        //                else if (lp.GetLinearProgram()[i, j] == 1)
         //                {
         //                    countOne++;
 
@@ -565,7 +539,7 @@ namespace IPSolver
         //                    }
         //                    else
         //                    {
-        //                        optimalSolution = finalLP[i, colAmount - 1];
+        //                        optimalSolution = lp.GetLinearProgram()[i, colAmount - 1];
         //                    }
         //                }
         //            }
