@@ -53,14 +53,14 @@ namespace IPSolver
                 Console.WriteLine(String.Format(@"
                                                 
                                               IP SOLVER
-                                       _________________________
+________________________________________________________________________________________________________________
 
                                         PLEASE ENTER A FILE "));
                 string filename = Console.ReadLine();
                 Console.Clear();
                 Console.WriteLine(@"
                 IP SOLVER
-__________________________________________________
+________________________________________________________
 
                 PLEASE SELECT AN ALGORITHM
 
