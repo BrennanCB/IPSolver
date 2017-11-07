@@ -101,7 +101,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis = int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu = (SensitivityMenu)userInputSensitivityAnalysis;
@@ -161,7 +162,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis1 = int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu1 = (SensitivityMenu)userInputSensitivityAnalysis1;
@@ -220,7 +222,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis2 = int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu2 = (SensitivityMenu)userInputSensitivityAnalysis2;
@@ -279,7 +282,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis3 = int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu3 = (SensitivityMenu)userInputSensitivityAnalysis3;
@@ -338,7 +342,8 @@ ________________________________________________________________________________
              9. Add a new activity to an optimal solution.
              10. Add a new constraint to an optimal solution.
              11. Display the shadow prices.
-             12. Duality");
+             12. Duality
+");
                         int userInputSensitivityAnalysis4= int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu4 = (SensitivityMenu)userInputSensitivityAnalysis4;
