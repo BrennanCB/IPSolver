@@ -23,6 +23,7 @@ namespace IPSolver
 
         static void Main(string[] args)
         {
+            //hi
             //Calls the menu
             Menu();
 
