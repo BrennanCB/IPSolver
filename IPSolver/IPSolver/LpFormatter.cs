@@ -38,30 +38,21 @@ namespace IPSolver
             return formattedLp;
         }
 
-        public List<String> GetCanonicalForm()
-        {
-            return canonicalForm;
-        }
+        public List<String> GetCanonicalForm() { return canonicalForm; }
 
-        public bool isTwoPhase()
-        {
-            return countA > 0;
-        }
+        public bool IsTwoPhase() { return countA > 0; }
 
-        public int getStartOfS()
-        {
-            return countX;
-        }
+        public int GetStartOfS() { return countX; }
 
-        public int getStartOfA()
-        {
-            return getStartOfE() + countE;
-        }
+        public int GetStartOfA() { return GetStartOfE() + countE; }
 
-        public int getStartOfE()
-        {
-            return getStartOfS() + countS;
-        }
+        public int GetStartOfE() { return GetStartOfS() + countS; }
+
+        public int GetCountA() { return countA; }
+
+        public int GetCountS() { return countS; }
+
+        public int GetCountE() { return countE; }
 
         public LpFormatter(List<String> unformattedLP)
         {
@@ -281,7 +272,6 @@ namespace IPSolver
                 Console.ReadKey();
                 Environment.Exit(0);
             }
-            return null;
         }
 
         //Puts the LP, S, E and A arrays into 1 big array
