@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +10,7 @@ namespace IPSolver
     {
         enum AlgorithimType
         {
-            Primal=0,
+            Primal = 0,
             TwoPhase,
             Dual,
             BranchAndBound,
@@ -20,7 +19,7 @@ namespace IPSolver
 
         enum SensitivityMenu
         {
-            display1=0,
+            display1 = 0,
             display2,
             display3,
             display4,
@@ -330,7 +329,7 @@ ________________________________________________________________________________
              11. Display the shadow prices.
              12. Duality
 ");
-                        int userInputSensitivityAnalysis4= int.Parse(Console.ReadLine());
+                        int userInputSensitivityAnalysis4 = int.Parse(Console.ReadLine());
 
                         SensitivityMenu smenu4 = (SensitivityMenu)userInputSensitivityAnalysis4;
                         switch (smenu4)
@@ -464,7 +463,7 @@ ________________________________________________________________________________
             bool isY = false;
 
             //Checks if two phase
-            if (!lp.IsTwoPhase())
+            if (!lp.IsTwoPhase)
             {
                 //Adds the top row
                 Console.Write("Row\tZ\t");
@@ -509,7 +508,7 @@ ________________________________________________________________________________
                 Console.Write("E" + i + "\t");
             }
 
-            for (int i = 1; i <= lp.GetCountA(); i++)
+            for (int i = 1; i <= lp.CountA; i++)
             {
                 Console.Write("A" + i + "\t");
             }
@@ -527,7 +526,7 @@ ________________________________________________________________________________
                 }
 
                 Console.WriteLine();
-            } 
+            }
         }
     }
 }
