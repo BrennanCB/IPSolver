@@ -56,6 +56,8 @@ namespace IPSolver
             
             while (!string.IsNullOrWhiteSpace((line = read.ReadLine())))
             {
+                line = line.Replace('\t', ' ');
+
                 unformattedLP.Add(line);
             }
             
