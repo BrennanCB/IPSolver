@@ -70,7 +70,8 @@ namespace IPSolver
                 CountE = 0,
                 ListOfA = new List<int>(),
                 ColOfA = new List<int>(),
-                ColY = new List<int>()
+                ColY = new List<int>(),
+                CanonicalForm = new List<string>()
             };
 
             FormatSimplxLP();
