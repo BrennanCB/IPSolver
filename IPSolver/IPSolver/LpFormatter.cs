@@ -47,7 +47,9 @@ namespace IPSolver
         {
             if (linearProgram == null)
             {
-                return new LinearProgram();
+                //TODO Handle this
+
+                //linearProgram = new LinearProgram();
             }
 
             return linearProgram;
@@ -75,7 +77,7 @@ namespace IPSolver
         }
 
         //Formats the LP, by adding the S, E and A, and creating the canonical form
-        private LinearProgram FormatSimplxLP()
+        private void FormatSimplxLP()
         {
             //Gets z equation
             string zEquation = unformattedLP[0];
@@ -83,7 +85,12 @@ namespace IPSolver
             string[] tempZ = zEquation.Split(' ');
 
             //Gets the type of LP from the first line
-            String LPType = tempZ[0].ToUpper();
+            String LPTypeString = tempZ[0].ToUpper();
+
+            if (LPTypeString == "MAX")
+                linearProgram.Type = LPType.Max;
+            else
+                linearProgram.Type = LPType.Min;
 
             //Sets the sizes of the arrays that will hold all the variables
             double[,] formatedLp = new double[unformattedLP.Count() - 1, tempZ.Count() + 1];
@@ -249,7 +256,7 @@ namespace IPSolver
                 }
                 linearProgram.LinearProgramArray =  CreateLPFinalForm(formatedLp);
 
-                return linearProgram;
+                //return linearProgram;
             }
             catch (FormatException) //Checks if data is valid
             {
@@ -288,7 +295,7 @@ namespace IPSolver
 
 
             //TODO handle this
-            return null;
+            //return null;
         }
 
         //Puts the LP, S, E and A arrays into 1 big array

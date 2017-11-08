@@ -19,7 +19,6 @@ namespace IPSolver
             ctplane
         }
 
-
         //Enum for Sensitivity Analysis
         enum SensitivityMenu
         {
@@ -536,7 +535,6 @@ ________________________________________________________________________________
                 Console.Clear();
             } while (isValid == false);
         }
-
 
         //Displays the table
         //TODO Rework this to better use the Linear Programming Object instead of parameter
