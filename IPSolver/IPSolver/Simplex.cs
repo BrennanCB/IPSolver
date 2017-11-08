@@ -16,7 +16,7 @@ namespace IPSolver
         }
 
         //Returns the Basic Variables
-        public LinearProgram Solve(LPType type)
+        public LinearProgram Solve()
         {
             int tableauNumber = 0;
             int colAmount = linearProgram.ColumnCount;
@@ -46,7 +46,7 @@ namespace IPSolver
                 //Loops through the rows to choose the winning column
                 for (int i = 1; i < linearProgram.LinearProgramArray.GetLength(1) - 1; i++)
                 {
-                    if (type == LPType.Max)
+                    if (linearProgram.Type == LPType.Max)
                     {
                         if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) < winningColAmount)
                         {
@@ -141,7 +141,7 @@ namespace IPSolver
 
                 answerFound = true;
 
-                if (type == LPType.Max)
+                if (linearProgram.Type == LPType.Max)
                 {
                     //Checks if there are any negatives in the top row, to see if it must continue
                     for (int i = 0; i < colAmount; i++)

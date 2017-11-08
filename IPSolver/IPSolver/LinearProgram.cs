@@ -13,6 +13,8 @@ namespace IPSolver
         //Removed to see if needed
         //private double[,] arrayA, arrayS, arrayE;
 
+        private LPType type;
+
         private List<int> listOfA;
         private List<int> colOfA;
 
@@ -28,7 +30,7 @@ namespace IPSolver
         }
 
         //TODO, if the above arrays arent needed, ctor needs to be simplified
-        public LinearProgram(int countS, int countE, int countA, int countX, List<int> listOfA, List<int> colOfA, List<int> colY, List<String> canonicalForm, double[,] linearProgramArray)
+        public LinearProgram(int countS, int countE, int countA, int countX, List<int> listOfA, List<int> colOfA, List<int> colY, LPType type, List<String> canonicalForm, double[,] linearProgramArray)
         {
             CountS = countS;
             CountE = countE;
@@ -38,6 +40,8 @@ namespace IPSolver
             //this.arrayA = arrayA;
             //this.arrayS = arrayS;
             //this.arrayE = arrayE;
+
+            Type = type;
 
             ListOfA = listOfA;
             ColOfA = colOfA;
@@ -61,6 +65,12 @@ namespace IPSolver
 
         public int RowCount => linearProgramArray.GetLength(0);
         public int ColumnCount => linearProgramArray.GetLength(1);
+
+        public LPType Type
+        {
+            get => type;
+            set => type = value;
+        }
 
         public double[,] LinearProgramArray
         {
