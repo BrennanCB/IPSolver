@@ -11,13 +11,18 @@ namespace IPSolver
         
         static void Main(string[] args)
         {
+            
+        }
+
+        public static void OLDMain()
+        {
             //UserInterfaceHandler.AlgorithimType();
 
             UserInterfaceHandler.OldMenu();
 
             List<String> unformatedLP = FileHandler.ReadLP();
             //LpFormatter LpFormatter = new LpFormatter(unformatedLP);
-            
+
             foreach (var item in unformatedLP)
             {
                 Console.WriteLine(item);
@@ -95,13 +100,13 @@ namespace IPSolver
             }
 
             Console.WriteLine();
-            
+
             List<double> finalSolution = new List<double>();
 
             double[] answers = linearProgram.GetBasicVariables();
 
             int countAnswers = 0;
-            
+
             //Displays the z-value
             double zValue = Math.Round(answers[countAnswers], 2);
             //Displays the optimal solutions
@@ -178,6 +183,7 @@ namespace IPSolver
 
             Console.ReadLine();
         }
+
 
         //TODO Display the Graph
         public static void Graph()
