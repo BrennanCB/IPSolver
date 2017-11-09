@@ -8,7 +8,7 @@ namespace IPSolver
 {
     public enum Algorithm
     {
-        Primal = 0,
+        Primal = 1,
         TwoPhase,
         Dual,
         BranchAndBound,
