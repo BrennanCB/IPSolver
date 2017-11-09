@@ -165,5 +165,89 @@ namespace IPSolver
             //TODO Add constraint to the LP
         } 
 
+        public void DisplaySolution()
+        {
+            List<double> finalSolution = new List<double>();
+
+            double[] answers = GetBasicVariables();
+
+            int countAnswers = 0;
+
+            //Displays the z-value
+            double zValue = Math.Round(answers[countAnswers], 2);
+            //Displays the optimal solutions
+            Console.WriteLine("Optimal Solutions");
+            Console.WriteLine("-----------------");
+            Console.WriteLine("Z = " + zValue);
+
+            countAnswers++;
+
+            //TODO Fix the displaying of the answers
+            //Displays the X's
+            for (int i = 0; i < CountX; i++)
+            {
+                bool isY = false;
+                foreach (var item in ColY)
+                {
+                    if (item + 1 == i)
+                    {
+                        isY = true;
+                    }
+                }
+
+                if (isY == true)
+                {
+                    Console.WriteLine("X" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2) * -1);
+                }
+                else
+                {
+                    Console.WriteLine("X" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2));
+                }
+
+                finalSolution.Add(Math.Round(answers[countAnswers], 2));
+                countAnswers++;
+            }
+
+            //Displaye the S's
+            for (int i = 0; i < CountS; i++)
+            {
+                Console.WriteLine("S" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2));
+                countAnswers++;
+            }
+
+            //Displaye the E's
+            for (int i = 0; i < CountE; i++)
+            {
+                Console.WriteLine("E" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2));
+                countAnswers++;
+            }
+
+            //Displaye the A's
+            for (int i = 0; i < CountA; i++)
+            {
+                Console.WriteLine("A" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2));
+                countAnswers++;
+            }
+
+            Console.WriteLine();
+
+            //Calls the method that saves the soution
+            FileHandler.SaveSolution(zValue, finalSolution);
+
+            Console.WriteLine("The solution has been saved!");
+
+            //Checks if it can draw a graph
+            if (CountX == 2)
+            {
+                //Draws graph
+                //Graph();
+            }
+            else
+            {
+                Console.WriteLine("This LP has more than two variables, cannot draw this graph");
+            }
+
+            Console.ReadKey();
+        }
     }
 }
