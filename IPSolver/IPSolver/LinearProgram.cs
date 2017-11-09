@@ -21,7 +21,7 @@ namespace IPSolver
         private List<int> colY;
 
         private List<String> canonicalForm;
-        private double[,] linearProgramArray;
+        private double[,] linearProgramMatrix;
 
         //TODO Temporary Default constructor
         public LinearProgram()
@@ -48,7 +48,7 @@ namespace IPSolver
             ColY = colY;
 
             CanonicalForm = canonicalForm;
-            LinearProgramArray = linearProgramArray;
+            LinearProgramMatrix = linearProgramArray;
         }
 
         public List<String> CanonicalForm
@@ -63,8 +63,8 @@ namespace IPSolver
         public int StartOfA => StartOfE + countE;
         public int StartOfE => StartOfS + countS;
 
-        public int RowCount => linearProgramArray.GetLength(0);
-        public int ColumnCount => linearProgramArray.GetLength(1);
+        public int RowCount => linearProgramMatrix.GetLength(0);
+        public int ColumnCount => linearProgramMatrix.GetLength(1);
 
         public LPType Type
         {
@@ -72,10 +72,10 @@ namespace IPSolver
             set => type = value;
         }
 
-        public double[,] LinearProgramArray
+        public double[,] LinearProgramMatrix
         {
-            get => linearProgramArray;
-            set => linearProgramArray = value;
+            get => linearProgramMatrix;
+            set => linearProgramMatrix = value;
         }
 
         public int CountA
@@ -134,20 +134,20 @@ namespace IPSolver
 
                 for (int i = 0; i < rowAmount; i++)
                 {
-                    double currentNumber = linearProgramArray[i, j];
+                    double currentNumber = linearProgramMatrix[i, j];
 
                     if (currentNumber != 0 && currentNumber != 1)
                     {
                         bv = false;
                     }
-                    else if (linearProgramArray[i, j] == 1)
+                    else if (linearProgramMatrix[i, j] == 1)
                     {
                         countOne++;
 
                         if (countOne > 1)
                             bv = false;
                         else
-                            optimalSolution = linearProgramArray[i, colAmount - 1];
+                            optimalSolution = linearProgramMatrix[i, colAmount - 1];
                     }
                 }
 

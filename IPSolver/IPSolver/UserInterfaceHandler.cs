@@ -589,7 +589,7 @@ ________________________________________________________________________________
 
                 for (int j = 0; j < linearProgram.ColumnCount; j++)
                 {
-                    Console.Write(Math.Round(linearProgram.LinearProgramArray[i, j], 2) + "\t");
+                    Console.Write(Math.Round(linearProgram.LinearProgramMatrix[i, j], 2) + "\t");
                 }
 
                 Console.WriteLine();
