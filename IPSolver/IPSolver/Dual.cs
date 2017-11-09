@@ -17,7 +17,6 @@ namespace IPSolver
 
         public bool DualRatio(out int winningCol, out int winningRow)
         {
-            double winningColAmount = 0;
             double winningRowAmount = 0;
 
             winningRow = 0;
