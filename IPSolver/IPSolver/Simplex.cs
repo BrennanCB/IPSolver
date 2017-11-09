@@ -24,7 +24,7 @@ namespace IPSolver
             List<double> ratios = new List<double>();
 
             //Loops through the rows to choose the winning column
-            for (int i = 1; i <= linearProgram.ColumnCount; i++)
+            for (int i = 1; i < linearProgram.ColumnCount; i++)
             {
                 if (linearProgram.Type == LPType.Max)
                 {

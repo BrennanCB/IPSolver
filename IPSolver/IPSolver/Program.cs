@@ -11,7 +11,7 @@ namespace IPSolver
         
         static void Main(string[] args)
         {
-            
+            UserInterfaceHandler.Menu();
         }
 
         public static void OLDMain()

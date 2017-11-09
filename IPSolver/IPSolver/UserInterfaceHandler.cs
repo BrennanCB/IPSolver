@@ -29,6 +29,35 @@ namespace IPSolver
         //New Main Menu with file,Alg& sensitivity ananlysis selection
         public static void Menu()
         {
+            OldMenu();
+
+            //TODO Move this to different place
+            #region Stuff to Move
+            List<String> unformatedLP = FileHandler.ReadLP();
+
+            foreach (var item in unformatedLP)
+            {
+                Console.WriteLine(item);
+            }
+
+            LpFormatter lpFormatter = new LpFormatter(unformatedLP);
+
+            LinearProgram linearProgram = lpFormatter.GetLinearProgram();
+
+            Console.WriteLine();
+            Console.WriteLine("Canonical Form");
+            Console.WriteLine("--------------");
+
+            foreach (var item in linearProgram.CanonicalForm)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine();
+
+            Console.WriteLine("Initial Table");
+            #endregion
+
             while (true)
             {
                 //Displays Menu For entering File Name
@@ -40,8 +69,6 @@ namespace IPSolver
                 //                                        PLEASE ENTER A FILE "));
                 //                string filename = Console.ReadLine();
                 //                Console.Clear();
-
-                OldMenu();
 
                 //Menu For Selecting Algorithm
                 Console.WriteLine(@"
@@ -66,32 +93,52 @@ ________________________________________________________
 
 
                         //TODO Insert method return solved Primal Simplex
+                        UserInterfaceHandler.DisplayTable(linearProgram);
 
+                        Simplex simplex = new Simplex(linearProgram);
+
+                        linearProgram = simplex.Solve();
+                        linearProgram.DisplaySolution();
 
                         Console.Clear();
 
-                        
+                        SensitivityAnalysisMenu();
 
                         break;
                     case Algorithm.TwoPhase:
 
 
                         //TODO Insert Method to return solved Two Phase Simplex
+                        TwoPhase twoPhase = new TwoPhase(linearProgram);
 
+                        //linearProgram  = twoPhase.FormatTwoPhase();
+
+                        UserInterfaceHandler.DisplayTable(linearProgram);
+
+                        //Runs Two Phase
+                        linearProgram = twoPhase.Solve();
+                        linearProgram.DisplaySolution();
 
                         Console.Clear();
 
-                        
+                        SensitivityAnalysisMenu();
 
                         break;
                     case Algorithm.Dual:
 
 
                         ////TODO Insert Method to Return solved Dual Simplex
+                        Dual dual = new Dual(linearProgram);
+
+                        UserInterfaceHandler.DisplayTable(linearProgram);
+
+                        linearProgram = dual.Solve();
+
+                        linearProgram.DisplaySolution();
 
                         Console.Clear();
 
-                        
+                        SensitivityAnalysisMenu();
 
                         break;
                     case Algorithm.BranchAndBound:
@@ -101,7 +148,7 @@ ________________________________________________________
 
                         Console.Clear();
 
-                        
+                        SensitivityAnalysisMenu();
 
                         break;
                     case Algorithm.CuttingPlane:
@@ -111,6 +158,7 @@ ________________________________________________________
 
                         Console.Clear();
 
+                        SensitivityAnalysisMenu();
 
                         break;
                     default:
