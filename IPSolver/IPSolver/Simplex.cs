@@ -16,8 +16,11 @@ namespace IPSolver
         }
         
         //Returns true of the ratio test fails
-        public bool SimplexRatio(ref int winningCol, ref int winningRow)
+        public bool SimplexRatio(out int winningCol, out int winningRow)
         {
+            winningCol = 0;
+            winningRow = 0;
+
             double winningColAmount = 0;
             double winningRatio = double.MaxValue;
 
@@ -108,7 +111,7 @@ namespace IPSolver
                 int winningCol = 0;
                 int winningRow = 0;
 
-                if (SimplexRatio(ref winningCol, ref winningRow))
+                if (SimplexRatio(out winningCol, out winningRow))
                 {
                     done = true;
                     break;
