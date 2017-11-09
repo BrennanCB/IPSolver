@@ -18,80 +18,61 @@ namespace IPSolver
         public bool DualRatio(out int winningCol, out int winningRow)
         {
             double winningColAmount = 0;
-
             double winningRowAmount = 0;
 
+            winningRow = 0;
+            winningCol = 0;
 
             double winningRatio = double.MaxValue;
 
             List<double> ratios = new List<double>();
 
-            for (int i = 0; i <= linearProgram.RowCount; i++)
-            {
-                if (Math.Round(linearProgram.LinearProgramMatrix[])
-                {
-
-                }
-            }
-
-
-
-
-            //Loops through the rows to choose the winning column
-            for (int i = 1; i <= linearProgram.ColumnCount; i++)
-            {
-                if (linearProgram.Type == LPType.Max)
-                {
-                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < winningColAmount)
-                    {
-                        winningCol = i;
-                        winningColAmount = Math.Round(linearProgram.LinearProgramMatrix[0, i], 10);
-                    }
-                }
-                else
-                {
-                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > winningColAmount)
-                    {
-                        winningCol = i;
-                        winningColAmount = Math.Round(linearProgram.LinearProgramMatrix[0, i], 10);
-                    }
-                }
-            }
-
-            //Makes sure the winning column isnt Z
-            if (winningCol == 0)
-                return true;
-
-            //Calculates the ratios
             for (int i = 1; i < linearProgram.RowCount; i++)
             {
-                //Makes sure that cannot divide by zero
-                try
+                if (Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1]) < winningRowAmount)
                 {
-                    double tempRatio = Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1] / linearProgram.LinearProgramMatrix[i, winningCol], 10);
-
-                    ratios.Add(tempRatio);
-                }
-                catch (DivideByZeroException)
-                {
-                    ratios.Add(-1);
+                    winningRow = i;
+                    winningRowAmount = Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1]);
                 }
             }
 
+            if (winningRow == 0)
+                return true;
+
+            for (int i = 1; i < linearProgram.ColumnCount - 1; i++)
+            {
+                if (linearProgram.LinearProgramMatrix[winningRow, i] < 0)
+                {
+                    //Makes sure that cannot divide by zero
+                    try
+                    {
+                        double tempRatio = Math.Abs(Math.Round(linearProgram.LinearProgramMatrix[0, i] / linearProgram.LinearProgramMatrix[winningRow, i], 10));
+
+                        ratios.Add(tempRatio);
+                    }
+                    catch (DivideByZeroException)
+                    {
+                        ratios.Add(-1);
+                    }
+                }
+            }
+            
             //Chooses the winning row
             for (int i = 0; i < ratios.Count(); i++)
             {
                 if (ratios[i] < winningRatio && ratios[i] > 0)
                 {
                     winningRatio = ratios[i];
-                    winningRow = i + 1;
+
+                    //check
+                    winningCol = i + 1;
                 }
                 else if (ratios[i] == 0)
                 {
-                    if (linearProgram.LinearProgramMatrix[i + 1, winningCol] > 0)
+                    if (linearProgram.LinearProgramMatrix[winningRow, i + 1] > 0)
                     {
                         winningRatio = 0;
-                        winningRow = i + 1;
+                        winningCol = i + 1;
                     }
                 }
             }
@@ -155,36 +136,26 @@ namespace IPSolver
                 UserInterfaceHandler.DisplayTable(linearProgram);
 
                 done = true;
-
                 answerFound = true;
 
-                if (linearProgram.Type == LPType.Max)
+                for (int i = 1; i < rowAmount; i++)
                 {
-                    //Checks if there are any negatives in the top row, to see if it must continue
-                    for (int i = 0; i < colAmount; i++)
+                    if (Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1] , 10) < 0)
                     {
-                        if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < 0)
-                        {
-                            done = false;
-                            answerFound = false;
-                            break;
-                        }
+                        done = false;
+                        answerFound = false;
+                        break;
                     }
                 }
-                else
-                {
-                    //Checks if there are any positives in the top row, to see if it must continue
-                    for (int i = 0; i < colAmount; i++)
-                    {
-                        if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > 0)
-                        {
-                            done = false;
-                            answerFound = false;
-                            break;
-                        }
-                    }
-                }
-            } while (done == false);
+            } while (!done);
+
+            if (answerFound)
+            {
+                Simplex simplex = new Simplex(linearProgram);
+
+                //Calls the appropriate simplex method
+                linearProgram = simplex.Solve();
+            }
 
             //Checks if there is an answer
             //TODO Handle the case when there is no solution found, as currently it will display no solution but still return the lp

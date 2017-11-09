@@ -9,9 +9,6 @@ namespace IPSolver
 {
     static class UserInterfaceHandler
     {
-        //Enum for Algorithm selection
-        
-
         //Enum for Sensitivity Analysis
         enum SensitivityMenu
         {
@@ -35,14 +32,16 @@ namespace IPSolver
             while (true)
             {
                 //Displays Menu For entering File Name
-                Console.WriteLine(String.Format(@"
-                                                
-                                              IP SOLVER
-________________________________________________________________________________________________________________
+                //                Console.WriteLine(String.Format(@"
 
-                                        PLEASE ENTER A FILE "));
-                string filename = Console.ReadLine();
-                Console.Clear();
+                //                                              IP SOLVER
+                //________________________________________________________________________________________________________________
+
+                //                                        PLEASE ENTER A FILE "));
+                //                string filename = Console.ReadLine();
+                //                Console.Clear();
+
+                OldMenu();
 
                 //Menu For Selecting Algorithm
                 Console.WriteLine(@"
@@ -71,72 +70,7 @@ ________________________________________________________
 
                         Console.Clear();
 
-                        //Sensitivity Analysis Menu
-                        Console.WriteLine(@"
-                                  IP SOLVER
-________________________________________________________________________________________
-                                                                                        
-                           SENSITIVITY ANALYSIS
-
-                       
-             1. Display the range of a selected Non-Basic Variable.
-             2. Apply and display a change of a selected Non-Basic Variable.
-             3. Display the range of a selected Basic Variable.
-             4. Apply and display a change of a selected Basic Variable.
-             5. Display the range of a selected constraint right-hand-side value.
-             6. Apply and display a change of a selected constraint right-hand-side value.
-             7. Display the range of a selected variable in a Non-Basic Variable column.
-             8. Apply and display a change of a selected variable in a Non-Basic Variable column.
-             9. Add a new activity to an optimal solution.
-             10. Add a new constraint to an optimal solution.
-             11. Display the shadow prices.
-             12. Duality
-");
-                        int userInputSensitivityAnalysis = int.Parse(Console.ReadLine());
-
-                        SensitivityMenu smenu = (SensitivityMenu)userInputSensitivityAnalysis;
-                        switch (smenu)
-                        {
-                            case SensitivityMenu.display1:
-                                //TODO Display the range of a selected Non-Basic Variable.
-
-                                break;
-                            case SensitivityMenu.display2:
-                                //TODO Display the range of a selected Non-Basic Variable.
-                                break;
-                            case SensitivityMenu.display3:
-                                //TODO Display the range of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display4:
-                                //TODO Apply and display a change of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display5:
-                                //TODO Display the range of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display6:
-                                //TODO Apply and display a change of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display7:
-                                //TODO Display the range of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display8:
-                                //TODO Apply and display a change of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display9:
-                                //TODO Add a new activity to an optimal solution.
-                                break;
-                            case SensitivityMenu.display10:
-                                //TODO Add a new constraint to an optimal solution.
-                                break;
-                            case SensitivityMenu.display11:
-                                //TODO Display the shadow prices.
-                                break;
-                            case SensitivityMenu.display12:
-                                //TODO Duality
-                                break;
-                            default:
-                                break;
-                        }
+                        
 
                         break;
                     case Algorithm.TwoPhase:
@@ -147,72 +81,7 @@ ________________________________________________________________________________
 
                         Console.Clear();
 
-                        //Sensitivity Analysis Menu
-                        Console.WriteLine(@"
-                                  IP SOLVER
-________________________________________________________________________________________
-                                                                                        
-                           SENSITIVITY ANALYSIS
-
-                       
-             1. Display the range of a selected Non-Basic Variable.
-             2. Apply and display a change of a selected Non-Basic Variable.
-             3. Display the range of a selected Basic Variable.
-             4. Apply and display a change of a selected Basic Variable.
-             5. Display the range of a selected constraint right-hand-side value.
-             6. Apply and display a change of a selected constraint right-hand-side value.
-             7. Display the range of a selected variable in a Non-Basic Variable column.
-             8. Apply and display a change of a selected variable in a Non-Basic Variable column.
-             9. Add a new activity to an optimal solution.
-             10. Add a new constraint to an optimal solution.
-             11. Display the shadow prices.
-             12. Duality
-");
-                        int userInputSensitivityAnalysis1 = int.Parse(Console.ReadLine());
-
-                        SensitivityMenu smenu1 = (SensitivityMenu)userInputSensitivityAnalysis1;
-                        switch (smenu1)
-                        {
-                            case SensitivityMenu.display1:
-                                //TODO Display the range of a selected Non-Basic Variable.
-
-                                break;
-                            case SensitivityMenu.display2:
-                                //TODO Display the range of a selected Non-Basic Variable.
-                                break;
-                            case SensitivityMenu.display3:
-                                //TODO Display the range of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display4:
-                                //TODO Apply and display a change of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display5:
-                                //TODO Display the range of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display6:
-                                //TODO Apply and display a change of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display7:
-                                //TODO Display the range of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display8:
-                                //TODO Apply and display a change of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display9:
-                                //TODO Add a new activity to an optimal solution.
-                                break;
-                            case SensitivityMenu.display10:
-                                //TODO Add a new constraint to an optimal solution.
-                                break;
-                            case SensitivityMenu.display11:
-                                //TODO Display the shadow prices.
-                                break;
-                            case SensitivityMenu.display12:
-                                //TODO Duality
-                                break;
-                            default:
-                                break;
-                        }
+                        
 
                         break;
                     case Algorithm.Dual:
@@ -222,147 +91,17 @@ ________________________________________________________________________________
 
                         Console.Clear();
 
-                        //Sensitivity Analysis Menu
-                        Console.WriteLine(@"
-                                  IP SOLVER
-________________________________________________________________________________________
-                                                                                        
-                           SENSITIVITY ANALYSIS
-
-                       
-             1. Display the range of a selected Non-Basic Variable.
-             2. Apply and display a change of a selected Non-Basic Variable.
-             3. Display the range of a selected Basic Variable.
-             4. Apply and display a change of a selected Basic Variable.
-             5. Display the range of a selected constraint right-hand-side value.
-             6. Apply and display a change of a selected constraint right-hand-side value.
-             7. Display the range of a selected variable in a Non-Basic Variable column.
-             8. Apply and display a change of a selected variable in a Non-Basic Variable column.
-             9. Add a new activity to an optimal solution.
-             10. Add a new constraint to an optimal solution.
-             11. Display the shadow prices.
-             12. Duality
-");
-                        int userInputSensitivityAnalysis2 = int.Parse(Console.ReadLine());
-
-                        SensitivityMenu smenu2 = (SensitivityMenu)userInputSensitivityAnalysis2;
-                        switch (smenu2)
-                        {
-                            case SensitivityMenu.display1:
-                                //TODO Display the range of a selected Non-Basic Variable.
-
-                                break;
-                            case SensitivityMenu.display2:
-                                //TODO Display the range of a selected Non-Basic Variable.
-                                break;
-                            case SensitivityMenu.display3:
-                                //TODO Display the range of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display4:
-                                //TODO Apply and display a change of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display5:
-                                //TODO Display the range of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display6:
-                                //TODO Apply and display a change of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display7:
-                                //TODO Display the range of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display8:
-                                //TODO Apply and display a change of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display9:
-                                //TODO Add a new activity to an optimal solution.
-                                break;
-                            case SensitivityMenu.display10:
-                                //TODO Add a new constraint to an optimal solution.
-                                break;
-                            case SensitivityMenu.display11:
-                                //TODO Display the shadow prices.
-                                break;
-                            case SensitivityMenu.display12:
-                                //TODO Duality
-                                break;
-                            default:
-                                break;
-                        }
+                        
 
                         break;
-                    case Algorithm.branch:
+                    case Algorithm.BranchAndBound:
 
 
                         //TODO Insert Method to return solved Branch & Bound Simplex
 
                         Console.Clear();
 
-                        //Sensitivity Analysis Menu
-                        Console.WriteLine(@"
-                                  IP SOLVER
-________________________________________________________________________________________
-                                                                                        
-                           SENSITIVITY ANALYSIS
-
-                       
-             1. Display the range of a selected Non-Basic Variable.
-             2. Apply and display a change of a selected Non-Basic Variable.
-             3. Display the range of a selected Basic Variable.
-             4. Apply and display a change of a selected Basic Variable.
-             5. Display the range of a selected constraint right-hand-side value.
-             6. Apply and display a change of a selected constraint right-hand-side value.
-             7. Display the range of a selected variable in a Non-Basic Variable column.
-             8. Apply and display a change of a selected variable in a Non-Basic Variable column.
-             9. Add a new activity to an optimal solution.
-             10. Add a new constraint to an optimal solution.
-             11. Display the shadow prices.
-             12. Duality
-");
-                        int userInputSensitivityAnalysis3 = int.Parse(Console.ReadLine());
-
-                        SensitivityMenu smenu3 = (SensitivityMenu)userInputSensitivityAnalysis3;
-                        switch (smenu3)
-                        {
-                            case SensitivityMenu.display1:
-                                //TODO Display the range of a selected Non-Basic Variable.
-
-                                break;
-                            case SensitivityMenu.display2:
-                                //TODO Display the range of a selected Non-Basic Variable.
-                                break;
-                            case SensitivityMenu.display3:
-                                //TODO Display the range of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display4:
-                                //TODO Apply and display a change of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display5:
-                                //TODO Display the range of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display6:
-                                //TODO Apply and display a change of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display7:
-                                //TODO Display the range of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display8:
-                                //TODO Apply and display a change of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display9:
-                                //TODO Add a new activity to an optimal solution.
-                                break;
-                            case SensitivityMenu.display10:
-                                //TODO Add a new constraint to an optimal solution.
-                                break;
-                            case SensitivityMenu.display11:
-                                //TODO Display the shadow prices.
-                                break;
-                            case SensitivityMenu.display12:
-                                //TODO Duality
-                                break;
-                            default:
-                                break;
-                        }
+                        
 
                         break;
                     case Algorithm.CuttingPlane:
@@ -372,8 +111,20 @@ ________________________________________________________________________________
 
                         Console.Clear();
 
-                        //Sensitivity Analysis Menu
-                        Console.WriteLine(@"
+
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        }
+
+        //Loop this?
+        public static void SensitivityAnalysisMenu()
+        {
+            //Sensitivity Analysis Menu
+            Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
                                                                                         
@@ -393,57 +144,50 @@ ________________________________________________________________________________
              11. Display the shadow prices.
              12. Duality
 ");
-                        int userInputSensitivityAnalysis4 = int.Parse(Console.ReadLine());
+            int userInputSensitivityAnalysis = int.Parse(Console.ReadLine());
 
-                        SensitivityMenu smenu4 = (SensitivityMenu)userInputSensitivityAnalysis4;
-                        switch (smenu4)
-                        {
-                            case SensitivityMenu.display1:
-                                //TODO Display the range of a selected Non-Basic Variable.
+            SensitivityMenu smenu = (SensitivityMenu)userInputSensitivityAnalysis;
+            switch (smenu)
+            {
+                case SensitivityMenu.display1:
+                    //TODO Display the range of a selected Non-Basic Variable.
 
-                                break;
-                            case SensitivityMenu.display2:
-                                //TODO Display the range of a selected Non-Basic Variable.
-                                break;
-                            case SensitivityMenu.display3:
-                                //TODO Display the range of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display4:
-                                //TODO Apply and display a change of a selected Basic Variable.
-                                break;
-                            case SensitivityMenu.display5:
-                                //TODO Display the range of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display6:
-                                //TODO Apply and display a change of a selected constraint right-hand-side value.
-                                break;
-                            case SensitivityMenu.display7:
-                                //TODO Display the range of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display8:
-                                //TODO Apply and display a change of a selected variable in a Non-Basic Variable column.
-                                break;
-                            case SensitivityMenu.display9:
-                                //TODO Add a new activity to an optimal solution.
-                                break;
-                            case SensitivityMenu.display10:
-                                //TODO Add a new constraint to an optimal solution.
-                                break;
-                            case SensitivityMenu.display11:
-                                //TODO Display the shadow prices.
-                                break;
-                            case SensitivityMenu.display12:
-                                //TODO Duality
-                                break;
-                            default:
-                                break;
-                        }
-
-                        break;
-                    default:
-                        break;
-                }
-
+                    break;
+                case SensitivityMenu.display2:
+                    //TODO Display the range of a selected Non-Basic Variable.
+                    break;
+                case SensitivityMenu.display3:
+                    //TODO Display the range of a selected Basic Variable.
+                    break;
+                case SensitivityMenu.display4:
+                    //TODO Apply and display a change of a selected Basic Variable.
+                    break;
+                case SensitivityMenu.display5:
+                    //TODO Display the range of a selected constraint right-hand-side value.
+                    break;
+                case SensitivityMenu.display6:
+                    //TODO Apply and display a change of a selected constraint right-hand-side value.
+                    break;
+                case SensitivityMenu.display7:
+                    //TODO Display the range of a selected variable in a Non-Basic Variable column.
+                    break;
+                case SensitivityMenu.display8:
+                    //TODO Apply and display a change of a selected variable in a Non-Basic Variable column.
+                    break;
+                case SensitivityMenu.display9:
+                    //TODO Add a new activity to an optimal solution.
+                    break;
+                case SensitivityMenu.display10:
+                    //TODO Add a new constraint to an optimal solution.
+                    break;
+                case SensitivityMenu.display11:
+                    //TODO Display the shadow prices.
+                    break;
+                case SensitivityMenu.display12:
+                    //TODO Duality
+                    break;
+                default:
+                    break;
             }
         }
 

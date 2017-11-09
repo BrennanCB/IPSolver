@@ -143,6 +143,8 @@ namespace IPSolver
 
                 answerFound = true;
 
+
+                //TODO this part needs to be removed if its to be shared with dual
                 if (linearProgram.Type == LPType.Max)
                 {
                     //Checks if there are any negatives in the top row, to see if it must continue
