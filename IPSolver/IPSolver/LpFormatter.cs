@@ -106,12 +106,20 @@ namespace IPSolver
             else
                 linearProgram.Type = LPType.Min;
 
+            int countEquals = 0;
+
+            foreach (var item in unformattedLP)
+            {
+                if (item.Contains(" = "))
+                    countEquals++;
+            }
+            
             //Sets the sizes of the arrays that will hold all the variables
-            double[,] formatedLp = new double[unformattedLP.Count() - 1, tempZ.Count() + 1];
+            double[,] formatedLp = new double[unformattedLP.Count() - 1 + countEquals, tempZ.Count() + 1];
 
             //arrayA = new double[0, unformattedLP.Count() - 1];
-            arrayS = new double[unformattedLP.Count() - 1, unformattedLP.Count() - 1];
-            arrayE = new double[unformattedLP.Count() - 1, unformattedLP.Count() - 1];
+            arrayS = new double[unformattedLP.Count() - 1 + countEquals, unformattedLP.Count() - 1 + countEquals];
+            arrayE = new double[unformattedLP.Count() - 1 + countEquals, unformattedLP.Count() - 1 + countEquals];
 
             //Sets Z to one
             formatedLp[0, 0] = 1;
@@ -159,10 +167,12 @@ namespace IPSolver
 
                 bool changeNeg = false;
 
+                int offset = 0;
+
                 //Fills the array( the X's)
                 for (int i = 1; i < unformattedLP.Count() - 1; i++)
                 {
-                    string[] tempConstraint = unformattedLP[i].Split(' ');
+                    string[] tempConstraint = unformattedLP[i + offset].Split(' ');
 
                     tempCanonicalForm = null;
 
@@ -177,20 +187,20 @@ namespace IPSolver
                                 //Changes the column to negative
                                 linearProgram.ColY.Add(j);
 
-                                formatedLp[i, j] = Convert.ToDouble(tempConstraint[j - 1]);
+                                formatedLp[i + offset, j] = Convert.ToDouble(tempConstraint[j - 1]);
 
-                                tempCanonicalForm += formatedLp[i, j] + "Y" + j + " ";
+                                tempCanonicalForm += formatedLp[i + offset, j] + "Y" + j + " ";
                             }
                             else
                             {
-                                formatedLp[i, j] = Convert.ToDouble(tempConstraint[j - 1]) * -1;
+                                formatedLp[i + offset, j] = Convert.ToDouble(tempConstraint[j - 1]) * -1;
 
-                                tempCanonicalForm += formatedLp[i, j] + "X" + j + " ";
+                                tempCanonicalForm += formatedLp[i + offset, j] + "X" + j + " ";
                             }
                         }
 
                         //Fills in the RHS
-                        formatedLp[i, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]) * -1;
+                        formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]) * -1;
 
                         //Changes the sign
                         if (tempConstraint[tempConstraint.Count() - 2] == "<=")
@@ -226,25 +236,25 @@ namespace IPSolver
                             }
                         }
                         //Fills in the RHS
-                        formatedLp[i, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]);
+                        formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]);
                     }
 
 
                     if (tempConstraint[tempConstraint.Count() - 2] == "<=")
                     {
-                        arrayS[i, linearProgram.CountS] = 1;
+                        arrayS[i + offset, linearProgram.CountS] = 1;
                         linearProgram.CountS++;
 
                         tempCanonicalForm += "S" + linearProgram.CountS + " ";
                     }
                     else if (tempConstraint[tempConstraint.Count() - 2] == ">=")
                     {
-                        arrayE[i, linearProgram.CountE] = 1;
+                        arrayE[i + offset, linearProgram.CountE] = 1;
                         linearProgram.CountE++;
                         
                         for (int j = 0; j < formatedLp.GetLength(1); j++)
                         {
-                            formatedLp[i, j] = formatedLp[i, j] * -1;
+                            formatedLp[i + offset, j] = formatedLp[i + offset, j] * -1;
                         }
 
 
@@ -255,20 +265,19 @@ namespace IPSolver
                     }
                     else //=
                     {
-                        arrayS[i, linearProgram.CountS] = 1;
+                        arrayS[i + offset, linearProgram.CountS] = 1;
                         linearProgram.CountS++;
 
                         tempCanonicalForm += "S" + linearProgram.CountS + " ";
 
+                        offset++;
 
-                        //TODO Add the e, currently only adds an s
-
-                        arrayE[i, linearProgram.CountE] = 1;
+                        arrayE[i + offset, linearProgram.CountE] = 1;
                         linearProgram.CountE++;
 
                         for (int j = 0; j < formatedLp.GetLength(1); j++)
                         {
-                            formatedLp[i, j] = formatedLp[i, j] * -1;
+                            formatedLp[i + offset, j] = formatedLp[i + offset - 1, j] * -1;
                         }
                         
                         tempCanonicalForm += "+E" + linearProgram.CountE + " ";
@@ -278,12 +287,12 @@ namespace IPSolver
                     if (changeNeg == true)
                     {
                         //Adds it to the canonical form list
-                        linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + (formatedLp[i, formatedLp.GetLength(1) - 1]) * -1);
+                        linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + (formatedLp[i + offset, formatedLp.GetLength(1) - 1]) * -1);
                     }
                     else
                     {
                         //Adds it to the canonical form list
-                        linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i, formatedLp.GetLength(1) - 1]);
+                        linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i + offset, formatedLp.GetLength(1) - 1]);
                     }
                 }
                 linearProgram.LinearProgramMatrix = CreateLPFinalForm(formatedLp);

@@ -28,7 +28,7 @@ namespace IPSolver
                 Console.WriteLine(item);
             }
 
-            LpFormatter lpFormatter = new LpFormatter(unformatedLP);
+            LpFormatter lpFormatter = new LpFormatter(unformatedLP, Algorithm.Primal);
 
             LinearProgram linearProgram = lpFormatter.GetLinearProgram();
 

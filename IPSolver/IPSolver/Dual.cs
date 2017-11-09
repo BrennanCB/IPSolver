@@ -55,6 +55,10 @@ namespace IPSolver
                         ratios.Add(-1);
                     }
                 }
+                else
+                {
+                    ratios.Add(-1);
+                }
             }
             
             //Chooses the winning row
