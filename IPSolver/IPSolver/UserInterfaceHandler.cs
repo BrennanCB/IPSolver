@@ -10,14 +10,7 @@ namespace IPSolver
     static class UserInterfaceHandler
     {
         //Enum for Algorithm selection
-        enum Algorithm
-        {
-            primal = 0,
-            twophase,
-            dual,
-            branch,
-            ctplane
-        }
+        
 
         //Enum for Sensitivity Analysis
         enum SensitivityMenu
@@ -70,7 +63,7 @@ ________________________________________________________
 
                 switch (menu)
                 {
-                    case Algorithm.primal:
+                    case Algorithm.Primal:
 
 
                         //TODO Insert method return solved Primal Simplex
@@ -146,7 +139,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case Algorithm.twophase:
+                    case Algorithm.TwoPhase:
 
 
                         //TODO Insert Method to return solved Two Phase Simplex
@@ -222,7 +215,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case Algorithm.dual:
+                    case Algorithm.Dual:
 
 
                         ////TODO Insert Method to Return solved Dual Simplex
@@ -372,7 +365,7 @@ ________________________________________________________________________________
                         }
 
                         break;
-                    case Algorithm.ctplane:
+                    case Algorithm.CuttingPlane:
 
 
                         //TODO Insert Method to Return solved Cutting Plane Simpelex

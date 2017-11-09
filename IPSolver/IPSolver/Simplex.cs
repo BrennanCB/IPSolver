@@ -14,16 +14,84 @@ namespace IPSolver
         {
             this.linearProgram = linearProgram;
         }
+        
+        public bool SimplexRatio(ref int winningCol, ref int winningRow)
+        {
+            double winningColAmount = 0;
+            double winningRatio = double.MaxValue;
 
-        //Returns the Basic Variables
+            List<double> ratios = new List<double>();
+
+            //Loops through the rows to choose the winning column
+            for (int i = 1; i <= linearProgram.ColumnCount; i++)
+            {
+                if (linearProgram.Type == LPType.Max)
+                {
+                    if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) < winningColAmount)
+                    {
+                        winningCol = i;
+                        winningColAmount = Math.Round(linearProgram.LinearProgramArray[0, i], 10);
+                    }
+                }
+                else
+                {
+                    if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) > winningColAmount)
+                    {
+                        winningCol = i;
+                        winningColAmount = Math.Round(linearProgram.LinearProgramArray[0, i], 10);
+                    }
+                }
+            }
+
+            //Makes sure the winning column isnt Z
+            if (winningCol == 0)
+                return true;
+
+            //Calculates the ratios
+            for (int i = 1; i < linearProgram.RowCount; i++)
+            {
+                //Makes sure that cannot divide by zero
+                try
+                {
+                    double tempRatio = Math.Round(linearProgram.LinearProgramArray[i, linearProgram.ColumnCount - 1] / linearProgram.LinearProgramArray[i, winningCol], 10);
+
+                    ratios.Add(tempRatio);
+                }
+                catch (DivideByZeroException)
+                {
+                    ratios.Add(-1);
+                }
+            }
+
+            //Chooses the winning row
+            for (int i = 0; i < ratios.Count(); i++)
+            {
+                if (ratios[i] < winningRatio && ratios[i] > 0)
+                {
+                    winningRatio = ratios[i];
+                    winningRow = i + 1;
+                }
+                else if (ratios[i] == 0)
+                {
+                    if (linearProgram.LinearProgramArray[i + 1, winningCol] > 0)
+                    {
+                        winningRatio = 0;
+                        winningRow = i + 1;
+                    }
+                }
+            }
+
+            //Makes sure the winning row isnt the top row
+            if (winningRow == 0)
+                return true;
+
+        }
+
         public LinearProgram Solve()
         {
             int tableauNumber = 0;
             int colAmount = linearProgram.ColumnCount;
             int rowAmount = linearProgram.RowCount;
-
-            //Lists to hold BV and Ratios
-            List<int> posFinalBV = new List<int>();
 
             bool done = false;
             bool answerFound = true;
@@ -35,78 +103,9 @@ namespace IPSolver
 
                 //Resets the variables
                 int winningCol = 0;
-                double winningColAmount = 0;
-
                 int winningRow = 0;
 
-                double winningRatio = double.MaxValue;
-
-                List<double> ratios = new List<double>();
-
-                //Loops through the rows to choose the winning column
-                for (int i = 1; i < linearProgram.LinearProgramArray.GetLength(1) - 1; i++)
-                {
-                    if (linearProgram.Type == LPType.Max)
-                    {
-                        if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) < winningColAmount)
-                        {
-                            winningCol = i;
-                            winningColAmount = Math.Round(linearProgram.LinearProgramArray[0, i], 10);
-                        }
-                    }
-                    else
-                    {
-                        if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) > winningColAmount)
-                        {
-                            winningCol = i;
-                            winningColAmount = Math.Round(linearProgram.LinearProgramArray[0, i], 10);
-                        }
-                    }
-                }
-
-                //Makes sure the winning column isnt Z
-                if (winningCol == 0)
-                {
-                    done = true;
-                    break;
-                }
-
-                //Calculates the ratios
-                for (int i = 1; i < linearProgram.LinearProgramArray.GetLength(0); i++)
-                {
-                    //Makes sure that cannot divide by zero
-                    try
-                    {
-                        double tempRatio = Math.Round(linearProgram.LinearProgramArray[i, linearProgram.ColumnCount - 1] / linearProgram.LinearProgramArray[i, winningCol], 10);
-
-                        ratios.Add(tempRatio);
-                    }
-                    catch (DivideByZeroException)
-                    {
-                        ratios.Add(-1);
-                    }
-                }
-
-                //Chooses the winning row
-                for (int i = 0; i < ratios.Count(); i++)
-                {
-                    if (ratios[i] < winningRatio && ratios[i] > 0)
-                    {
-                        winningRatio = ratios[i];
-                        winningRow = i + 1;
-                    }
-                    else if (ratios[i] == 0)
-                    {
-                        if (linearProgram.LinearProgramArray[i + 1, winningCol] > 0)
-                        {
-                            winningRatio = 0;
-                            winningRow = i + 1;
-                        }
-                    }
-                }
-
-                //Makes sure the winning row isnt the top row
-                if (winningRow == 0)
+                if (SimplexRatio(ref winningCol, ref winningRow))
                 {
                     done = true;
                     break;
