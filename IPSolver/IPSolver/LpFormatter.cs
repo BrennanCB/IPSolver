@@ -255,7 +255,7 @@ namespace IPSolver
                         linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i, formatedLp.GetLength(1) - 1]);
                     }
                 }
-                linearProgram.LinearProgramArray =  CreateLPFinalForm(formatedLp);
+                linearProgram.LinearProgramMatrix =  CreateLPFinalForm(formatedLp);
 
                 //return linearProgram;
             }

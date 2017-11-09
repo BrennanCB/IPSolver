@@ -61,7 +61,7 @@ namespace IPSolver
             {
                 for (int j = 0; j < linearProgram.ColumnCount; j++)
                 {
-                    twoPhaseLP[i + 1, j + 1] = linearProgram.LinearProgramArray[i, j];
+                    twoPhaseLP[i + 1, j + 1] = linearProgram.LinearProgramMatrix[i, j];
                 }
             }
         }
@@ -286,7 +286,7 @@ namespace IPSolver
                     {
                         for (int j = 0; j < linearProgram.ColumnCount; j++)
                         {
-                            linearProgram.LinearProgramArray[i, j] = twoPhaseLP[i + 1, j + 1];
+                            linearProgram.LinearProgramMatrix[i, j] = twoPhaseLP[i + 1, j + 1];
                         }
                     }
 
@@ -297,7 +297,7 @@ namespace IPSolver
                         {
                             for (int i = 0; i < linearProgram.RowCount; i++)
                             {
-                                linearProgram.LinearProgramArray[i, item] = 0;
+                                linearProgram.LinearProgramMatrix[i, item] = 0;
                             }
                         }
                     }

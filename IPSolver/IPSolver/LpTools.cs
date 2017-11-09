@@ -13,7 +13,7 @@ namespace IPSolver
             if (CheckSpecialCases(LinearProgram))
                 return false;
 
-            double[,] problemMatrix = LinearProgram.LinearProgramArray;
+            double[,] problemMatrix = LinearProgram.LinearProgramMatrix;
 
             for (int i = 0; i < LinearProgram.ColumnCount; i++)
             {
@@ -44,15 +44,15 @@ namespace IPSolver
         private static bool IsInfeasable(LinearProgram LinearProgram)
         {
             //Check infeasable
-            double minValue = LinearProgram.LinearProgramArray
+            double minValue = LinearProgram.LinearProgramMatrix
                 [LinearProgram.RowCount - 1, LinearProgram.ColumnCount - 2];
             int minLocation = LinearProgram.RowCount - 1;
 
             for (int j = 0; j < LinearProgram.RowCount; j++)
             {
-                if (LinearProgram.LinearProgramArray[j, LinearProgram.ColumnCount - 2] < minValue)
+                if (LinearProgram.LinearProgramMatrix[j, LinearProgram.ColumnCount - 2] < minValue)
                 {
-                    minValue = LinearProgram.LinearProgramArray[j, LinearProgram.ColumnCount - 2];
+                    minValue = LinearProgram.LinearProgramMatrix[j, LinearProgram.ColumnCount - 2];
                     minLocation = j;
                 }
 
@@ -64,7 +64,7 @@ namespace IPSolver
             bool valid = false;
             for (int i = 0; i < LinearProgram.ColumnCount; i++)
             {
-                if (LinearProgram.LinearProgramArray[minLocation, i] < 0)
+                if (LinearProgram.LinearProgramMatrix[minLocation, i] < 0)
                 {
                     valid = true;
                     break;
@@ -78,7 +78,7 @@ namespace IPSolver
 
         private static bool IsUnbounded(LinearProgram LinearProgram)
         {
-            double[,] problemMatrix = LinearProgram.LinearProgramArray;
+            double[,] problemMatrix = LinearProgram.LinearProgramMatrix;
             double minValue = problemMatrix[0, 0];
             int minLocation = 0;
             for (int i = 0; i < LinearProgram.ColumnCount - 2; i++)

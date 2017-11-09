@@ -15,6 +15,7 @@ namespace IPSolver
             this.linearProgram = linearProgram;
         }
         
+        //Returns true of the ratio test fails
         public bool SimplexRatio(ref int winningCol, ref int winningRow)
         {
             double winningColAmount = 0;
@@ -27,18 +28,18 @@ namespace IPSolver
             {
                 if (linearProgram.Type == LPType.Max)
                 {
-                    if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) < winningColAmount)
+                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < winningColAmount)
                     {
                         winningCol = i;
-                        winningColAmount = Math.Round(linearProgram.LinearProgramArray[0, i], 10);
+                        winningColAmount = Math.Round(linearProgram.LinearProgramMatrix[0, i], 10);
                     }
                 }
                 else
                 {
-                    if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) > winningColAmount)
+                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > winningColAmount)
                     {
                         winningCol = i;
-                        winningColAmount = Math.Round(linearProgram.LinearProgramArray[0, i], 10);
+                        winningColAmount = Math.Round(linearProgram.LinearProgramMatrix[0, i], 10);
                     }
                 }
             }
@@ -53,7 +54,7 @@ namespace IPSolver
                 //Makes sure that cannot divide by zero
                 try
                 {
-                    double tempRatio = Math.Round(linearProgram.LinearProgramArray[i, linearProgram.ColumnCount - 1] / linearProgram.LinearProgramArray[i, winningCol], 10);
+                    double tempRatio = Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1] / linearProgram.LinearProgramMatrix[i, winningCol], 10);
 
                     ratios.Add(tempRatio);
                 }
@@ -73,7 +74,7 @@ namespace IPSolver
                 }
                 else if (ratios[i] == 0)
                 {
-                    if (linearProgram.LinearProgramArray[i + 1, winningCol] > 0)
+                    if (linearProgram.LinearProgramMatrix[i + 1, winningCol] > 0)
                     {
                         winningRatio = 0;
                         winningRow = i + 1;
@@ -85,8 +86,10 @@ namespace IPSolver
             if (winningRow == 0)
                 return true;
 
+            return false;
         }
 
+        //TODO move this to another place, as ratio test has been taken out and can be used for dual
         public LinearProgram Solve()
         {
             int tableauNumber = 0;
@@ -111,24 +114,24 @@ namespace IPSolver
                     break;
                 }
 
-                double winningNumber = linearProgram.LinearProgramArray[winningRow, winningCol];
+                double winningNumber = linearProgram.LinearProgramMatrix[winningRow, winningCol];
 
                 //Calculates the new values of winning row
                 for (int i = 0; i < colAmount; i++)
                 {
-                    double newAmount = linearProgram.LinearProgramArray[winningRow, i] / winningNumber;
+                    double newAmount = linearProgram.LinearProgramMatrix[winningRow, i] / winningNumber;
 
-                    linearProgram.LinearProgramArray[winningRow, i] = newAmount;
+                    linearProgram.LinearProgramMatrix[winningRow, i] = newAmount;
                 }
 
                 //Calculates the new amounts of the remaining rows
                 for (int i = 0; i < rowAmount; i++)
                 {
-                    double subtractAmount = linearProgram.LinearProgramArray[i, winningCol];
+                    double subtractAmount = linearProgram.LinearProgramMatrix[i, winningCol];
                     for (int j = 0; j < colAmount; j++)
                     {
                         if (i != winningRow)
-                            linearProgram.LinearProgramArray[i, j] = linearProgram.LinearProgramArray[i, j] - subtractAmount * linearProgram.LinearProgramArray[winningRow, j];
+                            linearProgram.LinearProgramMatrix[i, j] = linearProgram.LinearProgramMatrix[i, j] - subtractAmount * linearProgram.LinearProgramMatrix[winningRow, j];
                     }
                 }
 
@@ -145,7 +148,7 @@ namespace IPSolver
                     //Checks if there are any negatives in the top row, to see if it must continue
                     for (int i = 0; i < colAmount; i++)
                     {
-                        if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) < 0)
+                        if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < 0)
                         {
                             done = false;
                             answerFound = false;
@@ -158,7 +161,7 @@ namespace IPSolver
                     //Checks if there are any positives in the top row, to see if it must continue
                     for (int i = 0; i < colAmount; i++)
                     {
-                        if (Math.Round(linearProgram.LinearProgramArray[0, i], 10) > 0)
+                        if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > 0)
                         {
                             done = false;
                             answerFound = false;
