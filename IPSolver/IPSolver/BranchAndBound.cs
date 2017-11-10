@@ -39,12 +39,16 @@ namespace IPSolver
 
         public LinearProgram Sovle(LinearProgram problem, LPType type)
         {
+            problems.Add(new ProblemNode(problem, false, null, 0));
+
             bool solved = false;
             ProblemNode currentOptimal = problems.ElementAt(0);
 
+            //loop runs until all problems are solved, exit via break
             while (true)
             {
                 ProblemNode currentProblem = problems.ElementAt(0);
+                //this loop checks to see if all problems are solved
                 for (int i = 0; i < problems.Count; i++)
                 {
                     if (!problems.ElementAt(i).Solved)
