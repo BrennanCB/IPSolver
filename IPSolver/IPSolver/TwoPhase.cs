@@ -8,14 +8,10 @@ namespace IPSolver
 {
     class TwoPhase
     {
-        //public static double[,] originalLP, arrayS, arrayE, arrayA, formattedLP, finalLP, twoPhaseLP;
-        //public static int countX = 0, countS = 0, countA = 0, countE = 0;
-        //public static List<int> listOfA = new List<int>();
-        //public static List<int> colOfA = new List<int>();
-
         LinearProgram linearProgram;
 
         private double[,] twoPhaseLP;
+        private double[,] simplexLP;
 
         public TwoPhase(LinearProgram linearProgram)
         {
@@ -26,6 +22,8 @@ namespace IPSolver
         public void FormatTwoPhase()
         {
             //Makes the twoPhase array larger
+            simplexLP = linearProgram.LinearProgramMatrix;
+
             twoPhaseLP = new double[linearProgram.RowCount + 1, linearProgram.ColumnCount + 1];
 
             //Adds the w and z
@@ -66,14 +64,16 @@ namespace IPSolver
             }
         }
 
-        //Solves Two phase problems
         public LinearProgram Solve()
         {
             //TODO check if this is where we call this method
             FormatTwoPhase();
 
+            linearProgram.LinearProgramMatrix = twoPhaseLP;
+
             int counter = 1;
-            int colAmount = twoPhaseLP.GetLength(1), rowAmount = twoPhaseLP.GetLength(0);
+
+            int colAmount = linearProgram.ColumnCount, rowAmount = linearProgram.RowCount;
 
             bool done = false;
             bool answerFound = false;
@@ -83,9 +83,9 @@ namespace IPSolver
             //Calculates the New W row
             foreach (var item in linearProgram.ListOfA)
             {
-                for (int i = 0; i < twoPhaseLP.GetLength(1); i++)
+                for (int i = 0; i < colAmount; i++)
                 {
-                    twoPhaseLP[0, i] += twoPhaseLP[item + 1, i];
+                    linearProgram.LinearProgramMatrix[0, i] += linearProgram.LinearProgramMatrix[item + 1, i];
                 }
             }
 
@@ -110,10 +110,10 @@ namespace IPSolver
                 //Loops through the rows t choose the winning column
                 for (int i = 2; i < colAmount - 1; i++)
                 {
-                    if (twoPhaseLP[0, i] > winningColAmount)
+                    if (linearProgram.LinearProgramMatrix[0, i] > winningColAmount)
                     {
                         winningCol = i;
-                        winningColAmount = twoPhaseLP[0, i];
+                        winningColAmount = linearProgram.LinearProgramMatrix[0, i];
                     }
                 }
 
@@ -131,7 +131,7 @@ namespace IPSolver
                     //Makes sure that cannot divide by zero
                     try
                     {
-                        ratios.Add(twoPhaseLP[i, colAmount - 1] / twoPhaseLP[i, winningCol]);
+                        ratios.Add(linearProgram.LinearProgramMatrix[i, colAmount - 1] / linearProgram.LinearProgramMatrix[i, winningCol]);
                     }
                     catch (DivideByZeroException)
                     {
@@ -149,7 +149,7 @@ namespace IPSolver
                     }
                     else if (ratios[i] == 0)
                     {
-                        if (twoPhaseLP[i + 2, winningCol] > 0)
+                        if (linearProgram.LinearProgramMatrix[i + 2, winningCol] > 0)
                         {
                             winningRatio = 0;
                             winningRow = i + 2;
@@ -164,24 +164,24 @@ namespace IPSolver
                     break;
                 }
 
-                double winningNumber = twoPhaseLP[winningRow, winningCol];
+                double winningNumber = linearProgram.LinearProgramMatrix[winningRow, winningCol];
 
                 //Calculates the new values of winning row
                 for (int i = 0; i < colAmount; i++)
                 {
-                    double newAmount = twoPhaseLP[winningRow, i] / winningNumber;
+                    double newAmount = linearProgram.LinearProgramMatrix[winningRow, i] / winningNumber;
 
-                    twoPhaseLP[winningRow, i] = newAmount;
+                    linearProgram.LinearProgramMatrix[winningRow, i] = newAmount;
                 }
 
                 //Calculates the new amounts of the remaining rows
                 for (int i = 0; i < rowAmount; i++)
                 {
-                    double subtractAmount = twoPhaseLP[i, winningCol];
+                    double subtractAmount = linearProgram.LinearProgramMatrix[i, winningCol];
                     for (int j = 0; j < colAmount; j++)
                     {
                         if (i != winningRow)
-                            twoPhaseLP[i, j] = twoPhaseLP[i, j] - subtractAmount * twoPhaseLP[winningRow, j];
+                            linearProgram.LinearProgramMatrix[i, j] = linearProgram.LinearProgramMatrix[i, j] - subtractAmount * linearProgram.LinearProgramMatrix[winningRow, j];
                     }
                 }
 
@@ -196,7 +196,7 @@ namespace IPSolver
                 //Checks if there are any positive in the top row, to see if it must continue
                 for (int i = 0; i < colAmount; i++)
                 {
-                    if (twoPhaseLP[0, i] > 0)
+                    if (linearProgram.LinearProgramMatrix[0, i] > 0)
                     {
                         done = false;
                         answerFound = false;
@@ -204,7 +204,7 @@ namespace IPSolver
                     }
                 }
 
-                double wRHS = Math.Round(twoPhaseLP[0, colAmount - 1], 10);
+                double wRHS = Math.Round(linearProgram.LinearProgramMatrix[0, colAmount - 1], 10);
 
                 //Checks if the W rhs amount is 0
                 if (wRHS == 0)
@@ -213,44 +213,19 @@ namespace IPSolver
                     answerFound = true;
                 }
 
-            } while (done == false);
+            } while (!done);
 
             //Checks if an answer is found
-            if (answerFound == true)
+            if (answerFound)
             {
                 //Finds BVs
+                double[] bvs = linearProgram.GetBasicVariables();
                 List<int> bvCols = new List<int>();
 
-                for (int j = 0; j < colAmount - 1; j++)
+                for (int i = 0; i < bvs.Length; i++)
                 {
-                    bool bv = true;
-                    int countOne = 0;
-
-                    for (int i = 0; i < rowAmount; i++)
-                    {
-                        double currentNumber = twoPhaseLP[i, j];
-
-                        if (currentNumber != 0 && currentNumber != 1)
-                        {
-                            bv = false;
-                        }
-                        else if (twoPhaseLP[i, j] == 1)
-                        {
-                            countOne++;
-
-                            if (countOne > 1)
-                                bv = false;
-                        }
-                    }
-
-                    if (bv == false)
-                    {
-
-                    }
-                    else if (bv == true && countOne == 1)
-                    {
-                        bvCols.Add(j);
-                    }
+                    if (bvs[i] != 0)
+                        bvCols.Add(i);
                 }
 
                 bool deleteNegatives = false;
@@ -266,27 +241,27 @@ namespace IPSolver
                 }
 
                 //Deletes the A's
-                if (Math.Round(twoPhaseLP[0, colAmount - 1], 10) == 0)
+                if (Math.Round(linearProgram.LinearProgramMatrix[0, colAmount - 1], 10) == 0)
                 {
-                    if (deleteNegatives == true)
+                    if (deleteNegatives)
                     {
                         for (int i = 0; i < colAmount; i++)
                         {
-                            if (twoPhaseLP[0, i] < 0)
+                            if (linearProgram.LinearProgramMatrix[0, i] < 0)
                             {
                                 for (int j = 0; j < rowAmount; j++)
                                 {
-                                    twoPhaseLP[j, i] = 0;
+                                    linearProgram.LinearProgramMatrix[j, i] = 0;
                                 }
                             }
                         }
                     }
 
-                    for (int i = 0; i < linearProgram.RowCount; i++)
+                    for (int i = 0; i < simplexLP.GetLength(0); i++)
                     {
-                        for (int j = 0; j < linearProgram.ColumnCount; j++)
+                        for (int j = 0; j < simplexLP.GetLength(1); j++)
                         {
-                            linearProgram.LinearProgramMatrix[i, j] = twoPhaseLP[i + 1, j + 1];
+                            simplexLP[i, j] = linearProgram.LinearProgramMatrix[i + 1, j + 1];
                         }
                     }
 
@@ -295,20 +270,22 @@ namespace IPSolver
                     {
                         if (!bvCols.Contains(item + 1))
                         {
-                            for (int i = 0; i < linearProgram.RowCount; i++)
+                            for (int i = 0; i < simplexLP.GetLength(0); i++)
                             {
-                                linearProgram.LinearProgramMatrix[i, item] = 0;
+                                simplexLP[i, item] = 0;
                             }
                         }
                     }
 
                     //TODO check if this is needed
-                    //twoPhase = false;
+                    linearProgram.IsTwoPhase = false;
 
                     Console.WriteLine();
                     Console.WriteLine("Phase 2 - Initial Table");
-                    UserInterfaceHandler.DisplayTable(linearProgram);
 
+                    linearProgram.LinearProgramMatrix = simplexLP;
+
+                    UserInterfaceHandler.DisplayTable(linearProgram);
 
                     Simplex simplex = new Simplex(linearProgram);
 

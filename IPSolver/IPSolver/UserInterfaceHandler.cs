@@ -40,11 +40,7 @@ namespace IPSolver
                 Console.WriteLine(item);
             }
 
-            
-
             LinearProgram linearProgram;
-
-            
             #endregion
 
             while (true)
@@ -84,20 +80,10 @@ ________________________________________________________
 
                         linearProgram = lpFormatter.GetLinearProgram();
 
-                        Console.WriteLine();
-                        Console.WriteLine("Canonical Form");
-                        Console.WriteLine("--------------");
-
-                        foreach (var item in linearProgram.CanonicalForm)
-                        {
-                            Console.WriteLine(item);
-                        }
-
-                        Console.WriteLine();
+                        linearProgram.DisplayCanonicalForm();
 
                         Console.WriteLine("Initial Table");
-
-                        //TODO Insert method return solved Primal Simplex
+                        
                         UserInterfaceHandler.DisplayTable(linearProgram);
 
                         Simplex simplex = new Simplex(linearProgram);
@@ -111,29 +97,17 @@ ________________________________________________________
 
                         break;
                     case Algorithm.TwoPhase:
-
+                        
                         lpFormatter = new LpFormatter(unformatedLP, Algorithm.TwoPhase);
 
                         linearProgram = lpFormatter.GetLinearProgram();
+                        linearProgram.IsTwoPhase = true;
 
-                        Console.WriteLine();
-                        Console.WriteLine("Canonical Form");
-                        Console.WriteLine("--------------");
-
-                        foreach (var item in linearProgram.CanonicalForm)
-                        {
-                            Console.WriteLine(item);
-                        }
-
-                        Console.WriteLine();
+                        linearProgram.DisplayCanonicalForm();
 
                         Console.WriteLine("Initial Table");
 
-
-                        //TODO Insert Method to return solved Two Phase Simplex
                         TwoPhase twoPhase = new TwoPhase(linearProgram);
-
-                        //linearProgram  = twoPhase.FormatTwoPhase();
 
                         UserInterfaceHandler.DisplayTable(linearProgram);
 
@@ -152,26 +126,14 @@ ________________________________________________________
 
                         linearProgram = lpFormatter.GetLinearProgram();
 
-                        Console.WriteLine();
-                        Console.WriteLine("Canonical Form");
-                        Console.WriteLine("--------------");
-
-                        foreach (var item in linearProgram.CanonicalForm)
-                        {
-                            Console.WriteLine(item);
-                        }
-
-                        Console.WriteLine();
+                        linearProgram.DisplayCanonicalForm();
 
                         Console.WriteLine("Initial Table");
-
-
-                        ////TODO Insert Method to Return solved Dual Simplex
+                        
                         Dual dual = new Dual(linearProgram);
 
                         UserInterfaceHandler.DisplayTable(linearProgram);
-
-                        //Console.ReadKey();
+                        
                         linearProgram = dual.Solve();
 
                         linearProgram.DisplaySolution();
@@ -204,7 +166,6 @@ ________________________________________________________
                     default:
                         break;
                 }
-
             }
         }
 

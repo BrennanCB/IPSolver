@@ -15,6 +15,8 @@ namespace IPSolver
 
         private LPType type;
 
+        private bool isTwoPhase;
+
         private List<int> listOfA;
         private List<int> colOfA;
 
@@ -57,7 +59,8 @@ namespace IPSolver
             set => canonicalForm = value;
         }
 
-        public bool IsTwoPhase => countA > 0;
+        //TODO Check this
+        //public bool IsTwoPhase => countA > 0;
 
         public int StartOfS => countX;
         public int StartOfA => StartOfE + countE;
@@ -65,6 +68,12 @@ namespace IPSolver
 
         public int RowCount => linearProgramMatrix.GetLength(0);
         public int ColumnCount => linearProgramMatrix.GetLength(1);
+
+        public bool IsTwoPhase
+        {
+            get => isTwoPhase;
+            set => isTwoPhase = value;
+        }
 
         public LPType Type
         {
@@ -96,7 +105,8 @@ namespace IPSolver
             set => countE = value;
         }
 
-        public int CountX {
+        public int CountX
+        {
             get => countX;
             set => countX = value;
         }
@@ -163,7 +173,20 @@ namespace IPSolver
         public void AddConstraint(String Constraint)
         {
             //TODO Add constraint to the LP
-        } 
+        }
+
+        public void DisplayCanonicalForm()
+        {
+            Console.WriteLine("\nCanonical Form");
+            Console.WriteLine("--------------");
+
+            foreach (var item in CanonicalForm)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine();
+        }
 
         public void DisplaySolution()
         {
