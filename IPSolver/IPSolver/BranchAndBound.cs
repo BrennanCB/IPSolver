@@ -74,11 +74,17 @@ namespace IPSolver
                 for (int i = 0; i < xValues.Length; i++)
                     xValues[i] = currentProblem.Problem.LinearProgramMatrix[0, i];
 
+                
                 for (int i = 0; i < xValues.Length; i++)
                 {
                     if((xValues[i] % 1) != 0)
                     {
-
+                        problems.Add(new ProblemNode(
+                            LpTools.AddBasicConstraint(currentProblem.Problem, i, LpTools.LESS_THAN, (int)xValues[i]),
+                            false, null, 0 ));
+                        problems.Add(new ProblemNode(
+                            LpTools.AddBasicConstraint(currentProblem.Problem, i, LpTools.GREATER_THAN, (int)xValues[i]+1),
+                            false, null, 0));
                     }
                         
                 }
