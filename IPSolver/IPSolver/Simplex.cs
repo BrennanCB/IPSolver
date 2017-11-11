@@ -15,6 +15,33 @@ namespace IPSolver
             this.linearProgram = linearProgram;
         }
         
+        //TODO rename
+        public bool CheckIfCanContinue()
+        {
+            //TODO this part needs to be removed if its to be shared with dual
+            if (linearProgram.Type == LPType.Max)
+            {
+                //Checks if there are any negatives in the top row, to see if it must continue
+                for (int i = 1; i < linearProgram.ColumnCount - 1; i++)
+                {
+                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < 0)
+                        return true;
+                }
+            }
+            else
+            {
+                //Checks if there are any positives in the top row, to see if it must continue
+                for (int i = 1; i < linearProgram.ColumnCount - 1; i++)
+                {
+                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > 0)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+
         //Returns true of the ratio test fails
         public bool SimplexRatio(out int winningCol, out int winningRow)
         {
@@ -99,11 +126,17 @@ namespace IPSolver
             int colAmount = linearProgram.ColumnCount;
             int rowAmount = linearProgram.RowCount;
 
-            bool done = false;
+            bool done = true;
             bool answerFound = true;
 
+            if (CheckIfCanContinue())
+            {
+                done = false;
+                answerFound = false;
+            }
+            
             //Loops till final table
-            do
+            while (done == false)
             {
                 tableauNumber++;
 
@@ -143,38 +176,14 @@ namespace IPSolver
                 UserInterfaceHandler.DisplayTable(linearProgram);
 
                 done = true;
-
                 answerFound = true;
 
-
-                //TODO this part needs to be removed if its to be shared with dual
-                if (linearProgram.Type == LPType.Max)
+                if (CheckIfCanContinue())
                 {
-                    //Checks if there are any negatives in the top row, to see if it must continue
-                    for (int i = 0; i < colAmount; i++)
-                    {
-                        if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < 0)
-                        {
-                            done = false;
-                            answerFound = false;
-                            break;
-                        }
-                    }
+                    done = false;
+                    answerFound = false;
                 }
-                else
-                {
-                    //Checks if there are any positives in the top row, to see if it must continue
-                    for (int i = 0; i < colAmount; i++)
-                    {
-                        if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > 0)
-                        {
-                            done = false;
-                            answerFound = false;
-                            break;
-                        }
-                    }
-                }
-            } while (done == false);
+            } 
 
             //Checks if there is an answer
             //TODO Handle the case when there is no solution found, as currently it will display no solution but still return the lp
