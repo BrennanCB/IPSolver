@@ -8,6 +8,9 @@ namespace IPSolver
 {
     class LpTools
     {
+        public static int GREATER_THAN = 1;
+        public static int LESS_THAN= 0;
+
         public static bool CheckIfLpIsSolved(LinearProgram LinearProgram)
         {
             if (CheckSpecialCases(LinearProgram))
@@ -110,6 +113,59 @@ namespace IPSolver
             return false;
         }
 
-        
+        //TODO: WILL BREAK IF SOLUTION IS NOT YET SOLVED OR IF YOU ADD CONSTRAINT TO A COLUMN WITH NO X SOLUTION
+        public static LinearProgram AddBasicConstraint
+            (LinearProgram linearProgram, int column, int ConstraintType, int rhs)
+        {
+            if (ConstraintType != GREATER_THAN && ConstraintType != LESS_THAN)
+            {
+                throw new ArgumentException
+                    ("The argument passed to AddBasicConstraint for ConstraintType does not match the expected value");
+            }
+
+            int constraintRow = linearProgram.RowCount;
+            double[,] newArray = new double[linearProgram.RowCount +1, linearProgram.ColumnCount +1];
+            for (int c = 0; c < linearProgram.ColumnCount-1; c++)
+            {
+                for (int r = 0; r < linearProgram.RowCount; r++)
+                {
+                    newArray[r, c] = linearProgram.LinearProgramMatrix[r, c];
+                }   
+            }
+            for (int i = 0; i < linearProgram.RowCount; i++)
+            {
+                newArray[i, linearProgram.ColumnCount] = linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount-1];
+            }
+            for (int i = 0; i < linearProgram.RowCount; i++)
+            {
+                newArray[i, linearProgram.ColumnCount] = 0;
+            }
+            newArray[constraintRow, column] = 1;
+            newArray[constraintRow, linearProgram.ColumnCount] = rhs;
+
+            newArray[constraintRow, linearProgram.ColumnCount] =
+                (ConstraintType == GREATER_THAN) ? -1 : 1;
+
+            //Constraint has been added, now check vilidity
+            int conflictingRow = 0;
+            for (int i = 0; i < linearProgram.RowCount; i++)
+            {
+                if(newArray[i, column] == 1)
+                {
+                    conflictingRow = i;
+                    break;
+                }
+            }
+            for (int i = 0; i < linearProgram.ColumnCount +1; i++)
+            {   
+                newArray[constraintRow, i] = newArray[constraintRow, i] - newArray[conflictingRow, i];
+            }
+            if(newArray[constraintRow, linearProgram.ColumnCount-1] < 0)
+                for (int i = 0; i < linearProgram.ColumnCount + 1; i++)
+                {
+                    newArray[constraintRow, i] *= -1;
+                }
+            return linearProgram;
+        }
     }
 }

@@ -32,15 +32,14 @@ namespace IPSolver
 
         private List<ProblemNode> problems;
 
-        public BranchAndBound()
+        public BranchAndBound(LinearProgram problem)
         {
             problems = new List<ProblemNode>();
+            problems.Add(new ProblemNode(problem, false, null, 0));
         }
 
         public LinearProgram Sovle(LinearProgram problem, LPType type)
         {
-            problems.Add(new ProblemNode(problem, false, null, 0));
-
             bool solved = false;
             ProblemNode currentOptimal = problems.ElementAt(0);
 
@@ -60,7 +59,29 @@ namespace IPSolver
                 if (solved)
                     break;
 
-                //todo: logic to solve here
+                Dual dual = new Dual(currentProblem.Problem);
+                currentProblem.Problem =  dual.Solve();
+
+                double[] xValues = new double[currentProblem.Problem.CountX];
+
+                currentProblem.XValues = xValues;
+
+                currentProblem.ZValue = 
+                    currentProblem.Problem.LinearProgramMatrix[0, currentProblem.Problem.ColumnCount];
+
+                currentProblem.Solved = true;
+
+                for (int i = 0; i < xValues.Length; i++)
+                    xValues[i] = currentProblem.Problem.LinearProgramMatrix[0, i];
+
+                for (int i = 0; i < xValues.Length; i++)
+                {
+                    if((xValues[i] % 1) != 0)
+                    {
+
+                    }
+                        
+                }
                 //todo: check for infinte loop when initial problem cannot be solved
 
                 if ((type == LPType.Max && currentProblem.ZValue > currentOptimal.ZValue)
