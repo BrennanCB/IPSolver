@@ -138,7 +138,7 @@ namespace IPSolver
             }
             for (int i = 0; i < linearProgram.RowCount; i++)
             {
-                newArray[i, linearProgram.ColumnCount] = 0;
+                newArray[i, linearProgram.ColumnCount-1] = 0;
             }
             newArray[constraintRow, column] = 1;
             newArray[constraintRow, linearProgram.ColumnCount] = rhs;
