@@ -15,12 +15,13 @@ namespace IPSolver
             this.linearProgram = linearProgram;
         }
 
-        public bool DualRatio(out int winningCol, out int winningRow)
+        //Returns true of the ratio test fails
+        public bool DualRatioTest(out int pivotCol, out int pivotRow)
         {
-            double winningRowAmount = 0;
+            double pivotRowAmount = 0;
 
-            winningRow = 0;
-            winningCol = 0;
+            pivotRow = 0;
+            pivotCol = 0;
 
             double winningRatio = double.MaxValue;
 
@@ -28,24 +29,24 @@ namespace IPSolver
 
             for (int i = 1; i < linearProgram.RowCount; i++)
             {
-                if (Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1]) < winningRowAmount)
+                if (Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1]) < pivotRowAmount)
                 {
-                    winningRow = i;
-                    winningRowAmount = Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1]);
+                    pivotRow = i;
+                    pivotRowAmount = Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1]);
                 }
             }
 
-            if (winningRow == 0)
+            if (pivotRow == 0)
                 return true;
 
             for (int i = 1; i < linearProgram.ColumnCount - 1; i++)
             {
-                if (linearProgram.LinearProgramMatrix[winningRow, i] < 0)
+                if (linearProgram.LinearProgramMatrix[pivotRow, i] < 0)
                 {
                     //Makes sure that cannot divide by zero
                     try
                     {
-                        double tempRatio = Math.Abs(Math.Round(linearProgram.LinearProgramMatrix[0, i] / linearProgram.LinearProgramMatrix[winningRow, i], 10));
+                        double tempRatio = Math.Abs(Math.Round(linearProgram.LinearProgramMatrix[0, i] / linearProgram.LinearProgramMatrix[pivotRow, i], 10));
 
                         ratios.Add(tempRatio);
                     }
@@ -68,25 +69,24 @@ namespace IPSolver
                     winningRatio = ratios[i];
 
                     //check
-                    winningCol = i + 1;
+                    pivotCol = i + 1;
                 }
                 else if (ratios[i] == 0)
                 {
-                    if (linearProgram.LinearProgramMatrix[winningRow, i + 1] > 0)
+                    if (linearProgram.LinearProgramMatrix[pivotRow, i + 1] > 0)
                     {
                         winningRatio = 0;
-                        winningCol = i + 1;
+                        pivotCol = i + 1;
                     }
                 }
             }
 
             //Makes sure the winning row isnt the top row
-            if (winningRow == 0)
+            if (pivotRow == 0)
                 return true;
 
             return false;
         }
-
 
         //TODO move this to another place, as ratio test has been taken out and can be used for simplex
         public LinearProgram Solve()
@@ -104,39 +104,39 @@ namespace IPSolver
                 tableauNumber++;
 
                 //Resets the variables
-                int winningCol = 0;
-                int winningRow = 0;
+                int pivotCol = 0;
+                int pivotRow = 0;
 
-                if (DualRatio(out winningCol, out winningRow))
+                if (DualRatioTest(out pivotCol, out pivotRow))
                 {
                     done = true;
                     break;
                 }
 
-                double winningNumber = linearProgram.LinearProgramMatrix[winningRow, winningCol];
+                double pivotCellValue = linearProgram.LinearProgramMatrix[pivotRow, pivotCol];
 
                 //Calculates the new values of winning row
                 for (int i = 0; i < colAmount; i++)
                 {
-                    double newAmount = linearProgram.LinearProgramMatrix[winningRow, i] / winningNumber;
+                    double newAmount = linearProgram.LinearProgramMatrix[pivotRow, i] / pivotCellValue;
 
-                    linearProgram.LinearProgramMatrix[winningRow, i] = newAmount;
+                    linearProgram.LinearProgramMatrix[pivotRow, i] = newAmount;
                 }
 
                 //Calculates the new amounts of the remaining rows
                 for (int i = 0; i < rowAmount; i++)
                 {
-                    double subtractAmount = linearProgram.LinearProgramMatrix[i, winningCol];
+                    double subtractAmount = linearProgram.LinearProgramMatrix[i, pivotCol];
                     for (int j = 0; j < colAmount; j++)
                     {
-                        if (i != winningRow)
-                            linearProgram.LinearProgramMatrix[i, j] = linearProgram.LinearProgramMatrix[i, j] - subtractAmount * linearProgram.LinearProgramMatrix[winningRow, j];
+                        if (i != pivotRow)
+                            linearProgram.LinearProgramMatrix[i, j] = linearProgram.LinearProgramMatrix[i, j] - subtractAmount * linearProgram.LinearProgramMatrix[pivotRow, j];
                     }
                 }
 
                 //Displays the table
                 Console.WriteLine("\nTable " + tableauNumber);
-                UserInterfaceHandler.DisplayTable(linearProgram);
+                linearProgram.DisplayCurrentTable();
 
                 done = true;
                 answerFound = true;
@@ -155,8 +155,7 @@ namespace IPSolver
             if (answerFound)
             {
                 Simplex simplex = new Simplex(linearProgram);
-
-                //Calls the appropriate simplex method
+                
                 linearProgram = simplex.Solve();
             }
 

@@ -10,22 +10,6 @@ namespace IPSolver
 
     class LpFormatter
     {
-        //public static double[,] originalLP, arrayS, arrayE, arrayA, formattedLP, finalLP, twoPhaseLP;
-        //public static double[] answers;
-        //public static List<string> canonicalForm = new List<string>();
-
-        //public static int countX = 0, countS = 0, countA = 0, countE = 0;
-        ////public static List<string> sign = new List<string>();
-        //public static bool twoPhase = false, answerFound = false;
-        //public static double[,] coordindates;
-        //public static List<int> colY = new List<int>();
-        //public static string LPType;
-
-        //private int countS = 0;
-        //private int countE = 0;
-        //private int countA = 0;
-        //private int countX = 0;
-
         LinearProgram linearProgram;
 
         private double[,] arrayA;
@@ -33,14 +17,6 @@ namespace IPSolver
         private double[,] arrayE;
         
         private List<String> unformattedLP;
-        //private List<String> canonicalForm;
-        //private double[,] formattedLp;
-        
-        //public double[,] GetFormattedLp()
-        //{
-        //    return formattedLp;
-        //}
-
 
         //TODO Check this method, see why its here and if its needed
         public LinearProgram GetLinearProgram()
@@ -53,9 +29,6 @@ namespace IPSolver
             }
 
             return linearProgram;
-
-            //return new LinearProgram(countS, countE, countA, countX, arrayA, arrayS,
-            //    arrayE, listOfA, colOfA, canonicalForm, formattedLp);
         }
 
         public LpFormatter(List<String> unformattedLP, Algorithm algorithm)
@@ -106,6 +79,7 @@ namespace IPSolver
             else
                 linearProgram.Type = LPType.Min;
 
+            //Used to increase the array size when = constraints are present
             int countEquals = 0;
 
             foreach (var item in unformattedLP)
@@ -130,14 +104,7 @@ namespace IPSolver
             try
             {
                 //Splits the signs
-                string[] tempSign = unformattedLP[unformattedLP.Count() - 1].Split(' ');
-
-                List<String> sign = new List<string>();
-
-                foreach (var item in tempSign)
-                {
-                    sign.Add(item);
-                }
+                string[] signs = unformattedLP[unformattedLP.Count() - 1].Split(' ');
 
                 //Does the canonical form for the z equation
                 string tempCanonicalForm = "Z ";
@@ -145,24 +112,17 @@ namespace IPSolver
                 //Cycles through temp Z equation
                 for (int i = 1; i < tempZ.Count(); i++)
                 {
-                    //Checks if restriction is negative
-                    if (sign[i - 1] == "-")
-                    {
-                        //Saves X's to array
+                    //Checks if restriction is negative & Saves X's to array
+                    if (signs[i - 1] == "-")
                         formatedLp[0, i] = Convert.ToDouble(tempZ[i]);
-                    }
                     else
-                    {
-                        //Saves X's to array
                         formatedLp[0, i] = Convert.ToDouble(tempZ[i]) * -1;
-                    }
 
                     //Saves X's to the canonical form
                     tempCanonicalForm += formatedLp[0, i] + "X" + i + " ";
                 }
 
                 //Adds the Equation to the canonical form list
-
                 linearProgram.CanonicalForm.Add(tempCanonicalForm + "= 0");
 
                 bool changeNeg = false;
@@ -182,7 +142,7 @@ namespace IPSolver
                         for (int j = 1; j < tempConstraint.Count() - 1; j++)
                         {
                             //Checks if sign restriction is negative
-                            if (sign[j - 1] == "-")
+                            if (signs[j - 1] == "-")
                             {
                                 //Changes the column to negative
                                 linearProgram.ColY.Add(j);
@@ -204,13 +164,9 @@ namespace IPSolver
 
                         //Changes the sign
                         if (tempConstraint[tempConstraint.Count() - 2] == "<=")
-                        {
                             tempConstraint[tempConstraint.Count() - 2] = ">=";
-                        }
                         else if (tempConstraint[tempConstraint.Count() - 2] == ">=")
-                        {
                             tempConstraint[tempConstraint.Count() - 2] = "<=";
-                        }
 
                         changeNeg = true;
                     }
@@ -219,7 +175,7 @@ namespace IPSolver
                         for (int j = 1; j < tempConstraint.Count() - 1; j++)
                         {
                             //Checks if sign restriction is negative
-                            if (sign[j - 1] == "-")
+                            if (signs[j - 1] == "-")
                             {
                                 //Changes the column to negative
                                 linearProgram.ColY.Add(j);
@@ -239,6 +195,8 @@ namespace IPSolver
                         formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]);
                     }
 
+                    formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]);
+
 
                     if (tempConstraint[tempConstraint.Count() - 2] == "<=")
                     {
@@ -256,11 +214,7 @@ namespace IPSolver
                         {
                             formatedLp[i + offset, j] = formatedLp[i + offset, j] * -1;
                         }
-
-
-                        //arrayA[i, linearProgram.CountA] = 1;
-                        //linearProgram.CountA++;
-
+                        
                         tempCanonicalForm += "+E" + linearProgram.CountE + " ";
                     }
                     else //=
@@ -295,7 +249,7 @@ namespace IPSolver
                         linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i + offset, formatedLp.GetLength(1) - 1]);
                     }
                 }
-                linearProgram.LinearProgramMatrix = CreateLPFinalForm(formatedLp);
+                linearProgram.LinearProgramMatrix = MergeArraysIntoLPMatrix(formatedLp);
 
                 //return linearProgram;
             }
@@ -339,8 +293,6 @@ namespace IPSolver
             //return null;
         }
 
-
-
         //Formats the LP, by adding the S, E and A, and creating the canonical form
         private void FormatSimplxLP()
         {
@@ -373,14 +325,7 @@ namespace IPSolver
             try
             {
                 //Splits the signs
-                string[] tempSign = unformattedLP[unformattedLP.Count() - 1].Split(' ');
-
-                List<String> sign = new List<string>();
-
-                foreach (var item in tempSign)
-                {
-                    sign.Add(item);
-                }
+                string[] signs = unformattedLP[unformattedLP.Count() - 1].Split(' ');
 
                 //Does the canonical form for the z equation
                 string tempCanonicalForm = "Z ";
@@ -388,23 +333,15 @@ namespace IPSolver
                 //Cycles through temp Z equation
                 for (int i = 1; i < tempZ.Count(); i++)
                 {
-                    //Checks if restriction is negative
-                    if (sign[i - 1] == "-")
-                    {
-                        //Saves X's to array
+                    //Checks if restriction is negative & Saves X's to array
+                    if (signs[i - 1] == "-")
                         formatedLp[0, i] = Convert.ToDouble(tempZ[i]);
-                    }
                     else
-                    {
-                        //Saves X's to array
                         formatedLp[0, i] = Convert.ToDouble(tempZ[i]) * -1;
-                    }
 
                     //Saves X's to the canonical form
                     tempCanonicalForm += formatedLp[0, i] + "X" + i + " ";
                 }
-
-                //Adds the Equation to the canonical form list
                 
                 linearProgram.CanonicalForm.Add(tempCanonicalForm + "= 0");
 
@@ -424,7 +361,7 @@ namespace IPSolver
                         for (int j = 1; j < tempConstraint.Count() - 1; j++)
                         {
                             //Checks if sign restriction is negative
-                            if (sign[j - 1] == "-")
+                            if (signs[j - 1] == "-")
                             {
                                 //Changes the column to negative
                                 linearProgram.ColY.Add(j);
@@ -461,7 +398,7 @@ namespace IPSolver
                         for (int j = 1; j < tempConstraint.Count() - 1; j++)
                         {
                             //Checks if sign restriction is negative
-                            if (sign[j - 1] == "-")
+                            if (signs[j - 1] == "-")
                             {
                                 //Changes the column to negative
                                 linearProgram.ColY.Add(j);
@@ -481,7 +418,6 @@ namespace IPSolver
                         formatedLp[i, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]);
                     }
 
-                   
                     if (tempConstraint[tempConstraint.Count() - 2] == "<=")
                     {
                         arrayS[i, linearProgram.CountS] = 1;
@@ -509,19 +445,12 @@ namespace IPSolver
 
                     //Changes the RHS
                     if (changeNeg == true)
-                    {
-                        //Adds it to the canonical form list
                         linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + (formatedLp[i, formatedLp.GetLength(1) - 1]) * -1);
-                    }
                     else
-                    {
-                        //Adds it to the canonical form list
                         linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i, formatedLp.GetLength(1) - 1]);
-                    }
                 }
-                linearProgram.LinearProgramMatrix =  CreateLPFinalForm(formatedLp);
 
-                //return linearProgram;
+                linearProgram.LinearProgramMatrix =  MergeArraysIntoLPMatrix(formatedLp);
             }
             catch (FormatException) //Checks if data is valid
             {
@@ -550,7 +479,7 @@ namespace IPSolver
             }
             catch (ArgumentOutOfRangeException) //Catchs error if not enough signs
             {
-                Console.WriteLine("Please ensire that you gave each variable a constraint");
+                Console.WriteLine("Please ensure that you gave each variable a constraint");
                 Console.WriteLine();
                 Console.WriteLine("Press any key to continue...");
 
@@ -564,15 +493,14 @@ namespace IPSolver
         }
 
         //Puts the LP, S, E and A arrays into 1 big array
-        private double[,] CreateLPFinalForm(double[,] originalLP)
+        private double[,] MergeArraysIntoLPMatrix(double[,] originalLP)
         {
             //Gets the number of columns of the final array
             int finalLPLength = originalLP.GetLength(1) + linearProgram.CountA + linearProgram.CountE + linearProgram.CountS;
 
             //Sets the rows and columns for the final array
             double[,] finalLP = new double[originalLP.GetLength(0), finalLPLength];
-
-            //Chooses the row
+            
             for (int i = 0; i < finalLP.GetLength(0); i++)
             {
                 int mainCol = 0;

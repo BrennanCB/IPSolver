@@ -14,41 +14,28 @@ namespace IPSolver
         {
             this.linearProgram = linearProgram;
         }
-        
+
         //TODO rename
-        public bool CheckIfCanContinue()
+        public bool CheckZRowValues()
         {
-            //TODO this part needs to be removed if its to be shared with dual
-            if (linearProgram.Type == LPType.Max)
+            //Checks the top row, to see if it must continue
+            for (int i = 1; i < linearProgram.ColumnCount - 1; i++)
             {
-                //Checks if there are any negatives in the top row, to see if it must continue
-                for (int i = 1; i < linearProgram.ColumnCount - 1; i++)
-                {
-                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < 0)
-                        return true;
-                }
-            }
-            else
-            {
-                //Checks if there are any positives in the top row, to see if it must continue
-                for (int i = 1; i < linearProgram.ColumnCount - 1; i++)
-                {
-                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > 0)
-                        return true;
-                }
+                if ((linearProgram.Type == LPType.Max && Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < 0) ||
+                        (linearProgram.Type == LPType.Min && Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > 0))
+                    return true;
             }
 
             return false;
         }
 
-
         //Returns true of the ratio test fails
-        public bool SimplexRatio(out int winningCol, out int winningRow)
+        public bool SimplexRatioTest(out int pivotCol, out int pivotRow)
         {
-            winningCol = 0;
-            winningRow = 0;
+            pivotCol = 0;
+            pivotRow = 0;
 
-            double winningColAmount = 0;
+            double pivotColAmount = 0;
             double winningRatio = double.MaxValue;
 
             List<double> ratios = new List<double>();
@@ -56,26 +43,16 @@ namespace IPSolver
             //Loops through the rows to choose the winning column
             for (int i = 1; i < linearProgram.ColumnCount - 1; i++)
             {
-                if (linearProgram.Type == LPType.Max)
+                if ((linearProgram.Type == LPType.Max && Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < pivotColAmount) ||
+                    (linearProgram.Type == LPType.Min && Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > pivotColAmount))
                 {
-                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) < winningColAmount)
-                    {
-                        winningCol = i;
-                        winningColAmount = Math.Round(linearProgram.LinearProgramMatrix[0, i], 10);
-                    }
-                }
-                else
-                {
-                    if (Math.Round(linearProgram.LinearProgramMatrix[0, i], 10) > winningColAmount)
-                    {
-                        winningCol = i;
-                        winningColAmount = Math.Round(linearProgram.LinearProgramMatrix[0, i], 10);
-                    }
+                    pivotCol = i;
+                    pivotColAmount = Math.Round(linearProgram.LinearProgramMatrix[0, i], 10);
                 }
             }
 
             //Makes sure the winning column isnt Z
-            if (winningCol == 0)
+            if (pivotCol == 0)
                 return true;
 
             //Calculates the ratios
@@ -84,7 +61,7 @@ namespace IPSolver
                 //Makes sure that cannot divide by zero
                 try
                 {
-                    double tempRatio = Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1] / linearProgram.LinearProgramMatrix[i, winningCol], 10);
+                    double tempRatio = Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1] / linearProgram.LinearProgramMatrix[i, pivotCol], 10);
 
                     ratios.Add(tempRatio);
                 }
@@ -100,20 +77,17 @@ namespace IPSolver
                 if (ratios[i] < winningRatio && ratios[i] > 0)
                 {
                     winningRatio = ratios[i];
-                    winningRow = i + 1;
+                    pivotRow = i + 1;
                 }
-                else if (ratios[i] == 0)
+                else if (ratios[i] == 0 && linearProgram.LinearProgramMatrix[i + 1, pivotCol] > 0)
                 {
-                    if (linearProgram.LinearProgramMatrix[i + 1, winningCol] > 0)
-                    {
-                        winningRatio = 0;
-                        winningRow = i + 1;
-                    }
+                    winningRatio = 0;
+                    pivotRow = i + 1;
                 }
             }
 
             //Makes sure the winning row isnt the top row
-            if (winningRow == 0)
+            if (pivotRow == 0)
                 return true;
 
             return false;
@@ -129,61 +103,61 @@ namespace IPSolver
             bool done = true;
             bool answerFound = true;
 
-            if (CheckIfCanContinue())
+            if (CheckZRowValues())
             {
                 done = false;
                 answerFound = false;
             }
-            
+
             //Loops till final table
-            while (done == false)
+            while (!done)
             {
                 tableauNumber++;
 
                 //Resets the variables
-                int winningCol = 0;
-                int winningRow = 0;
+                int pivotCol = 0;
+                int pivotRow = 0;
 
-                if (SimplexRatio(out winningCol, out winningRow))
+                if (SimplexRatioTest(out pivotCol, out pivotRow))
                 {
                     done = true;
                     break;
                 }
 
-                double winningNumber = linearProgram.LinearProgramMatrix[winningRow, winningCol];
+                double pivotCellValue = linearProgram.LinearProgramMatrix[pivotRow, pivotCol];
 
                 //Calculates the new values of winning row
                 for (int i = 0; i < colAmount; i++)
                 {
-                    double newAmount = linearProgram.LinearProgramMatrix[winningRow, i] / winningNumber;
+                    double newAmount = linearProgram.LinearProgramMatrix[pivotRow, i] / pivotCellValue;
 
-                    linearProgram.LinearProgramMatrix[winningRow, i] = newAmount;
+                    linearProgram.LinearProgramMatrix[pivotRow, i] = newAmount;
                 }
 
                 //Calculates the new amounts of the remaining rows
                 for (int i = 0; i < rowAmount; i++)
                 {
-                    double subtractAmount = linearProgram.LinearProgramMatrix[i, winningCol];
+                    double subtractAmount = linearProgram.LinearProgramMatrix[i, pivotCol];
                     for (int j = 0; j < colAmount; j++)
                     {
-                        if (i != winningRow)
-                            linearProgram.LinearProgramMatrix[i, j] = linearProgram.LinearProgramMatrix[i, j] - subtractAmount * linearProgram.LinearProgramMatrix[winningRow, j];
+                        if (i != pivotRow)
+                            linearProgram.LinearProgramMatrix[i, j] = linearProgram.LinearProgramMatrix[i, j] - subtractAmount * linearProgram.LinearProgramMatrix[pivotRow, j];
                     }
                 }
 
                 //Displays the table
                 Console.WriteLine("\nTable " + tableauNumber);
-                UserInterfaceHandler.DisplayTable(linearProgram);
+                linearProgram.DisplayCurrentTable();
 
                 done = true;
                 answerFound = true;
 
-                if (CheckIfCanContinue())
+                if (CheckZRowValues())
                 {
                     done = false;
                     answerFound = false;
                 }
-            } 
+            }
 
             //Checks if there is an answer
             //TODO Handle the case when there is no solution found, as currently it will display no solution but still return the lp

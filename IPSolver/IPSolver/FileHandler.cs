@@ -68,7 +68,7 @@ namespace IPSolver
         }
         
         //Saves the basic variables ofr optimal solution
-        public static void SaveSolution(double zValue, List<double> solutions)
+        public static void SaveSolution(double zValue, double[] solutions)
         {
             FileStream file = new FileStream(outputLocation, FileMode.Create, FileAccess.Write);
             StreamWriter write = new StreamWriter(file);

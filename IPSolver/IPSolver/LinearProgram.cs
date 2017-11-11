@@ -8,41 +8,33 @@ namespace IPSolver
 {
     public class LinearProgram
     {
+        #region Fields
         private int countS, countE, countA, countX;
-
-        //Removed to see if needed
-        //private double[,] arrayA, arrayS, arrayE;
-
         private LPType type;
-
         private bool isTwoPhase;
 
         private List<int> listOfA;
         private List<int> colOfA;
-
         private List<int> colY;
 
         private List<String> canonicalForm;
+
         private double[,] linearProgramMatrix;
+        #endregion
 
         //TODO Temporary Default constructor
         public LinearProgram()
         {
 
         }
-
-        //TODO, if the above arrays arent needed, ctor needs to be simplified
+        
         public LinearProgram(int countS, int countE, int countA, int countX, List<int> listOfA, List<int> colOfA, List<int> colY, LPType type, List<String> canonicalForm, double[,] linearProgramArray)
         {
             CountS = countS;
             CountE = countE;
             CountA = countA;
             CountX = countX;
-
-            //this.arrayA = arrayA;
-            //this.arrayS = arrayS;
-            //this.arrayE = arrayE;
-
+            
             Type = type;
 
             ListOfA = listOfA;
@@ -53,12 +45,8 @@ namespace IPSolver
             LinearProgramMatrix = linearProgramArray;
         }
 
-        public List<String> CanonicalForm
-        {
-            get => canonicalForm;
-            set => canonicalForm = value;
-        }
 
+        #region Properties
         //TODO Check this
         //public bool IsTwoPhase => countA > 0;
 
@@ -79,6 +67,12 @@ namespace IPSolver
         {
             get => type;
             set => type = value;
+        }
+
+        public List<String> CanonicalForm
+        {
+            get => canonicalForm;
+            set => canonicalForm = value;
         }
 
         public double[,] LinearProgramMatrix
@@ -128,21 +122,19 @@ namespace IPSolver
             get => colY;
             set => colY = value;
         }
+        #endregion
 
         public double[] GetBasicVariables()
         {
-            int colAmount = ColumnCount;
-            int rowAmount = RowCount;
+            double[] basicVariableValues = new double[ColumnCount - 1];
 
-            double[] basicVariableValues = new double[colAmount - 1];
-
-            for (int j = 0; j < colAmount - 1; j++)
+            for (int j = 0; j < ColumnCount - 1; j++)
             {
                 bool bv = true;
-                int countOne = 0;
+                int countOfOnes = 0;
                 double optimalSolution = 0;
 
-                for (int i = 0; i < rowAmount; i++)
+                for (int i = 0; i < RowCount; i++)
                 {
                     double currentNumber = linearProgramMatrix[i, j];
 
@@ -150,29 +142,24 @@ namespace IPSolver
                     {
                         bv = false;
                     }
-                    else if (linearProgramMatrix[i, j] == 1)
+                    else if (currentNumber == 1)
                     {
-                        countOne++;
+                        countOfOnes++;
 
-                        if (countOne > 1)
+                        if (countOfOnes > 1)
                             bv = false;
                         else
-                            optimalSolution = linearProgramMatrix[i, colAmount - 1];
+                            optimalSolution = linearProgramMatrix[i, ColumnCount - 1];
                     }
                 }
 
                 if (bv == false)
                     basicVariableValues[j] = 0;
-                else if (bv == true && countOne == 1)
-                    basicVariableValues[j] = optimalSolution;
+                else if (bv == true && countOfOnes == 1)
+                    basicVariableValues[j] = Math.Round(optimalSolution, 2);
             }
 
             return basicVariableValues;
-        }
-
-        public void AddConstraint(String Constraint)
-        {
-            //TODO Add constraint to the LP
         }
 
         public void DisplayCanonicalForm()
@@ -188,74 +175,122 @@ namespace IPSolver
             Console.WriteLine();
         }
 
+        public void DisplayCurrentTable()
+        {
+            bool isY = false;
+
+            //Checks if two phase
+
+            Console.Write("Row\t");
+
+            if (IsTwoPhase)
+                Console.Write("W\t");
+
+            Console.Write("Z\t");
+
+            for (int i = 1; i <= CountX; i++)
+            {
+                //Checks it the X changes to a Y
+                isY = false;
+                foreach (var item in ColY)
+                {
+                    if (item == i)
+                        isY = true;
+                }
+
+                //Displays Y if true
+                if (isY == true)
+                    Console.Write("Y" + i + "\t");
+                else
+                    Console.Write("X" + i + "\t");
+            }
+
+            for (int i = 1; i <= CountS; i++)
+            {
+                Console.Write("S" + i + "\t");
+            }
+
+            for (int i = 1; i <= CountE; i++)
+            {
+                Console.Write("E" + i + "\t");
+            }
+
+            for (int i = 1; i <= CountA; i++)
+            {
+                Console.Write("A" + i + "\t");
+            }
+
+            Console.Write("RHS");
+            Console.WriteLine();
+
+            //Displays the data
+            for (int i = 0; i < RowCount; i++)
+            {
+                Console.Write(i + "\t");
+
+                for (int j = 0; j < ColumnCount; j++)
+                {
+                    Console.Write(Math.Round(LinearProgramMatrix[i, j], 2) + "\t");
+                }
+
+                Console.WriteLine();
+            }
+        }
+
         public void DisplaySolution()
         {
-            List<double> finalSolution = new List<double>();
-
             double[] answers = GetBasicVariables();
 
-            int countAnswers = 0;
+            double zValue = answers[0];
 
-            //Displays the z-value
-            double zValue = Math.Round(answers[countAnswers], 2);
-            //Displays the optimal solutions
-            Console.WriteLine("Optimal Solutions");
-            Console.WriteLine("-----------------");
-            Console.WriteLine("Z = " + zValue);
+            Console.WriteLine("Optimal Solutions\n-----------------\nZ = + " + zValue);
 
-            countAnswers++;
-
-            //TODO Fix the displaying of the answers
+            int countAnswers = 1;
+            
             //Displays the X's
             for (int i = 0; i < CountX; i++)
             {
                 bool isY = false;
+
                 foreach (var item in ColY)
                 {
                     if (item + 1 == i)
-                    {
                         isY = true;
-                    }
                 }
 
                 if (isY == true)
-                {
-                    Console.WriteLine("X" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2) * -1);
-                }
+                    Console.WriteLine("X" + (i + 1) + " = " + answers[countAnswers] * -1);
                 else
-                {
-                    Console.WriteLine("X" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2));
-                }
+                    Console.WriteLine("X" + (i + 1) + " = " + answers[countAnswers]);
 
-                finalSolution.Add(Math.Round(answers[countAnswers], 2));
                 countAnswers++;
             }
 
             //Displaye the S's
             for (int i = 0; i < CountS; i++)
             {
-                Console.WriteLine("S" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2));
+                Console.WriteLine("S" + (i + 1) + " = " + answers[countAnswers]);
                 countAnswers++;
             }
 
             //Displaye the E's
             for (int i = 0; i < CountE; i++)
             {
-                Console.WriteLine("E" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2));
+                Console.WriteLine("E" + (i + 1) + " = " + answers[countAnswers]);
                 countAnswers++;
             }
 
             //Displaye the A's
             for (int i = 0; i < CountA; i++)
             {
-                Console.WriteLine("A" + (i + 1) + " = " + Math.Round(answers[countAnswers], 2));
+                Console.WriteLine("A" + (i + 1) + " = " + answers[countAnswers]);
                 countAnswers++;
             }
 
             Console.WriteLine();
 
             //Calls the method that saves the soution
-            FileHandler.SaveSolution(zValue, finalSolution);
+            FileHandler.SaveSolution(zValue, answers);
 
             Console.WriteLine("The solution has been saved!");
 
@@ -266,9 +301,7 @@ namespace IPSolver
                 //Graph();
             }
             else
-            {
                 Console.WriteLine("This LP has more than two variables, cannot draw this graph");
-            }
 
             Console.ReadKey();
         }

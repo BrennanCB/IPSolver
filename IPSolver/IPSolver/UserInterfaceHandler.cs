@@ -29,7 +29,7 @@ namespace IPSolver
         //New Main Menu with file,Alg& sensitivity ananlysis selection
         public static void Menu()
         {
-            OldMenu();
+            GetInputAndOutputFiles();
 
             //TODO Move this to different place
             #region Stuff to Move
@@ -83,8 +83,8 @@ ________________________________________________________
                         linearProgram.DisplayCanonicalForm();
 
                         Console.WriteLine("Initial Table");
-                        
-                        UserInterfaceHandler.DisplayTable(linearProgram);
+
+                        linearProgram.DisplayCurrentTable();
 
                         Simplex simplex = new Simplex(linearProgram);
 
@@ -109,7 +109,7 @@ ________________________________________________________
 
                         TwoPhase twoPhase = new TwoPhase(linearProgram);
 
-                        UserInterfaceHandler.DisplayTable(linearProgram);
+                        linearProgram.DisplayCurrentTable();
 
                         //Runs Two Phase
                         linearProgram = twoPhase.Solve();
@@ -132,7 +132,7 @@ ________________________________________________________
                         
                         Dual dual = new Dual(linearProgram);
 
-                        UserInterfaceHandler.DisplayTable(linearProgram);
+                        linearProgram.DisplayCurrentTable();
                         
                         linearProgram = dual.Solve();
 
@@ -240,9 +240,8 @@ ________________________________________________________________________________
             }
         }
 
-        //Main Menu
         //TODO Check if anything from here can be added into the new menu
-        public static void OldMenu()
+        public static void GetInputAndOutputFiles()
         {
             bool isValid = false;
 
@@ -321,73 +320,5 @@ ________________________________________________________________________________
                 Console.Clear();
             } while (isValid == false);
         }
-
-        //Displays the table
-        //TODO Rework this to better use the Linear Programming Object instead of parameter
-        public static void DisplayTable(LinearProgram linearProgram)
-        {
-            bool isY = false;
-
-            //Checks if two phase
-            if (!linearProgram.IsTwoPhase)
-            {
-                //Adds the top row
-                Console.Write("Row\tZ\t");
-            }
-            else
-            {
-                //Adds the top row
-                Console.Write("Row\tW\tZ\t");
-            }
-
-            for (int i = 1; i <= linearProgram.CountX; i++)
-            {
-                //Checks it the X changes to a Y
-                isY = false;
-                foreach (var item in linearProgram.ColY)
-                {
-                    if (item == i)
-                        isY = true;
-                }
-
-                //Displays Y if true
-                if (isY == true)
-                    Console.Write("Y" + i + "\t");
-                else
-                    Console.Write("X" + i + "\t");
-            }
-
-            for (int i = 1; i <= linearProgram.CountS; i++)
-            {
-                Console.Write("S" + i + "\t");
-            }
-
-            for (int i = 1; i <= linearProgram.CountE; i++)
-            {
-                Console.Write("E" + i + "\t");
-            }
-
-            for (int i = 1; i <= linearProgram.CountA; i++)
-            {
-                Console.Write("A" + i + "\t");
-            }
-
-            Console.Write("RHS");
-            Console.WriteLine();
-
-            //Displays the data
-            for (int i = 0; i < linearProgram.RowCount; i++)
-            {
-                Console.Write(i + "\t");
-
-                for (int j = 0; j < linearProgram.ColumnCount; j++)
-                {
-                    Console.Write(Math.Round(linearProgram.LinearProgramMatrix[i, j], 2) + "\t");
-                }
-
-                Console.WriteLine();
-            }
-        }
     }
-
 }
