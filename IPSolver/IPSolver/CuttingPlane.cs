@@ -21,7 +21,7 @@ namespace IPSolver
                 if (linearProgram.LinearProgramMatrix[i, 0] == 1)
                     targetRow = i;
             }
-            double[] fractionArray = new double[linearProgram.ColumnCount];
+            double[] fractionArray = new double[linearProgram.ColumnCount+1];
             for (int i = 0; i < linearProgram.ColumnCount; i++)
             {
                 fractionArray[i] = linearProgram.LinearProgramMatrix[targetRow, i];
@@ -34,9 +34,15 @@ namespace IPSolver
 
             }
 
+            fractionArray[fractionArray.Length - 1] = fractionArray[fractionArray.Length - 2];
+            fractionArray[fractionArray.Length - 2] = 1;
 
+            linearProgram.LinearProgramMatrix = LpTools.AddRow(fractionArray, linearProgram);
+            linearProgram.IsTwoPhase = true;
+            linearProgram.CountS++;
 
-            return linearProgram;
+            Dual dual = new Dual(linearProgram);
+            return dual.Solve();
         }
 
      
