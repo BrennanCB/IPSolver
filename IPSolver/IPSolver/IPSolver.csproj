@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
     <Compile Include="BranchAndBound.cs" />
+    <Compile Include="CuttingPlane.cs" />
     <Compile Include="Dual.cs" />
     <Compile Include="LpTools.cs" />
     <Compile Include="LPType.cs" />
