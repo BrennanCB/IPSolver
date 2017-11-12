@@ -167,5 +167,31 @@ namespace IPSolver
                 }
             return linearProgram;
         }
+
+        //Only works when one new slack variable is added
+        public static double[,] AddRow(double[] row, LinearProgram linearProgram)
+        {
+            double[,] newArray = new double[linearProgram.RowCount + 1, linearProgram.ColumnCount + 1];
+            for (int c = 0; c < linearProgram.ColumnCount - 1; c++)
+            {
+                for (int r = 0; r < linearProgram.RowCount; r++)
+                {
+                    newArray[r, c] = linearProgram.LinearProgramMatrix[r, c];
+                }
+            }
+            for (int i = 0; i < linearProgram.RowCount; i++)
+            {
+                newArray[i, linearProgram.ColumnCount] = linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1];
+            }
+            for (int i = 0; i < linearProgram.RowCount; i++)
+            {
+                newArray[i, linearProgram.ColumnCount - 1] = 0;
+            }
+            for (int i = 0; i < row.Length; i++)
+            {
+                newArray[linearProgram.RowCount - 1, i] = row[i];
+            }
+            return newArray;
+        }
     }
 }
