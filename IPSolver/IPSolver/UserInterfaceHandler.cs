@@ -115,17 +115,12 @@ ________________________________________________________
                         linearProgram.DisplaySolution();
                         break;
                     case Algorithm.BranchAndBound:
-                        lpFormatter = new LpFormatter(unformatedLP, Algorithm.Dual);
 
-                        linearProgram = lpFormatter.GetLinearProgram();
+                        linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
 
                         linearProgram.DisplayCanonicalForm();
 
-                        Console.WriteLine("Initial Table");
-
                         Dual bbDual = new Dual(linearProgram);
-
-                        linearProgram.DisplayCurrentTable();
 
                         linearProgram = bbDual.Solve();
 

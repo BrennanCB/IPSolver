@@ -121,7 +121,7 @@ namespace IPSolver
                 currentProblem.XValues = xValues;
 
                 currentProblem.ZValue = 
-                    currentProblem.Problem.LinearProgramMatrix[0, currentProblem.Problem.ColumnCount];
+                    currentProblem.Problem.LinearProgramMatrix[0, currentProblem.Problem.ColumnCount-1];
 
                 currentProblem.Solved = true;
 
