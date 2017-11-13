@@ -144,7 +144,24 @@ ________________________________________________________
 
                         break;
                     case Algorithm.BranchAndBound:
+                        lpFormatter = new LpFormatter(unformatedLP, Algorithm.Dual);
 
+                        linearProgram = lpFormatter.GetLinearProgram();
+
+                        linearProgram.DisplayCanonicalForm();
+
+                        Console.WriteLine("Initial Table");
+
+                        Dual bbDual = new Dual(linearProgram);
+
+                        linearProgram.DisplayCurrentTable();
+
+                        linearProgram = bbDual.Solve();
+
+                        BranchAndBound BB = new BranchAndBound(linearProgram);
+                        linearProgram = BB.Sovle();
+
+                        linearProgram.DisplaySolution();
 
                         //TODO Insert Method to return solved Branch & Bound Simplex
 

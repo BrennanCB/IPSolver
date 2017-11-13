@@ -143,7 +143,7 @@ namespace IPSolver
             newArray[constraintRow, column] = 1;
             newArray[constraintRow, linearProgram.ColumnCount] = rhs;
 
-            newArray[constraintRow, linearProgram.ColumnCount] =
+            newArray[constraintRow, linearProgram.ColumnCount-1] =
                 (ConstraintType == GREATER_THAN) ? -1 : 1;
 
             //Constraint has been added, now check vilidity

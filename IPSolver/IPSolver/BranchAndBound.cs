@@ -31,14 +31,16 @@ namespace IPSolver
         }
 
         private List<ProblemNode> problems;
+        LPType type;
 
         public BranchAndBound(LinearProgram problem)
         {
             problems = new List<ProblemNode>();
             problems.Add(new ProblemNode(problem, false, null, 0));
+            type = problem.Type;
         }
 
-        public LinearProgram Sovle(LinearProgram problem, LPType type)
+        public LinearProgram Sovle()
         {
             bool solved = false;
             ProblemNode currentOptimal = problems.ElementAt(0);
@@ -90,6 +92,7 @@ namespace IPSolver
                 }
                 //todo: check for infinte loop when initial problem cannot be solved
 
+                
                 if ((type == LPType.Max && currentProblem.ZValue > currentOptimal.ZValue)
                     || (type == LPType.Min && currentOptimal.ZValue > currentProblem.ZValue))
                 { 
