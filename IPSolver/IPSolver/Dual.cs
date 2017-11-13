@@ -39,7 +39,7 @@ namespace IPSolver
 
             for (int i = 1; i < LinearProgram.RowCount; i++)
             {
-                if (Math.Round(LinearProgram.LinearProgramMatrix[i, LinearProgram.ColumnCount - 1]) < pivotRowAmount)
+                if (Math.Round(LinearProgram.LinearProgramMatrix[i, LinearProgram.ColumnCount - 1], 5) < pivotRowAmount)
                 {
                     pivotRow = i;
                     pivotRowAmount = Math.Round(LinearProgram.LinearProgramMatrix[i, LinearProgram.ColumnCount - 1]);

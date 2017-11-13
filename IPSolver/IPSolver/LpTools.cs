@@ -142,8 +142,8 @@ namespace IPSolver
             newArray[constraintRow, column] = 1;
             newArray[constraintRow, linearProgram.ColumnCount] = rhs;
 
-            newArray[constraintRow, linearProgram.ColumnCount-1] =
-                (ConstraintType == GREATER_THAN) ? -1 : 1;
+            newArray[constraintRow, linearProgram.ColumnCount - 1] = 1;
+               // (ConstraintType == GREATER_THAN) ? -1 : 1;
 
             
 
@@ -162,7 +162,8 @@ namespace IPSolver
                 tempLp.CountE++;
                 for (int i = 0; i < linearProgram.ColumnCount + 1; i++)
                 {
-                    newArray[constraintRow, i] = newArray[constraintRow, i] + newArray[conflictingRow, i];
+                    newArray[constraintRow, i] = newArray[constraintRow, i] - newArray[conflictingRow, i];
+                    newArray[constraintRow, linearProgram.ColumnCount - 1] *= -1;
                 }
             }
             else

@@ -9,7 +9,7 @@ namespace IPSolver
     class BranchAndBound
     {
 
-        private class ProblemNode
+        private class ProblemNode : ICloneable
         {
             LinearProgram problem;
             bool solved;
@@ -76,6 +76,11 @@ namespace IPSolver
                 }
             }
 
+            public object Clone()
+            {
+                return this.MemberwiseClone();
+            }
+
             //public LinearProgram Problem { get => problem; set => problem = value; }
             //public bool Solved { get => solved; set => solved = value; }
             //public double[] XValues { get => xValues; set => xValues = value; }
@@ -95,18 +100,18 @@ namespace IPSolver
         public LinearProgram Sovle()
         {
             bool solved = false;
-            ProblemNode currentOptimal = problems.ElementAt(0);
+            ProblemNode currentOptimal = (ProblemNode)problems.ElementAt(0);
 
             //loop runs until all problems are solved, exit via break
             while (true)
             {
-                ProblemNode currentProblem = problems.ElementAt(0);
+                ProblemNode currentProblem = (ProblemNode)problems.ElementAt(0);
                 //this loop checks to see if all problems are solved
                 for (int i = 0; i < problems.Count; i++)
                 {
                     if (!problems.ElementAt(i).Solved)
                     {
-                        currentProblem = problems.ElementAt(i);
+                        currentProblem = (ProblemNode)problems.ElementAt(i);
                         break;
                     }
                     if (problems.Count == i -1)
