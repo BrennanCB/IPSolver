@@ -127,7 +127,7 @@ ________________________________________________________
                         linearProgram = bbDual.Solve();
 
                         BranchAndBound BB = new BranchAndBound(linearProgram);
-                        linearProgram = BB.Sovle();
+                        linearProgram = BB.Solve();
 
                         linearProgram.DisplaySolution();
 
@@ -136,7 +136,18 @@ ________________________________________________________
 
                         break;
                     case Algorithm.CuttingPlane:
+                        linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
 
+                        linearProgram.DisplayCanonicalForm();
+
+                        Dual cutDual = new Dual(linearProgram);
+
+                        linearProgram = cutDual.Solve();
+
+                        CuttingPlane cutingPlane = new CuttingPlane(linearProgram);
+                        linearProgram = cutingPlane.Sovle();
+
+                        linearProgram.DisplaySolution();
 
                         //TODO Insert Method to Return solved Cutting Plane Simpelex
 
