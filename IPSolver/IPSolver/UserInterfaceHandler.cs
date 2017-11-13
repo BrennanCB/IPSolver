@@ -82,11 +82,7 @@ ________________________________________________________
 
                         linearProgram.DisplayCanonicalForm();
 
-                        Console.WriteLine("Initial Table");
-
-                        linearProgram.DisplayCurrentTable();
-
-                        Simplex simplex = new Simplex(linearProgram);
+                        PrimalSimplex simplex = new PrimalSimplex(linearProgram);
 
                         linearProgram = simplex.Solve();
                         linearProgram.DisplaySolution();
@@ -103,13 +99,9 @@ ________________________________________________________
                         linearProgram = lpFormatter.GetLinearProgram();
                         linearProgram.IsTwoPhase = true;
 
-                        linearProgram.DisplayCanonicalForm();
-
-                        Console.WriteLine("Initial Table");
-
                         TwoPhase twoPhase = new TwoPhase(linearProgram);
 
-                        linearProgram.DisplayCurrentTable();
+                        linearProgram.DisplayCanonicalForm();
 
                         //Runs Two Phase
                         linearProgram = twoPhase.Solve();
@@ -128,11 +120,9 @@ ________________________________________________________
 
                         linearProgram.DisplayCanonicalForm();
 
-                        Console.WriteLine("Initial Table");
                         
                         Dual dual = new Dual(linearProgram);
 
-                        linearProgram.DisplayCurrentTable();
                         
                         linearProgram = dual.Solve();
 

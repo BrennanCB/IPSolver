@@ -49,11 +49,11 @@ namespace IPSolver
 
             switch (algorithm)
             {
-                case Algorithm.Primal: FormatSimplxLP();
+                case Algorithm.Primal: FormatLPTwoPhase();
                     break;
-                case Algorithm.TwoPhase: FormatSimplxLP();
+                case Algorithm.TwoPhase: FormatLPTwoPhase();
                     break;
-                case Algorithm.Dual: FormatDualLP();
+                case Algorithm.Dual: FormatLPDual();
                     break;
                 case Algorithm.BranchAndBound:
                     break;
@@ -64,7 +64,7 @@ namespace IPSolver
             }
         }
 
-        private void FormatDualLP()
+        private void FormatLPDual()
         {
             //Gets z equation
             string zEquation = unformattedLP[0];
@@ -294,7 +294,7 @@ namespace IPSolver
         }
 
         //Formats the LP, by adding the S, E and A, and creating the canonical form
-        private void FormatSimplxLP()
+        private void FormatLPTwoPhase()
         {
             //Gets z equation
             string zEquation = unformattedLP[0];

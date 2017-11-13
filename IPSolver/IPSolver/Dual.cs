@@ -6,17 +6,27 @@ using System.Threading.Tasks;
 
 namespace IPSolver
 {
-    class Dual
+    class Dual : Simplex
     {
-        LinearProgram linearProgram;
-
         public Dual(LinearProgram linearProgram)
+            : base(linearProgram)
         {
-            this.linearProgram = linearProgram;
+            LinearProgram = linearProgram;
+        }
+
+        override public bool CheckIfContinue()
+        {
+            for (int i = 1; i < LinearProgram.RowCount; i++)
+            {
+                if (Math.Round(LinearProgram.LinearProgramMatrix[i, LinearProgram.ColumnCount - 1], 10) < 0)
+                    return true;
+            }
+
+            return false;
         }
 
         //Returns true of the ratio test fails
-        public bool DualRatioTest(out int pivotCol, out int pivotRow)
+        override public bool RatioTest(out int pivotCol, out int pivotRow)
         {
             double pivotRowAmount = 0;
 
@@ -27,26 +37,26 @@ namespace IPSolver
 
             List<double> ratios = new List<double>();
 
-            for (int i = 1; i < linearProgram.RowCount; i++)
+            for (int i = 1; i < LinearProgram.RowCount; i++)
             {
-                if (Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1]) < pivotRowAmount)
+                if (Math.Round(LinearProgram.LinearProgramMatrix[i, LinearProgram.ColumnCount - 1]) < pivotRowAmount)
                 {
                     pivotRow = i;
-                    pivotRowAmount = Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1]);
+                    pivotRowAmount = Math.Round(LinearProgram.LinearProgramMatrix[i, LinearProgram.ColumnCount - 1]);
                 }
             }
 
             if (pivotRow == 0)
                 return true;
 
-            for (int i = 1; i < linearProgram.ColumnCount - 1; i++)
+            for (int i = 1; i < LinearProgram.ColumnCount - 1; i++)
             {
-                if (linearProgram.LinearProgramMatrix[pivotRow, i] < 0)
+                if (LinearProgram.LinearProgramMatrix[pivotRow, i] < 0)
                 {
                     //Makes sure that cannot divide by zero
                     try
                     {
-                        double tempRatio = Math.Abs(Math.Round(linearProgram.LinearProgramMatrix[0, i] / linearProgram.LinearProgramMatrix[pivotRow, i], 10));
+                        double tempRatio = Math.Abs(Math.Round(LinearProgram.LinearProgramMatrix[0, i] / LinearProgram.LinearProgramMatrix[pivotRow, i], 10));
 
                         ratios.Add(tempRatio);
                     }
@@ -60,7 +70,7 @@ namespace IPSolver
                     ratios.Add(-1);
                 }
             }
-            
+
             //Chooses the winning row
             for (int i = 0; i < ratios.Count(); i++)
             {
@@ -73,7 +83,7 @@ namespace IPSolver
                 }
                 else if (ratios[i] == 0)
                 {
-                    if (linearProgram.LinearProgramMatrix[pivotRow, i + 1] > 0)
+                    if (LinearProgram.LinearProgramMatrix[pivotRow, i + 1] > 0)
                     {
                         winningRatio = 0;
                         pivotCol = i + 1;
@@ -89,11 +99,9 @@ namespace IPSolver
         }
 
         //TODO move this to another place, as ratio test has been taken out and can be used for simplex
-        public LinearProgram Solve()
+        override public LinearProgram Solve()
         {
             int tableauNumber = 0;
-            int colAmount = linearProgram.ColumnCount;
-            int rowAmount = linearProgram.RowCount;
 
             bool done = false;
             bool answerFound = true;
@@ -103,60 +111,33 @@ namespace IPSolver
             {
                 tableauNumber++;
 
-                //Resets the variables
-                int pivotCol = 0;
-                int pivotRow = 0;
-
-                if (DualRatioTest(out pivotCol, out pivotRow))
+                if (RatioTest(out int pivotCol, out int pivotRow))
                 {
                     done = true;
                     break;
                 }
 
-                double pivotCellValue = linearProgram.LinearProgramMatrix[pivotRow, pivotCol];
-
-                //Calculates the new values of winning row
-                for (int i = 0; i < colAmount; i++)
-                {
-                    double newAmount = linearProgram.LinearProgramMatrix[pivotRow, i] / pivotCellValue;
-
-                    linearProgram.LinearProgramMatrix[pivotRow, i] = newAmount;
-                }
-
-                //Calculates the new amounts of the remaining rows
-                for (int i = 0; i < rowAmount; i++)
-                {
-                    double subtractAmount = linearProgram.LinearProgramMatrix[i, pivotCol];
-                    for (int j = 0; j < colAmount; j++)
-                    {
-                        if (i != pivotRow)
-                            linearProgram.LinearProgramMatrix[i, j] = linearProgram.LinearProgramMatrix[i, j] - subtractAmount * linearProgram.LinearProgramMatrix[pivotRow, j];
-                    }
-                }
+                CalculateNewCellValues(pivotRow, pivotCol);
 
                 //Displays the table
                 Console.WriteLine("\nTable " + tableauNumber);
-                linearProgram.DisplayCurrentTable();
+                LinearProgram.DisplayCurrentTable();
 
                 done = true;
                 answerFound = true;
 
-                for (int i = 1; i < rowAmount; i++)
+                if (CheckIfContinue())
                 {
-                    if (Math.Round(linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount - 1] , 10) < 0)
-                    {
-                        done = false;
-                        answerFound = false;
-                        break;
-                    }
+                    done = false;
+                    answerFound = false;
                 }
             } while (!done);
 
             if (answerFound)
             {
-                Simplex simplex = new Simplex(linearProgram);
-                
-                linearProgram = simplex.Solve();
+                PrimalSimplex simplex = new PrimalSimplex(LinearProgram);
+
+                LinearProgram = simplex.Solve();
             }
 
             //Checks if there is an answer
@@ -170,7 +151,7 @@ namespace IPSolver
                 Console.WriteLine("No Solution");
             }
 
-            return linearProgram;
+            return LinearProgram;
         }
     }
 }

@@ -6,25 +6,27 @@ using System.Threading.Tasks;
 
 namespace IPSolver
 {
-    class TwoPhase
+    class TwoPhase : Simplex
     {
-        LinearProgram linearProgram;
-
-        private double[,] twoPhaseLP;
         private double[,] simplexLP;
 
         public TwoPhase(LinearProgram linearProgram)
+            :base(linearProgram)
         {
-            this.linearProgram = linearProgram;
+            LinearProgram = linearProgram;
+
+            FormatTwoPhase();
         }
 
         //Formats the table for two phase
         public void FormatTwoPhase()
         {
-            //Makes the twoPhase array larger
-            simplexLP = linearProgram.LinearProgramMatrix;
+            double[,] twoPhaseLP;
 
-            twoPhaseLP = new double[linearProgram.RowCount + 1, linearProgram.ColumnCount + 1];
+            //Makes the twoPhase array larger
+            simplexLP = LinearProgram.LinearProgramMatrix;
+
+            twoPhaseLP = new double[LinearProgram.RowCount + 1, LinearProgram.ColumnCount + 1];
 
             //Adds the w and z
             twoPhaseLP[0, 0] = 1;
@@ -33,14 +35,14 @@ namespace IPSolver
             int counterW = 2;
 
             //Adds 0's to the X, S and E columns
-            for (int i = 2; i < (linearProgram.CountX + linearProgram.CountS + linearProgram.CountE) + 2; i++)
+            for (int i = 2; i < (LinearProgram.CountX + LinearProgram.CountS + LinearProgram.CountE) + 2; i++)
             {
                 twoPhaseLP[0, i] = 0;
                 counterW++;
             }
 
             //Adds -1 to the A column
-            for (int i = 0; i < linearProgram.CountA; i++)
+            for (int i = 0; i < LinearProgram.CountA; i++)
             {
                 twoPhaseLP[0, counterW] = -1;
                 counterW++;
@@ -55,153 +57,139 @@ namespace IPSolver
             }
 
             //FIlls the rest of thw array with the simplex array amounts
-            for (int i = 0; i < linearProgram.RowCount; i++)
+            for (int i = 0; i < LinearProgram.RowCount; i++)
             {
-                for (int j = 0; j < linearProgram.ColumnCount; j++)
+                for (int j = 0; j < LinearProgram.ColumnCount; j++)
                 {
-                    twoPhaseLP[i + 1, j + 1] = linearProgram.LinearProgramMatrix[i, j];
+                    twoPhaseLP[i + 1, j + 1] = LinearProgram.LinearProgramMatrix[i, j];
+                }
+            }
+
+            LinearProgram.LinearProgramMatrix = twoPhaseLP;
+
+            //Calculates the New W row
+            for (int a = 0; a < LinearProgram.ListOfA.Count; a++)
+            {
+                for (int i = 0; i < LinearProgram.ColumnCount; i++)
+                {
+                    LinearProgram.LinearProgramMatrix[0, i] += LinearProgram.LinearProgramMatrix[LinearProgram.ListOfA[a] + 1, i];
                 }
             }
         }
 
-        public LinearProgram Solve()
+        override public bool CheckIfContinue()
         {
-            FormatTwoPhase();
+            //Checks if there are any positive in the top row, to see if it must continue
+            for (int i = 0; i < LinearProgram.ColumnCount; i++)
+            {
+                if (LinearProgram.LinearProgramMatrix[0, i] > 0)
+                    return true;
+            }
+            
+            return false;
+        }
 
-            linearProgram.LinearProgramMatrix = twoPhaseLP;
+        //Returns true of the ratio test fails
+        override public bool RatioTest(out int pivotCol, out int pivotRow)
+        {
+            pivotCol = 0;
+            pivotRow = 0;
 
-            int counter = 1;
+            double pivotColAmount = 0;
+            double winningRatio = double.MaxValue;
 
-            int colAmount = linearProgram.ColumnCount, rowAmount = linearProgram.RowCount;
+            List<double> ratios = new List<double>();
+
+            //Loops through the rows to choose the winning column
+            for (int i = 2; i < LinearProgram.ColumnCount - 1; i++)
+            {
+                if (LinearProgram.LinearProgramMatrix[0, i] > pivotColAmount)
+                {
+                    pivotCol = i;
+                    pivotColAmount = LinearProgram.LinearProgramMatrix[0, i];
+                }
+            }
+
+            //Makes sure the winning column isnt Z or W
+            if (pivotCol == 0)
+                return true;
+
+            //Calculates the ratios
+            for (int i = 2; i < LinearProgram.RowCount; i++)
+            {
+                //Makes sure that cannot divide by zero
+                try
+                {
+                    ratios.Add(LinearProgram.LinearProgramMatrix[i, LinearProgram.ColumnCount - 1] / LinearProgram.LinearProgramMatrix[i, pivotCol]);
+                }
+                catch (DivideByZeroException)
+                {
+                    ratios.Add(-1);
+                }
+            }
+
+            //Chooses the winning row
+            for (int i = 0; i < ratios.Count(); i++)
+            {
+                if (ratios[i] < winningRatio && ratios[i] > 0)
+                {
+                    winningRatio = ratios[i];
+                    pivotRow = i + 2;
+                }
+                else if (ratios[i] == 0 && LinearProgram.LinearProgramMatrix[i + 2, pivotCol] > 0)
+                {
+                    winningRatio = 0;
+                    pivotRow = i + 2;
+                }
+            }
+
+            //Makes sure the winning row isnt the top two rows
+            if (pivotRow == 0)
+                return true;
+
+            return false;
+        }
+
+        override public LinearProgram Solve()
+        {
+            int tableauNumber = 1;
 
             bool done = false;
             bool answerFound = false;
 
             int pivotRow = 0;
-
-            //Calculates the New W row
-            foreach (var item in linearProgram.ListOfA)
-            {
-                for (int i = 0; i < colAmount; i++)
-                {
-                    linearProgram.LinearProgramMatrix[0, i] += linearProgram.LinearProgramMatrix[item + 1, i];
-                }
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("Phase 1 - Table 1");
-            linearProgram.DisplayCurrentTable();
+            
+            Console.WriteLine("\nPhase 1 - Table 1");
+            LinearProgram.DisplayCurrentTable();
 
             //Loops till final table
             do
             {
-                counter++;
-
-                //Resets the variables
+                tableauNumber++;
+                
                 pivotRow = 0;
 
-                int pivotCol = 0;
-                double pivotColAmount = 0;
-
-                double winningRatio = double.MaxValue;
-
-                List<double> ratios = new List<double>();
-
-                //Loops through the rows to choose the winning column
-                for (int i = 2; i < colAmount - 1; i++)
-                {
-                    if (linearProgram.LinearProgramMatrix[0, i] > pivotColAmount)
-                    {
-                        pivotCol = i;
-                        pivotColAmount = linearProgram.LinearProgramMatrix[0, i];
-                    }
-                }
-
-                //Makes sure the winning column isnt Z or W
-                if (pivotCol == 0)
-                {
-                    done = true;
-                    answerFound = true;
-                    break;
-                }
-
-                //Calculates the ratios
-                for (int i = 2; i < rowAmount; i++)
-                {
-                    //Makes sure that cannot divide by zero
-                    try
-                    {
-                        ratios.Add(linearProgram.LinearProgramMatrix[i, colAmount - 1] / linearProgram.LinearProgramMatrix[i, pivotCol]);
-                    }
-                    catch (DivideByZeroException)
-                    {
-                        ratios.Add(-1);
-                    }
-                }
-
-                //Chooses the winning row
-                for (int i = 0; i < ratios.Count(); i++)
-                {
-                    if (ratios[i] < winningRatio && ratios[i] > 0)
-                    {
-                        winningRatio = ratios[i];
-                        pivotRow = i + 2;
-                    }
-                    else if (ratios[i] == 0 && linearProgram.LinearProgramMatrix[i + 2, pivotCol] > 0)
-                    {
-                            winningRatio = 0;
-                            pivotRow = i + 2;
-                    }
-                }
-
-                //Makes sure the winning row isnt the top two rows
-                if (pivotRow == 0)
+                if (RatioTest(out int pivotCol, out pivotRow))
                 {
                     done = true;
                     break;
                 }
 
-                double pivotCellValue = linearProgram.LinearProgramMatrix[pivotRow, pivotCol];
+                CalculateNewCellValues(pivotRow, pivotCol);
 
-                //Calculates the new values of winning row
-                for (int i = 0; i < colAmount; i++)
-                {
-                    double newAmount = linearProgram.LinearProgramMatrix[pivotRow, i] / pivotCellValue;
-
-                    linearProgram.LinearProgramMatrix[pivotRow, i] = newAmount;
-                }
-
-                //Calculates the new amounts of the remaining rows
-                for (int i = 0; i < rowAmount; i++)
-                {
-                    double subtractAmount = linearProgram.LinearProgramMatrix[i, pivotCol];
-                    for (int j = 0; j < colAmount; j++)
-                    {
-                        if (i != pivotRow)
-                            linearProgram.LinearProgramMatrix[i, j] = linearProgram.LinearProgramMatrix[i, j] - subtractAmount * linearProgram.LinearProgramMatrix[pivotRow, j];
-                    }
-                }
-
-                //Displays the table
-                Console.WriteLine();
-                Console.WriteLine("Phase 1 - Table " + counter);
-                linearProgram.DisplayCurrentTable();
+                Console.WriteLine("\nPhase 1 - Table " + tableauNumber);
+                LinearProgram.DisplayCurrentTable();
 
                 done = true;
                 answerFound = true;
 
-                //Checks if there are any positive in the top row, to see if it must continue
-                for (int i = 0; i < colAmount; i++)
+                if (CheckIfContinue())
                 {
-                    if (linearProgram.LinearProgramMatrix[0, i] > 0)
-                    {
-                        done = false;
-                        answerFound = false;
-                        break;
-                    }
+                    done = false;
+                    answerFound = false;
                 }
 
-                double wRHS = Math.Round(linearProgram.LinearProgramMatrix[0, colAmount - 1], 10);
+                double wRHS = Math.Round(LinearProgram.LinearProgramMatrix[0, LinearProgram.ColumnCount - 1], 10);
 
                 //Checks if the W rhs amount is 0
                 if (wRHS == 0)
@@ -209,14 +197,13 @@ namespace IPSolver
                     done = true;
                     answerFound = true;
                 }
-
             } while (!done);
 
             //Checks if an answer is found
             if (answerFound)
             {
                 //Finds BVs
-                double[] bvs = linearProgram.GetBasicVariables();
+                double[] bvs = LinearProgram.GetBasicVariables();
                 List<int> bvCols = new List<int>();
 
                 for (int i = 0; i < bvs.Length; i++)
@@ -228,7 +215,7 @@ namespace IPSolver
                 bool deleteNegatives = false;
 
                 //If A is BV, delete Negatives
-                foreach (var item in linearProgram.ColOfA)
+                foreach (var item in LinearProgram.ColOfA)
                 {
                     foreach (var item1 in bvCols)
                     {
@@ -238,17 +225,17 @@ namespace IPSolver
                 }
 
                 //Deletes the A's
-                if (Math.Round(linearProgram.LinearProgramMatrix[0, colAmount - 1], 10) == 0)
+                if (Math.Round(LinearProgram.LinearProgramMatrix[0, LinearProgram.ColumnCount - 1], 10) == 0)
                 {
                     if (deleteNegatives)
                     {
-                        for (int i = 0; i < colAmount; i++)
+                        for (int i = 0; i < LinearProgram.ColumnCount; i++)
                         {
-                            if (linearProgram.LinearProgramMatrix[0, i] < 0)
+                            if (LinearProgram.LinearProgramMatrix[0, i] < 0)
                             {
-                                for (int j = 0; j < rowAmount; j++)
+                                for (int j = 0; j < LinearProgram.RowCount; j++)
                                 {
-                                    linearProgram.LinearProgramMatrix[j, i] = 0;
+                                    LinearProgram.LinearProgramMatrix[j, i] = 0;
                                 }
                             }
                         }
@@ -258,12 +245,12 @@ namespace IPSolver
                     {
                         for (int j = 0; j < simplexLP.GetLength(1); j++)
                         {
-                            simplexLP[i, j] = linearProgram.LinearProgramMatrix[i + 1, j + 1];
+                            simplexLP[i, j] = LinearProgram.LinearProgramMatrix[i + 1, j + 1];
                         }
                     }
 
                     //Sets the Amounts in the A coulmns to 0
-                    foreach (var item in linearProgram.ColOfA)
+                    foreach (var item in LinearProgram.ColOfA)
                     {
                         if (!bvCols.Contains(item + 1))
                         {
@@ -274,19 +261,19 @@ namespace IPSolver
                         }
                     }
                     
-                    linearProgram.IsTwoPhase = false;
+                    LinearProgram.IsTwoPhase = false;
 
                     Console.WriteLine();
                     Console.WriteLine("Phase 2 - Initial Table");
 
-                    linearProgram.LinearProgramMatrix = simplexLP;
+                    LinearProgram.LinearProgramMatrix = simplexLP;
 
-                    linearProgram.DisplayCurrentTable();
+                    LinearProgram.DisplayCurrentTable();
 
-                    Simplex simplex = new Simplex(linearProgram);
+                    PrimalSimplex simplex = new PrimalSimplex(LinearProgram);
 
                     //Calls the appropriate simplex method
-                    linearProgram = simplex.Solve();
+                    LinearProgram = simplex.Solve();
 
                     ///TODO handle what happens if theres no solution
                 }
@@ -307,7 +294,7 @@ namespace IPSolver
                 Console.WriteLine("");
             }
 
-            return linearProgram;
+            return LinearProgram;
         }
     }
 }
