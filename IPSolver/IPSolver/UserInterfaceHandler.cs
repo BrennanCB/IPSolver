@@ -236,7 +236,7 @@ ________________________________________________________________________________
 
                     Duality duality = new Duality(linearProgram);
 
-                    duality.RotateLP();
+                    duality.DeterminDuality();
                     Console.ReadKey();
 
                     break;

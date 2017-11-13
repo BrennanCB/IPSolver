@@ -36,8 +36,7 @@ namespace IPSolver
             originalLP = new LpFormatter(FileHandler.ReadLP(), Algorithm.Dual).GetLinearProgram();
         }
 
-
-        public void RotateLP()
+        public void DeterminDuality()
         {
             originalLP.DisplayCurrentTable();
 
@@ -56,12 +55,10 @@ namespace IPSolver
                 for (int j = 0; j <= originalLP.CountX; j++)
                 {
                     duality.LinearProgramMatrix[j, i] = originalLP.LinearProgramMatrix[i, j];
-
                 }
             }
             
             double[] rhs = new double[originalLP.CountX + 1];
-
 
             //Fill RHS
             for (int i = 1; i <= originalLP.CountX; i++)
@@ -72,7 +69,7 @@ namespace IPSolver
             duality.CountA = 0;
             duality.CountS = 0;
             duality.CountE = originalLP.CountX;
-            duality.CountX = originalLP.RowCount;
+            duality.CountX = originalLP.RowCount - 1;
 
             double[,] eArray = new double[duality.CountE + 1, duality.CountE];
 
@@ -95,7 +92,6 @@ namespace IPSolver
                       
                     mainCol++;
                 }
-                //mainCol++;
 
                 //Saves the E's
                 for (int eCol = 0; eCol < duality.CountE; eCol++)
@@ -115,24 +111,22 @@ namespace IPSolver
             }
 
             duality.LinearProgramMatrix = finalLP;
-
             duality.LinearProgramMatrix[0, 0] = 1;
-            
-            duality.CountX = originalLP.RowCount - 1;
 
             Console.WriteLine("Duality Initial Table");
             duality.DisplayCurrentTable();
-
             Console.WriteLine();
 
             Dual dual = new Dual(duality);
 
             duality = dual.Solve();
-            
+
+            Console.WriteLine();
+
             if (optimalSoltution.GetBasicVariables()[0] == duality.GetBasicVariables()[0])
-                Console.WriteLine("Strong");
+                Console.WriteLine("Strong Duality");
             else
-                Console.WriteLine("Weak");
+                Console.WriteLine("Weak Duality");
         }
     }
 }
