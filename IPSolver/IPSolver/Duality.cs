@@ -43,37 +43,23 @@ namespace IPSolver
 
             LinearProgram duality = (LinearProgram) originalLP.Clone();
 
-
             if (originalLP.Type == LPType.Max)
-            {
                 duality.Type = LPType.Min;
-            }
             else
-            {
                 duality.Type = LPType.Max;
-            }
-
 
             duality.LinearProgramMatrix = new double[originalLP.CountX + 1, originalLP.RowCount];
 
             //Fill X Values
             for (int i = 1; i < originalLP.RowCount; i++)
             {
-                for (int k = 0; k <= originalLP.CountX; k++)
+                for (int j = 0; j <= originalLP.CountX; j++)
                 {
-                    duality.LinearProgramMatrix[k, i] = originalLP.LinearProgramMatrix[i, k];
+                    duality.LinearProgramMatrix[j, i] = originalLP.LinearProgramMatrix[i, j];
+
                 }
             }
-
-
-            //duality.LinearProgramMatrix[0, 0] = 1;
-
-            ////Fill Z Row
-            //for (int i = 1; i < originalLP.RowCount; i++)
-            //{
-            //    duality.LinearProgramMatrix[0, i] = originalLP.LinearProgramMatrix[i, originalLP.ColumnCount - 1];
-            //}
-
+            
             double[] rhs = new double[originalLP.CountX + 1];
 
 
@@ -82,29 +68,21 @@ namespace IPSolver
             {
                 rhs[i] = originalLP.LinearProgramMatrix[0, i];
             }
-
-
-            foreach (var item in rhs)
-            {
-                Console.WriteLine(item);
-
-            }
-
+            
             duality.CountA = 0;
             duality.CountS = 0;
             duality.CountE = originalLP.CountX;
+            duality.CountX = originalLP.RowCount;
 
-            double[,] eArray = new double[duality.CountE + 2, duality.CountE + 2];
+            double[,] eArray = new double[duality.CountE + 1, duality.CountE];
 
             //Handle URS
-            for (int i = 1; i < eArray.GetLength(0); i++)
+            for (int i = 0; i < eArray.GetLength(1); i++)
             {
-                eArray[i, i] = 1;
+                eArray[i + 1, i] = 1;
             }
 
-
-            double[,] finalLP = new double[duality.RowCount, duality.ColumnCount + eArray.GetLength(0) + 1];
-
+            double[,] finalLP = new double[duality.RowCount, duality.ColumnCount + eArray.GetLength(0)];
 
             for (int i = 0; i < finalLP.GetLength(0); i++)
             {
@@ -113,10 +91,11 @@ namespace IPSolver
                 //Saves the LP
                 for (int orgCol = 0; orgCol < duality.ColumnCount; orgCol++)
                 {
-                    finalLP[i, mainCol] = originalLP.LinearProgramMatrix[i, orgCol];
-
+                    finalLP[i, orgCol] = duality.LinearProgramMatrix[i, orgCol] * -1;
+                      
                     mainCol++;
                 }
+                //mainCol++;
 
                 //Saves the E's
                 for (int eCol = 0; eCol < duality.CountE; eCol++)
@@ -127,28 +106,33 @@ namespace IPSolver
                 }
 
                 //Saves the RHS
-                //finalLP[i, mainCol] = rhs[i];
+                finalLP[i, duality.ColumnCount + duality.CountE] = rhs[i];
+            }
+
+            for (int i = 1; i < originalLP.RowCount; i++)
+            {
+                finalLP[0, i] = originalLP.LinearProgramMatrix[i, originalLP.ColumnCount - 1] * -1;
             }
 
             duality.LinearProgramMatrix = finalLP;
 
-
-
-
+            duality.LinearProgramMatrix[0, 0] = 1;
+            
             duality.CountX = originalLP.RowCount - 1;
+
+            Console.WriteLine("Duality Initial Table");
             duality.DisplayCurrentTable();
 
+            Console.WriteLine();
 
+            Dual dual = new Dual(duality);
 
-
-
-
-
+            duality = dual.Solve();
+            
+            if (optimalSoltution.GetBasicVariables()[0] == duality.GetBasicVariables()[0])
+                Console.WriteLine("Strong");
+            else
+                Console.WriteLine("Weak");
         }
-
-
-
-
-
     }
 }
