@@ -117,14 +117,15 @@ namespace IPSolver
         public static LinearProgram AddBasicConstraint
             (LinearProgram linearProgram, int column, int ConstraintType, int rhs)
         {
-            LinearProgram tempLp = (LinearProgram)linearProgram.Clone(); 
             if (ConstraintType != GREATER_THAN && ConstraintType != LESS_THAN)
             {
                 throw new ArgumentException
                     ("The argument passed to AddBasicConstraint for ConstraintType does not match the expected value");
             }
 
+            LinearProgram tempLp = (LinearProgram)linearProgram.Clone(); 
             int constraintRow = linearProgram.RowCount;
+
             double[,] newArray = new double[linearProgram.RowCount +1, linearProgram.ColumnCount +1];
             for (int c = 0; c < linearProgram.ColumnCount - 1; c++)
             {
@@ -144,10 +145,7 @@ namespace IPSolver
             newArray[constraintRow, linearProgram.ColumnCount-1] =
                 (ConstraintType == GREATER_THAN) ? -1 : 1;
 
-            if (ConstraintType == GREATER_THAN)
-                tempLp.CountE++;
-            else
-                tempLp.CountS++;
+            
 
             //Constraint has been added, now check vilidity
             int conflictingRow = 0;
@@ -159,10 +157,23 @@ namespace IPSolver
                     break;
                 }
             }
-            for (int i = 0; i < linearProgram.ColumnCount +1; i++)
-            {   
-                newArray[constraintRow, i] = newArray[constraintRow, i] - newArray[conflictingRow, i];
+            if (ConstraintType == GREATER_THAN)
+            {
+                tempLp.CountE++;
+                for (int i = 0; i < linearProgram.ColumnCount + 1; i++)
+                {
+                    newArray[constraintRow, i] = newArray[constraintRow, i] + newArray[conflictingRow, i];
+                }
             }
+            else
+            {
+                tempLp.CountS++;
+                for (int i = 0; i < linearProgram.ColumnCount + 1; i++)
+                {
+                    newArray[constraintRow, i] = newArray[constraintRow, i] - newArray[conflictingRow, i];
+                }
+            }
+           
             if(newArray[constraintRow, linearProgram.ColumnCount-1] < 0)
                 for (int i = 0; i < linearProgram.ColumnCount + 1; i++)
                 {
@@ -196,13 +207,10 @@ namespace IPSolver
             }
             for (int i = 0; i < row.Length; i++)
             {
-                newArray[linearProgram.RowCount - 1, i] = row[i];
+                newArray[linearProgram.RowCount , i] = row[i];
             }
             return newArray;
         }
-
-        //add the column and row headings
-        
     }
 
     
