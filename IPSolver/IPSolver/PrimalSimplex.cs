@@ -110,8 +110,10 @@ namespace IPSolver
             while (!done)
             {
                 tableauNumber++;
+                int pivotRow = 0;
+                int pivotCol = 0;
 
-                if (RatioTest(out int pivotRow, out int pivotCol))
+                if (RatioTest(out  pivotRow, out  pivotCol))
                 {
                     done = true;
                     break;

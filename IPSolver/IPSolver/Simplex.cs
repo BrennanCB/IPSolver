@@ -12,8 +12,15 @@ namespace IPSolver
 
         public LinearProgram LinearProgram
         {
-            get => linearProgram;
-            set => linearProgram = value;
+            get
+            {
+                return linearProgram;
+            }
+
+            set
+            {
+                linearProgram = value;
+            }
         }
 
         public Simplex(LinearProgram linearProgram)
@@ -38,10 +45,10 @@ namespace IPSolver
             }
 
             //Calculates the new amounts of the remaining rows
-            for (int i = 0; i < linearProgram.RowCount; i++)
+            for (int i = 0; i < LinearProgram.RowCount; i++)
             {
                 double subtractAmount = LinearProgram.LinearProgramMatrix[i, pivotCol];
-                for (int j = 0; j < linearProgram.ColumnCount; j++)
+                for (int j = 0; j < LinearProgram.ColumnCount; j++)
                 {
                     if (i != pivotRow)
                         LinearProgram.LinearProgramMatrix[i, j] = LinearProgram.LinearProgramMatrix[i, j] - subtractAmount * LinearProgram.LinearProgramMatrix[pivotRow, j];

@@ -158,7 +158,9 @@ namespace IPSolver
             bool answerFound = false;
 
             int pivotRow = 0;
-            
+            int pivotCol = 0;
+
+
             Console.WriteLine("\nPhase 1 - Table 1");
             LinearProgram.DisplayCurrentTable();
 
@@ -169,7 +171,7 @@ namespace IPSolver
                 
                 pivotRow = 0;
 
-                if (RatioTest(out pivotRow, out int pivotCol))
+                if (RatioTest(out pivotRow, out  pivotCol))
                 {
                     done = true;
                     break;

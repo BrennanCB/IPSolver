@@ -27,11 +27,16 @@ namespace IPSolver
 
             return File.Exists(inputLocation);
         }
+       
 
         public static string SetOutputFile
         {
-            set => outputLocation = docLocation + "/" + value + ".txt";
+           
+            set { outputLocation = docLocation + "/" + value + ".txt"; }
         }
+
+
+       
 
         public static List<string> ReadLP()
         {
