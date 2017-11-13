@@ -16,10 +16,19 @@ namespace IPSolver
         public LinearProgram Solve()
         {
             int targetRow = 0;
-            for (int i = 0; i < linearProgram.RowCount; i++)
+            double maxValue = -1;
+            for (int r = 1; r < linearProgram.RowCount; r++)
             {
-                if (linearProgram.LinearProgramMatrix[i, 0] == 1)
-                    targetRow = i;
+                for (int c = 1; c < linearProgram.CountX +1; c++)
+                {
+                    if (linearProgram.LinearProgramMatrix[r, c] == 1 
+                        && linearProgram.LinearProgramMatrix[r, linearProgram.ColumnCount-1] > maxValue)
+                    {
+                        maxValue = linearProgram.LinearProgramMatrix[r, linearProgram.ColumnCount - 1];
+                        targetRow = r;
+                    }
+                }
+               
             }
             double[] fractionArray = new double[linearProgram.ColumnCount+1];
             for (int i = 0; i < linearProgram.ColumnCount; i++)
@@ -31,14 +40,14 @@ namespace IPSolver
                     fractionArray[i] -= (int)fractionArray[i];
                 else
                     fractionArray[i] += (((int)fractionArray[i] *-1) + 1);
-
+                fractionArray[i] = Math.Round(fractionArray[i], 9);
+                fractionArray[i] *= -1;
             }
-
+            
             fractionArray[fractionArray.Length - 1] = fractionArray[fractionArray.Length - 2];
             fractionArray[fractionArray.Length - 2] = 1;
 
             linearProgram.LinearProgramMatrix = LpTools.AddRow(fractionArray, linearProgram);
-            linearProgram.IsTwoPhase = true;
             linearProgram.CountS++;
 
             Dual dual = new Dual(linearProgram);

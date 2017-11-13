@@ -145,7 +145,7 @@ ________________________________________________________
                         linearProgram = cutDual.Solve();
 
                         CuttingPlane cutingPlane = new CuttingPlane(linearProgram);
-                        linearProgram = cutingPlane.Sovle();
+                        linearProgram = cutingPlane.Solve();
 
                         linearProgram.DisplaySolution();
 
