@@ -100,7 +100,7 @@ namespace IPSolver
         public LinearProgram Sovle()
         {
             bool solved = false;
-            ProblemNode currentOptimal = (ProblemNode)problems.ElementAt(0);
+            ProblemNode currentOptimal = problems.ElementAt(0);
 
             //loop runs until all problems are solved, exit via break
             while (true)
@@ -111,10 +111,10 @@ namespace IPSolver
                 {
                     if (!problems.ElementAt(i).Solved)
                     {
-                        currentProblem = (ProblemNode)problems.ElementAt(i);
+                        currentProblem = problems.ElementAt(i);
                         break;
                     }
-                    if (problems.Count == i -1)
+                    if (problems.Count == i +1)
                         solved = true;
                 }
 
@@ -130,17 +130,20 @@ namespace IPSolver
                 Dual dual = new Dual(currentProblem.Problem);
                 currentProblem.Problem =  dual.Solve();
 
-                double[] xValues = new double[currentProblem.Problem.CountX];
-
-                currentProblem.XValues = xValues;
+                
 
                 currentProblem.ZValue = 
                     currentProblem.Problem.LinearProgramMatrix[0, currentProblem.Problem.ColumnCount-1];
 
                 currentProblem.Solved = true;
 
+                double[] xValues = new double[currentProblem.Problem.CountX];
+                
                 for (int i = 0; i < xValues.Length; i++)
                     xValues[i] = Math.Round(currentProblem.Problem.LinearProgramMatrix[i+1, currentProblem.Problem.ColumnCount-1],9);
+
+                currentProblem.XValues = xValues;
+                
                 Console.WriteLine("\n\nAdding Constraints:");
                 Console.WriteLine("===================================================================");
                 for (int i = 0; i < xValues.Length; i++)
@@ -153,7 +156,7 @@ namespace IPSolver
                         problems.Add(new ProblemNode(
                             LpTools.AddBasicConstraint(currentProblem.Problem, i+1, LpTools.GREATER_THAN, (int)xValues[i]+1),
                             false, null, 0));
-                        break;
+                       
                     }
                         
                 }
@@ -162,7 +165,8 @@ namespace IPSolver
 
 
                 if ((type == LPType.Max && currentProblem.ZValue > currentOptimal.ZValue)
-                    || (type == LPType.Min && currentOptimal.ZValue > currentProblem.ZValue))
+                    || (type == LPType.Min && currentOptimal.ZValue > currentProblem.ZValue)
+                    || currentOptimal.XValues.Any((x) => x % 1 != 0) )
                 { 
                     currentOptimal = currentProblem;
                 }
