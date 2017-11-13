@@ -13,7 +13,7 @@ namespace IPSolver
 
         public static bool CheckIfLpIsSolved(LinearProgram LinearProgram)
         {
-            if (CheckSpecialCases(LinearProgram))
+            if (IsSpecialCase(LinearProgram))
                 return false;
 
             double[,] problemMatrix = LinearProgram.LinearProgramMatrix;
@@ -34,7 +34,7 @@ namespace IPSolver
             return true;
         }
 
-        public static bool CheckSpecialCases(LinearProgram LinearProgram)
+        public static bool IsSpecialCase(LinearProgram LinearProgram)
         {
             if (IsInfeasable(LinearProgram))
                 return true;
@@ -73,9 +73,13 @@ namespace IPSolver
                     break;
                 }
             }
-            if (!valid)
-                throw new SpecialCaseException(SpecialCaseException.Type.Infeasable);
 
+            if (!valid)
+            {
+                Console.WriteLine("===== Lp is infeasable =====");
+                return true;
+            }
+          
             return false;
         }
 
@@ -142,8 +146,8 @@ namespace IPSolver
             newArray[constraintRow, column] = 1;
             newArray[constraintRow, linearProgram.ColumnCount] = rhs;
 
-            newArray[constraintRow, linearProgram.ColumnCount-1] =
-                (ConstraintType == GREATER_THAN) ? -1 : 1;
+            newArray[constraintRow, linearProgram.ColumnCount - 1] = 1;
+               // (ConstraintType == GREATER_THAN) ? -1 : 1;
 
             
 
@@ -162,7 +166,8 @@ namespace IPSolver
                 tempLp.CountE++;
                 for (int i = 0; i < linearProgram.ColumnCount + 1; i++)
                 {
-                    newArray[constraintRow, i] = newArray[constraintRow, i] + newArray[conflictingRow, i];
+                    newArray[constraintRow, i] = newArray[constraintRow, i] - newArray[conflictingRow, i];
+                    newArray[constraintRow, linearProgram.ColumnCount - 1] *= -1;
                 }
             }
             else
