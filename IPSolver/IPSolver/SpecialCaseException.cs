@@ -17,12 +17,34 @@ namespace IPSolver
 
         Type caseType;
         private string message;
-        private Type CaseType { get => caseType; set => caseType = value; }
-        public override string Message { get => message; }
+
+        public string Message1
+        {
+            get
+            {
+                return message;
+            }
+        }
+
+        internal Type CaseType
+        {
+            get
+            {
+                return caseType;
+            }
+
+            set
+            {
+                caseType = value;
+            }
+        }
+
+        //private Type CaseType { get => caseType; set => caseType = value; }
+        //public override string Message { get => message; }
 
         public SpecialCaseException(Type type)
         {
-            caseType = type;
+            CaseType = type;
 
             switch (type)
             {

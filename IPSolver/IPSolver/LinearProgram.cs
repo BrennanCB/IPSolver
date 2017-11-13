@@ -13,9 +13,7 @@ namespace IPSolver
         private LPType type;
         private bool isTwoPhase;
 
-        private List<int> listOfA;
-        private List<int> colOfA;
-        private List<int> colY;
+        private List<int> listOfA, colOfA, colY, colINTRestricted;
 
         private List<String> canonicalForm;
 
@@ -45,82 +43,87 @@ namespace IPSolver
             LinearProgramMatrix = linearProgramArray;
         }
 
-
         #region Properties
         //TODO Check this
         //public bool IsTwoPhase => countA > 0;
 
-        public int StartOfS => countX;
-        public int StartOfA => StartOfE + countE;
-        public int StartOfE => StartOfS + countS;
+        public int StartOfS => CountX;
+        public int StartOfA => StartOfE + CountE;
+        public int StartOfE => StartOfS + CountS;
 
-        public int RowCount => linearProgramMatrix.GetLength(0);
-        public int ColumnCount => linearProgramMatrix.GetLength(1);
-
-        public bool IsTwoPhase
-        {
-            get => isTwoPhase;
-            set => isTwoPhase = value;
-        }
-
-        public LPType Type
-        {
-            get => type;
-            set => type = value;
-        }
-
-        public List<String> CanonicalForm
-        {
-            get => canonicalForm;
-            set => canonicalForm = value;
-        }
-
-        public double[,] LinearProgramMatrix
-        {
-            get => linearProgramMatrix;
-            set => linearProgramMatrix = value;
-        }
-
-        public int CountA
-        {
-            get => countA;
-            set => countA = value;
-        }
+        public int RowCount => LinearProgramMatrix.GetLength(0);
+        public int ColumnCount => LinearProgramMatrix.GetLength(1);
 
         public int CountS
         {
-            get => countS;
-            set => countS = value;
+            get { return countS; }
+            set { countS = value; }
         }
 
         public int CountE
         {
-            get => countE;
-            set => countE = value;
+            get { return countE; }
+            set { countE = value; } 
+        }
+
+        public int CountA
+        {
+            get {  return countA; }
+            set { countA = value; }
         }
 
         public int CountX
         {
-            get => countX;
-            set => countX = value;
+            get { return countX; }
+            set { countX = value; }
+        }
+
+        public LPType Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+
+        public bool IsTwoPhase
+        {
+            get { return isTwoPhase; }
+            set { isTwoPhase = value; }
         }
 
         public List<int> ListOfA
         {
-            get => listOfA;
-            set => listOfA = value;
+            get { return listOfA; }
+            set { listOfA = value; }
         }
 
         public List<int> ColOfA
         {
-            get => colOfA;
-            set => colOfA = value;
+            get { return colOfA; }
+            set { colOfA = value; }
         }
 
         public List<int> ColY
         {
-            get => colY;
-            set => colY = value;
+            get { return colY; }
+            set { colY = value; }
+        }
+
+        public List<int> ColINTRestricted
+        {
+            get { return colINTRestricted; }
+            set { colINTRestricted = value; }
+        }
+
+        public List<string> CanonicalForm
+        {
+            get { return canonicalForm; } 
+            set { canonicalForm = value; }
+        }
+
+        public double[,] LinearProgramMatrix
+        {
+            get { return linearProgramMatrix; }
+            set { linearProgramMatrix = value; }
         }
         #endregion
 
@@ -136,7 +139,7 @@ namespace IPSolver
 
                 for (int i = 0; i < RowCount; i++)
                 {
-                    double currentNumber = linearProgramMatrix[i, j];
+                    double currentNumber = LinearProgramMatrix[i, j];
 
                     if (currentNumber != 0 && currentNumber != 1)
                     {
@@ -149,7 +152,7 @@ namespace IPSolver
                         if (countOfOnes > 1)
                             bv = false;
                         else
-                            optimalSolution = linearProgramMatrix[i, ColumnCount - 1];
+                            optimalSolution = LinearProgramMatrix[i, ColumnCount - 1];
                     }
                 }
 

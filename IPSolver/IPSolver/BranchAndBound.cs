@@ -24,10 +24,62 @@ namespace IPSolver
                 this.ZValue = zValue;
             }
 
-            public LinearProgram Problem { get => problem; set => problem = value; }
-            public bool Solved { get => solved; set => solved = value; }
-            public double[] XValues { get => xValues; set => xValues = value; }
-            public double ZValue { get => zValue; set => zValue = value; }
+            public LinearProgram Problem
+            {
+                get
+                {
+                    return problem;
+                }
+
+                set
+                {
+                    problem = value;
+                }
+            }
+
+            public bool Solved
+            {
+                get
+                {
+                    return solved;
+                }
+
+                set
+                {
+                    solved = value;
+                }
+            }
+
+            public double[] XValues
+            {
+                get
+                {
+                    return xValues;
+                }
+
+                set
+                {
+                    xValues = value;
+                }
+            }
+
+            public double ZValue
+            {
+                get
+                {
+                    return zValue;
+                }
+
+                set
+                {
+                    zValue = value;
+                }
+            }
+
+            //public LinearProgram Problem { get => problem; set => problem = value; }
+            //public bool Solved { get => solved; set => solved = value; }
+            //public double[] XValues { get => xValues; set => xValues = value; }
+            //public double ZValue { get => zValue; set => zValue = value; }
         }
 
         private List<ProblemNode> problems;
