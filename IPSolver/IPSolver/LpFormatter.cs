@@ -530,7 +530,6 @@ namespace IPSolver
                 }
 
                 //Saves the A's
-
                 for (int aCol = 0; aCol < linearProgram.CountA; aCol++)
                 {
                     finalLP[i, mainCol] = arrayA[i, aCol];

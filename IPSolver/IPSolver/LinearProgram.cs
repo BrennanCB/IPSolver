@@ -13,9 +13,7 @@ namespace IPSolver
         private LPType type;
         private bool isTwoPhase;
 
-        private List<int> listOfA;
-        private List<int> colOfA;
-        private List<int> colY;
+        private List<int> listOfA, colOfA, colY;
 
         private List<String> canonicalForm;
 
@@ -44,7 +42,6 @@ namespace IPSolver
             CanonicalForm = canonicalForm;
             LinearProgramMatrix = linearProgramArray;
         }
-
 
         #region Properties
         //TODO Check this

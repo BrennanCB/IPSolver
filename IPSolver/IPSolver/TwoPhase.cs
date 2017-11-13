@@ -215,12 +215,18 @@ namespace IPSolver
                 bool deleteNegatives = false;
 
                 //If A is BV, delete Negatives
-                foreach (var item in LinearProgram.ColOfA)
+                for (int aCol = 0; aCol < LinearProgram.ColOfA.Count; aCol++)
                 {
-                    foreach (var item1 in bvCols)
+                    for (int bvCol = 0; bvCol < bvCols.Count; bvCol++)
                     {
-                        if (item + 1 == item1)
+                        if (LinearProgram.ColOfA[aCol] + 1 == bvCols[bvCol])
+                        {
+                            //Breaks out of outer loop
+                            aCol = LinearProgram.ColOfA.Count;
+
                             deleteNegatives = true;
+                            break;
+                        }
                     }
                 }
 
@@ -262,9 +268,8 @@ namespace IPSolver
                     }
                     
                     LinearProgram.IsTwoPhase = false;
-
-                    Console.WriteLine();
-                    Console.WriteLine("Phase 2 - Initial Table");
+                    
+                    Console.WriteLine("\nPhase 2 - Initial Table");
 
                     LinearProgram.LinearProgramMatrix = simplexLP;
 

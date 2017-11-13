@@ -75,10 +75,8 @@ ________________________________________________________
                 switch (menu)
                 {
                     case Algorithm.Primal:
-
-                        LpFormatter lpFormatter = new LpFormatter(unformatedLP, Algorithm.Primal);
-
-                        linearProgram = lpFormatter.GetLinearProgram();
+                        
+                        linearProgram = new LpFormatter(unformatedLP, Algorithm.Primal).GetLinearProgram();
 
                         linearProgram.DisplayCanonicalForm();
 
@@ -94,9 +92,7 @@ ________________________________________________________
                         break;
                     case Algorithm.TwoPhase:
                         
-                        lpFormatter = new LpFormatter(unformatedLP, Algorithm.TwoPhase);
-
-                        linearProgram = lpFormatter.GetLinearProgram();
+                        linearProgram = new LpFormatter(unformatedLP, Algorithm.TwoPhase).GetLinearProgram();
                         linearProgram.IsTwoPhase = true;
 
                         TwoPhase twoPhase = new TwoPhase(linearProgram);
@@ -113,16 +109,12 @@ ________________________________________________________
 
                         break;
                     case Algorithm.Dual:
-
-                        lpFormatter = new LpFormatter(unformatedLP, Algorithm.Dual);
-
-                        linearProgram = lpFormatter.GetLinearProgram();
+                        
+                        linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
 
                         linearProgram.DisplayCanonicalForm();
-
                         
                         Dual dual = new Dual(linearProgram);
-
                         
                         linearProgram = dual.Solve();
 
