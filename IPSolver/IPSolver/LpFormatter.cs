@@ -21,8 +21,7 @@ namespace IPSolver
         private List<int> colBinary = new List<int>();
         
         private List<String> unformattedLP;
-
-        //TODO Check this method, see why its here and if its needed
+        
         public LinearProgram GetLinearProgram()
         {
             if (linearProgram == null)

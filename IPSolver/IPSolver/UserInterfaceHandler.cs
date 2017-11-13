@@ -9,6 +9,8 @@ namespace IPSolver
 {
     static class UserInterfaceHandler
     {
+        private static LinearProgram linearProgram;
+
         //Enum for Sensitivity Analysis
         enum SensitivityMenu
         {
@@ -40,7 +42,7 @@ namespace IPSolver
                 Console.WriteLine(item);
             }
 
-            LinearProgram linearProgram;
+            
             #endregion
 
             bool done = false;
@@ -220,6 +222,12 @@ ________________________________________________________________________________
                     break;
                 case SensitivityMenu.display12:
                     //TODO Duality
+
+                    Duality duality = new Duality(linearProgram);
+
+                    duality.RotateLP();
+                    Console.ReadKey();
+
                     break;
                 default:
                     break;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IPSolver
 {
-    public class LinearProgram
+    public class LinearProgram : ICloneable
     {
         #region Fields
         private int countS, countE, countA, countX;
@@ -307,6 +307,11 @@ namespace IPSolver
                 Console.WriteLine("This LP has more than two variables, cannot draw this graph");
 
             Console.ReadKey();
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }
