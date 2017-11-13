@@ -745,7 +745,14 @@ namespace IPSolver
         {
             foreach (var col in colBinary)
             {
-                linearProgram = LpTools.AddBasicConstraint(linearProgram, col, LpTools.LESS_THAN, 0);
+                double[] newRow = new double[linearProgram.ColumnCount + 1];
+
+                newRow[col] = 1;
+                newRow[linearProgram.ColumnCount - 1] = 1;
+                newRow[linearProgram.ColumnCount] = 1;
+
+                linearProgram.LinearProgramMatrix = LpTools.AddRow(newRow, linearProgram);
+                linearProgram.CountS++;
             }
         }
     }

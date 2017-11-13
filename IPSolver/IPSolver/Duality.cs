@@ -56,6 +56,7 @@ namespace IPSolver
 
             duality.LinearProgramMatrix = new double[originalLP.CountX + 1, originalLP.RowCount];
 
+            //Fill X Values
             for (int i = 1; i < originalLP.RowCount; i++)
             {
                 for (int k = 0; k <= originalLP.CountX; k++)
@@ -65,17 +66,73 @@ namespace IPSolver
             }
 
 
-            duality.LinearProgramMatrix[0, 0] = 1;
+            //duality.LinearProgramMatrix[0, 0] = 1;
 
-            for (int i = 1; i < originalLP.RowCount; i++)
+            ////Fill Z Row
+            //for (int i = 1; i < originalLP.RowCount; i++)
+            //{
+            //    duality.LinearProgramMatrix[0, i] = originalLP.LinearProgramMatrix[i, originalLP.ColumnCount - 1];
+            //}
+
+            double[] rhs = new double[originalLP.CountX + 1];
+
+
+            //Fill RHS
+            for (int i = 1; i <= originalLP.CountX; i++)
             {
-                duality.LinearProgramMatrix[0, i] = originalLP.LinearProgramMatrix[i, originalLP.ColumnCount - 1];
+                rhs[i] = originalLP.LinearProgramMatrix[0, i];
             }
 
-            for (int i = 1; i < originalLP.CountX; i++)
+
+            foreach (var item in rhs)
             {
-                duality.LinearProgramMatrix[i + 1, originalLP.RowCount - 1] = originalLP.LinearProgramMatrix[0, i];
+                Console.WriteLine(item);
+
             }
+
+            duality.CountA = 0;
+            duality.CountS = 0;
+            duality.CountE = originalLP.CountX;
+
+            double[,] eArray = new double[duality.CountE + 2, duality.CountE + 2];
+
+            //Handle URS
+            for (int i = 1; i < eArray.GetLength(0); i++)
+            {
+                eArray[i, i] = 1;
+            }
+
+
+            double[,] finalLP = new double[duality.RowCount, duality.ColumnCount + eArray.GetLength(0) + 1];
+
+
+            for (int i = 0; i < finalLP.GetLength(0); i++)
+            {
+                int mainCol = 0;
+
+                //Saves the LP
+                for (int orgCol = 0; orgCol < duality.ColumnCount; orgCol++)
+                {
+                    finalLP[i, mainCol] = originalLP.LinearProgramMatrix[i, orgCol];
+
+                    mainCol++;
+                }
+
+                //Saves the E's
+                for (int eCol = 0; eCol < duality.CountE; eCol++)
+                {
+                    finalLP[i, mainCol] = eArray[i, eCol];
+
+                    mainCol++;
+                }
+
+                //Saves the RHS
+                //finalLP[i, mainCol] = rhs[i];
+            }
+
+            duality.LinearProgramMatrix = finalLP;
+
+
 
 
             duality.CountX = originalLP.RowCount - 1;

@@ -89,7 +89,7 @@ namespace IPSolver
             }
 
             //Makes sure the winning row isnt the top row
-            if (pivotRow == 0)
+            if (pivotCol == 0)
                 return true;
 
             return false;
