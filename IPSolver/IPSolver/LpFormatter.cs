@@ -15,6 +15,10 @@ namespace IPSolver
         private double[,] arrayA;
         private double[,] arrayS;
         private double[,] arrayE;
+        private string[] signs;
+
+
+        private List<int> colBinary = new List<int>();
         
         private List<String> unformattedLP;
 
@@ -44,6 +48,7 @@ namespace IPSolver
                 ListOfA = new List<int>(),
                 ColOfA = new List<int>(),
                 ColY = new List<int>(),
+                ColINTRestricted = new List<int>(),
                 CanonicalForm = new List<string>()
             };
 
@@ -85,7 +90,7 @@ namespace IPSolver
                 if (item.Contains(" = "))
                     countEquals++;
             }
-            
+
             //Sets the sizes of the arrays that will hold all the variables
             double[,] formatedLp = new double[unformattedLP.Count() - 1 + countEquals, tempZ.Count() + 1];
 
@@ -102,7 +107,7 @@ namespace IPSolver
             try
             {
                 //Splits the signs
-                string[] signs = unformattedLP[unformattedLP.Count() - 1].Split(' ');
+                signs = unformattedLP[unformattedLP.Count() - 1].Split(' ');
 
                 //Does the canonical form for the z equation
                 string tempCanonicalForm = "Z ";
@@ -111,10 +116,7 @@ namespace IPSolver
                 for (int i = 1; i < tempZ.Count(); i++)
                 {
                     //Checks if restriction is negative & Saves X's to array
-                    if (signs[i - 1] == "-")
-                        formatedLp[0, i] = Convert.ToDouble(tempZ[i]);
-                    else
-                        formatedLp[0, i] = Convert.ToDouble(tempZ[i]) * -1;
+                    formatedLp[0, i] = Convert.ToDouble(tempZ[i]) * (signs[i - 1] == "-" ? 1 : -1);
 
                     //Saves X's to the canonical form
                     tempCanonicalForm += formatedLp[0, i] + "X" + i + " ";
@@ -122,58 +124,22 @@ namespace IPSolver
 
                 //Adds the Equation to the canonical form list
                 linearProgram.CanonicalForm.Add(tempCanonicalForm + "= 0");
-
-                bool changeNeg = false;
-
+                
                 int offset = 0;
 
                 //Fills the array( the X's)
                 for (int i = 1; i < unformattedLP.Count() - 1; i++)
                 {
-                    string[] tempConstraint = unformattedLP[i + offset].Split(' ');
+                    string[] tempConstraint = unformattedLP[i].Split(' ');
 
                     tempCanonicalForm = null;
 
-                    //Changes RHS to positive
-                    if (Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]) < 0)
+                    for (int k = 0; k < tempConstraint.Count() - 1; k++)
                     {
                         for (int j = 1; j < tempConstraint.Count() - 1; j++)
                         {
                             //Checks if sign restriction is negative
-                            if (signs[j - 1] == "-")
-                            {
-                                //Changes the column to negative
-                                linearProgram.ColY.Add(j);
-
-                                formatedLp[i + offset, j] = Convert.ToDouble(tempConstraint[j - 1]);
-
-                                tempCanonicalForm += formatedLp[i + offset, j] + "Y" + j + " ";
-                            }
-                            else
-                            {
-                                formatedLp[i + offset, j] = Convert.ToDouble(tempConstraint[j - 1]) * -1;
-
-                                tempCanonicalForm += formatedLp[i + offset, j] + "X" + j + " ";
-                            }
-                        }
-
-                        //Fills in the RHS
-                        formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]) * -1;
-
-                        //Changes the sign
-                        if (tempConstraint[tempConstraint.Count() - 2] == "<=")
-                            tempConstraint[tempConstraint.Count() - 2] = ">=";
-                        else if (tempConstraint[tempConstraint.Count() - 2] == ">=")
-                            tempConstraint[tempConstraint.Count() - 2] = "<=";
-
-                        changeNeg = true;
-                    }
-                    else
-                    {
-                        for (int j = 1; j < tempConstraint.Count() - 1; j++)
-                        {
-                            //Checks if sign restriction is negative
-                            if (signs[j - 1] == "-")
+                            if (signs[j - 1] == "-" && !linearProgram.ColY.Contains(j))
                             {
                                 //Changes the column to negative
                                 linearProgram.ColY.Add(j);
@@ -184,6 +150,16 @@ namespace IPSolver
                             }
                             else
                             {
+                                if (signs[j - 1].ToUpper() == "INT" && !linearProgram.ColINTRestricted.Contains(j))
+                                {
+                                    linearProgram.ColINTRestricted.Add(j);
+                                } else if (signs[j - 1].ToUpper() == "BIN" && !linearProgram.ColINTRestricted.Contains(j))
+                                {
+                                    linearProgram.ColINTRestricted.Add(j);
+
+                                    colBinary.Add(j);
+                                }
+
                                 formatedLp[i, j] = Convert.ToDouble(tempConstraint[j - 1]);
 
                                 tempCanonicalForm += formatedLp[i, j] + "X" + j + " ";
@@ -192,9 +168,8 @@ namespace IPSolver
                         //Fills in the RHS
                         formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]);
                     }
-
+                    
                     formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]);
-
 
                     if (tempConstraint[tempConstraint.Count() - 2] == "<=")
                     {
@@ -207,12 +182,12 @@ namespace IPSolver
                     {
                         arrayE[i + offset, linearProgram.CountE] = 1;
                         linearProgram.CountE++;
-                        
+
                         for (int j = 0; j < formatedLp.GetLength(1); j++)
                         {
                             formatedLp[i + offset, j] = formatedLp[i + offset, j] * -1;
                         }
-                        
+
                         tempCanonicalForm += "+E" + linearProgram.CountE + " ";
                     }
                     else //=
@@ -231,23 +206,17 @@ namespace IPSolver
                         {
                             formatedLp[i + offset, j] = formatedLp[i + offset - 1, j] * -1;
                         }
-                        
+
                         tempCanonicalForm += "+E" + linearProgram.CountE + " ";
                     }
 
-                    //Changes the RHS
-                    if (changeNeg == true)
-                    {
-                        //Adds it to the canonical form list
-                        linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + (formatedLp[i + offset, formatedLp.GetLength(1) - 1]) * -1);
-                    }
-                    else
-                    {
-                        //Adds it to the canonical form list
-                        linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i + offset, formatedLp.GetLength(1) - 1]);
-                    }
+                    linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i + offset, formatedLp.GetLength(1) - 1]);
                 }
+
                 linearProgram.LinearProgramMatrix = MergeArraysIntoLPMatrix(formatedLp);
+
+
+                AddBinaryConstraint();
 
                 //return linearProgram;
             }
@@ -291,6 +260,232 @@ namespace IPSolver
             //return null;
         }
 
+        #region Redacted Code
+        //To add back if i break it
+        //private void FormatLPDual()
+        //{
+        //    //Gets z equation
+        //    string[] tempZ = unformattedLP[0].Split(' ');
+
+        //    //Gets the type of LP from the first line
+        //    String LPTypeString = tempZ[0].ToUpper();
+
+        //    if (LPTypeString == "MAX")
+        //        linearProgram.Type = LPType.Max;
+        //    else
+        //        linearProgram.Type = LPType.Min;
+
+        //    //Used to increase the array size when = constraints are present
+        //    int countEquals = 0;
+
+        //    foreach (var item in unformattedLP)
+        //    {
+        //        if (item.Contains(" = "))
+        //            countEquals++;
+        //    }
+
+        //    //Sets the sizes of the arrays that will hold all the variables
+        //    double[,] formatedLp = new double[unformattedLP.Count() - 1 + countEquals, tempZ.Count() + 1];
+
+        //    //arrayA = new double[0, unformattedLP.Count() - 1];
+        //    arrayS = new double[unformattedLP.Count() - 1 + countEquals, unformattedLP.Count() - 1 + countEquals];
+        //    arrayE = new double[unformattedLP.Count() - 1 + countEquals, unformattedLP.Count() - 1 + countEquals];
+
+        //    //Sets Z to one
+        //    formatedLp[0, 0] = 1;
+
+        //    //Gets the number of X's
+        //    linearProgram.CountX = tempZ.Count() - 1;
+
+        //    try
+        //    {
+        //        //Splits the signs
+        //        string[] signs = unformattedLP[unformattedLP.Count() - 1].Split(' ');
+
+        //        //Does the canonical form for the z equation
+        //        string tempCanonicalForm = "Z ";
+
+        //        //Cycles through temp Z equation
+        //        for (int i = 1; i < tempZ.Count(); i++)
+        //        {
+        //            //Checks if restriction is negative & Saves X's to array
+        //            formatedLp[0, i] = Convert.ToDouble(tempZ[i]) * (signs[i - 1] == "-" ? 1 : -1);
+
+        //            //Saves X's to the canonical form
+        //            tempCanonicalForm += formatedLp[0, i] + "X" + i + " ";
+        //        }
+
+        //        //Adds the Equation to the canonical form list
+        //        linearProgram.CanonicalForm.Add(tempCanonicalForm + "= 0");
+
+        //        bool changeNeg = false;
+
+        //        int offset = 0;
+
+        //        //Fills the array( the X's)
+        //        for (int i = 1; i < unformattedLP.Count() - 1; i++)
+        //        {
+        //            string[] tempConstraint = unformattedLP[i].Split(' ');
+
+        //            tempCanonicalForm = null;
+
+        //            //Changes RHS to positive
+        //            if (Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]) < 0)
+        //            {
+        //                for (int j = 1; j < tempConstraint.Count() - 1; j++)
+        //                {
+        //                    //Checks if sign restriction is negative
+        //                    if (signs[j - 1] == "-")
+        //                    {
+        //                        //Changes the column to negative
+        //                        linearProgram.ColY.Add(j);
+
+        //                        formatedLp[i + offset, j] = Convert.ToDouble(tempConstraint[j - 1]);
+
+        //                        tempCanonicalForm += formatedLp[i + offset, j] + "Y" + j + " ";
+        //                    }
+        //                    else
+        //                    {
+        //                        formatedLp[i + offset, j] = Convert.ToDouble(tempConstraint[j - 1]) * -1;
+
+        //                        tempCanonicalForm += formatedLp[i + offset, j] + "X" + j + " ";
+        //                    }
+        //                }
+
+        //                //Fills in the RHS
+        //                formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]) * -1;
+
+        //                //Changes the sign
+        //                if (tempConstraint[tempConstraint.Count() - 2] == "<=")
+        //                    tempConstraint[tempConstraint.Count() - 2] = ">=";
+        //                else if (tempConstraint[tempConstraint.Count() - 2] == ">=")
+        //                    tempConstraint[tempConstraint.Count() - 2] = "<=";
+
+        //                changeNeg = true;
+        //            }
+        //            else
+        //            {
+        //                for (int j = 1; j < tempConstraint.Count() - 1; j++)
+        //                {
+        //                    //Checks if sign restriction is negative
+        //                    if (signs[j - 1] == "-")
+        //                    {
+        //                        //Changes the column to negative
+        //                        linearProgram.ColY.Add(j);
+
+        //                        formatedLp[i, j] = Convert.ToDouble(tempConstraint[j - 1]) * -1;
+
+        //                        tempCanonicalForm += formatedLp[i, j] + "Y" + j + " ";
+        //                    }
+        //                    else
+        //                    {
+        //                        formatedLp[i, j] = Convert.ToDouble(tempConstraint[j - 1]);
+
+        //                        tempCanonicalForm += formatedLp[i, j] + "X" + j + " ";
+        //                    }
+        //                }
+        //                //Fills in the RHS
+        //                formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]);
+        //            }
+
+        //            formatedLp[i + offset, formatedLp.GetLength(1) - 1] = Convert.ToDouble(tempConstraint[tempConstraint.Count() - 1]);
+
+
+        //            if (tempConstraint[tempConstraint.Count() - 2] == "<=")
+        //            {
+        //                arrayS[i + offset, linearProgram.CountS] = 1;
+        //                linearProgram.CountS++;
+
+        //                tempCanonicalForm += "S" + linearProgram.CountS + " ";
+        //            }
+        //            else if (tempConstraint[tempConstraint.Count() - 2] == ">=")
+        //            {
+        //                arrayE[i + offset, linearProgram.CountE] = 1;
+        //                linearProgram.CountE++;
+
+        //                for (int j = 0; j < formatedLp.GetLength(1); j++)
+        //                {
+        //                    formatedLp[i + offset, j] = formatedLp[i + offset, j] * -1;
+        //                }
+
+        //                tempCanonicalForm += "+E" + linearProgram.CountE + " ";
+        //            }
+        //            else //=
+        //            {
+        //                arrayS[i + offset, linearProgram.CountS] = 1;
+        //                linearProgram.CountS++;
+
+        //                tempCanonicalForm += "S" + linearProgram.CountS + " ";
+
+        //                offset++;
+
+        //                arrayE[i + offset, linearProgram.CountE] = 1;
+        //                linearProgram.CountE++;
+
+        //                for (int j = 0; j < formatedLp.GetLength(1); j++)
+        //                {
+        //                    formatedLp[i + offset, j] = formatedLp[i + offset - 1, j] * -1;
+        //                }
+
+        //                tempCanonicalForm += "+E" + linearProgram.CountE + " ";
+        //            }
+
+        //            //Changes the RHS
+        //            if (changeNeg == true)
+        //            {
+        //                //Adds it to the canonical form list
+        //                linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + (formatedLp[i + offset, formatedLp.GetLength(1) - 1]) * -1);
+        //            }
+        //            else
+        //            {
+        //                //Adds it to the canonical form list
+        //                linearProgram.CanonicalForm.Add(tempCanonicalForm + "= " + formatedLp[i + offset, formatedLp.GetLength(1) - 1]);
+        //            }
+        //        }
+        //        linearProgram.LinearProgramMatrix = MergeArraysIntoLPMatrix(formatedLp);
+
+        //        //return linearProgram;
+        //    }
+        //    catch (FormatException) //Checks if data is valid
+        //    {
+        //        //Gives error and exits if invalid
+        //        Console.WriteLine("Some of the input data is incorrect, plese check the data and run the program again");
+        //        Console.WriteLine();
+        //        Console.WriteLine("Press any key to exit...");
+
+        //        Console.ReadKey();
+
+        //        Environment.Exit(0);
+        //    }
+        //    catch (IndexOutOfRangeException) //Checks if data is valid
+        //    {
+        //        //Gives error and exits if invalid
+        //        Console.WriteLine("Please check your input, ensure that:");
+        //        Console.WriteLine("\tYou entered the correct amount of sign variables");
+        //        Console.WriteLine("\tYou entered every variable and gave each a value in every constraint");
+
+        //        Console.WriteLine();
+        //        Console.WriteLine("Press any key to exit...");
+
+        //        Console.ReadKey();
+
+        //        Environment.Exit(0);
+        //    }
+        //    catch (ArgumentOutOfRangeException) //Catchs error if not enough signs
+        //    {
+        //        Console.WriteLine("Please ensire that you gave each variable a constraint");
+        //        Console.WriteLine();
+        //        Console.WriteLine("Press any key to continue...");
+
+        //        Console.ReadKey();
+        //        Environment.Exit(0);
+        //    }
+
+
+        //    //TODO handle this
+        //    //return null;
+        //}
+    #endregion
         //Formats the LP, by adding the S, E and A, and creating the canonical form
         private void FormatLPTwoPhase()
         {
@@ -545,6 +740,14 @@ namespace IPSolver
                 finalLP[i, mainCol] = originalLP[i, originalLP.GetLength(1) - 1];
             }
             return finalLP;
+        }
+
+        private void AddBinaryConstraint()
+        {
+            foreach (var col in colBinary)
+            {
+                linearProgram = LpTools.AddBasicConstraint(linearProgram, col, LpTools.LESS_THAN, 0);
+            }
         }
     }
 }

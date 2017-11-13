@@ -81,13 +81,10 @@ namespace IPSolver
                     //check
                     pivotCol = i + 1;
                 }
-                else if (ratios[i] == 0)
+                else if ((ratios[i] == 0) && (LinearProgram.LinearProgramMatrix[pivotRow, i + 1] > 0))
                 {
-                    if (LinearProgram.LinearProgramMatrix[pivotRow, i + 1] > 0)
-                    {
-                        winningRatio = 0;
-                        pivotCol = i + 1;
-                    }
+                    winningRatio = 0;
+                    pivotCol = i + 1;
                 }
             }
 
@@ -116,7 +113,7 @@ namespace IPSolver
                 int pivotCol = 0;
                 int pivotRow = 0;
 
-                if (RatioTest(out pivotRow, out  pivotCol))
+                if (RatioTest(out pivotRow, out pivotCol))
                 {
                     done = true;
                     break;
