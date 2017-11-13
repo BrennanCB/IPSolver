@@ -117,6 +117,7 @@ namespace IPSolver
         public static LinearProgram AddBasicConstraint
             (LinearProgram linearProgram, int column, int ConstraintType, int rhs)
         {
+            LinearProgram tempLp = (LinearProgram)linearProgram.Clone(); 
             if (ConstraintType != GREATER_THAN && ConstraintType != LESS_THAN)
             {
                 throw new ArgumentException
@@ -125,26 +126,28 @@ namespace IPSolver
 
             int constraintRow = linearProgram.RowCount;
             double[,] newArray = new double[linearProgram.RowCount +1, linearProgram.ColumnCount +1];
-            for (int c = 0; c < linearProgram.ColumnCount-1; c++)
+            for (int c = 0; c < linearProgram.ColumnCount - 1; c++)
             {
                 for (int r = 0; r < linearProgram.RowCount; r++)
                 {
                     newArray[r, c] = linearProgram.LinearProgramMatrix[r, c];
-                }   
+                }
             }
             for (int i = 0; i < linearProgram.RowCount; i++)
-            {
                 newArray[i, linearProgram.ColumnCount] = linearProgram.LinearProgramMatrix[i, linearProgram.ColumnCount-1];
-            }
             for (int i = 0; i < linearProgram.RowCount; i++)
-            {
                 newArray[i, linearProgram.ColumnCount-1] = 0;
-            }
+            
             newArray[constraintRow, column] = 1;
             newArray[constraintRow, linearProgram.ColumnCount] = rhs;
 
             newArray[constraintRow, linearProgram.ColumnCount-1] =
                 (ConstraintType == GREATER_THAN) ? -1 : 1;
+
+            if (ConstraintType == GREATER_THAN)
+                tempLp.CountE++;
+            else
+                tempLp.CountS++;
 
             //Constraint has been added, now check vilidity
             int conflictingRow = 0;
@@ -165,7 +168,11 @@ namespace IPSolver
                 {
                     newArray[constraintRow, i] *= -1;
                 }
-            return linearProgram;
+            tempLp.LinearProgramMatrix = newArray;
+            Console.WriteLine("===================================================================");
+            tempLp.DisplayCurrentTable();
+            Console.WriteLine("===================================================================");
+            return tempLp;
         }
 
         //Only works when one new slack variable is added
@@ -193,5 +200,10 @@ namespace IPSolver
             }
             return newArray;
         }
+
+        //add the column and row headings
+        
     }
+
+    
 }

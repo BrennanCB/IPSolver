@@ -105,8 +105,11 @@ namespace IPSolver
                 for (int i = 0; i < problems.Count; i++)
                 {
                     if (!problems.ElementAt(i).Solved)
+                    {
+                        currentProblem = problems.ElementAt(i);
                         break;
-                    if (problems.Count == i - 1)
+                    }
+                    if (problems.Count == i -1)
                         solved = true;
                 }
 
@@ -126,7 +129,7 @@ namespace IPSolver
                 currentProblem.Solved = true;
 
                 for (int i = 0; i < xValues.Length; i++)
-                    xValues[i] = currentProblem.Problem.LinearProgramMatrix[0, i];
+                    xValues[i] = currentProblem.Problem.LinearProgramMatrix[i+1, currentProblem.Problem.ColumnCount-1];
 
                 
                 for (int i = 0; i < xValues.Length; i++)
@@ -134,10 +137,10 @@ namespace IPSolver
                     if((xValues[i] % 1) != 0)
                     {
                         problems.Add(new ProblemNode(
-                            LpTools.AddBasicConstraint(currentProblem.Problem, i, LpTools.LESS_THAN, (int)xValues[i]),
+                            LpTools.AddBasicConstraint(currentProblem.Problem, i+1, LpTools.LESS_THAN, (int)xValues[i]),
                             false, null, 0 ));
                         problems.Add(new ProblemNode(
-                            LpTools.AddBasicConstraint(currentProblem.Problem, i, LpTools.GREATER_THAN, (int)xValues[i]+1),
+                            LpTools.AddBasicConstraint(currentProblem.Problem, i+1, LpTools.GREATER_THAN, (int)xValues[i]+1),
                             false, null, 0));
                     }
                         
