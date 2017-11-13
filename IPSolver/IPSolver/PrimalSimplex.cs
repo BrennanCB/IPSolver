@@ -29,7 +29,7 @@ namespace IPSolver
         }
 
         //Returns true of the ratio test fails
-        override public bool RatioTest(out int pivotCol, out int pivotRow)
+        override public bool RatioTest(out int pivotRow, out int pivotCol)
         {
             pivotCol = 0;
             pivotRow = 0;
@@ -111,7 +111,7 @@ namespace IPSolver
             {
                 tableauNumber++;
 
-                if (RatioTest(out int pivotCol, out int pivotRow))
+                if (RatioTest(out int pivotRow, out int pivotCol))
                 {
                     done = true;
                     break;

@@ -90,7 +90,7 @@ namespace IPSolver
         }
 
         //Returns true of the ratio test fails
-        override public bool RatioTest(out int pivotCol, out int pivotRow)
+        override public bool RatioTest(out int pivotRow, out int pivotCol)
         {
             pivotCol = 0;
             pivotRow = 0;
@@ -169,7 +169,7 @@ namespace IPSolver
                 
                 pivotRow = 0;
 
-                if (RatioTest(out int pivotCol, out pivotRow))
+                if (RatioTest(out pivotRow, out int pivotCol))
                 {
                     done = true;
                     break;

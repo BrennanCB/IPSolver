@@ -12,7 +12,7 @@ namespace IPSolver
         //Enum for Sensitivity Analysis
         enum SensitivityMenu
         {
-            display1 = 0,
+            display1 = 1,
             display2,
             display3,
             display4,
@@ -43,7 +43,9 @@ namespace IPSolver
             LinearProgram linearProgram;
             #endregion
 
-            while (true)
+            bool done = false;
+
+            do
             {
                 //Displays Menu For entering File Name
                 //                Console.WriteLine(String.Format(@"
@@ -75,7 +77,7 @@ ________________________________________________________
                 switch (menu)
                 {
                     case Algorithm.Primal:
-                        
+
                         linearProgram = new LpFormatter(unformatedLP, Algorithm.Primal).GetLinearProgram();
 
                         linearProgram.DisplayCanonicalForm();
@@ -85,13 +87,9 @@ ________________________________________________________
                         linearProgram = simplex.Solve();
                         linearProgram.DisplaySolution();
 
-                        Console.Clear();
-
-                        SensitivityAnalysisMenu();
-
                         break;
                     case Algorithm.TwoPhase:
-                        
+
                         linearProgram = new LpFormatter(unformatedLP, Algorithm.TwoPhase).GetLinearProgram();
                         linearProgram.IsTwoPhase = true;
 
@@ -103,36 +101,24 @@ ________________________________________________________
                         linearProgram = twoPhase.Solve();
                         linearProgram.DisplaySolution();
 
-                        Console.Clear();
-
-                        SensitivityAnalysisMenu();
-
                         break;
                     case Algorithm.Dual:
-                        
+
                         linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
 
                         linearProgram.DisplayCanonicalForm();
-                        
+
                         Dual dual = new Dual(linearProgram);
-                        
+
                         linearProgram = dual.Solve();
 
                         linearProgram.DisplaySolution();
-
-                        Console.Clear();
-
-                        SensitivityAnalysisMenu();
-
                         break;
                     case Algorithm.BranchAndBound:
 
 
                         //TODO Insert Method to return solved Branch & Bound Simplex
 
-                        Console.Clear();
-
-                        SensitivityAnalysisMenu();
 
                         break;
                     case Algorithm.CuttingPlane:
@@ -140,15 +126,21 @@ ________________________________________________________
 
                         //TODO Insert Method to Return solved Cutting Plane Simpelex
 
-                        Console.Clear();
-
-                        SensitivityAnalysisMenu();
 
                         break;
                     default:
                         break;
                 }
-            }
+
+
+
+                //todo check for input errors, set done to false if there arent any
+                done = true;
+            } while (!done);
+
+            Console.Clear();
+
+            SensitivityAnalysisMenu();
         }
 
         //Loop this?
@@ -233,24 +225,22 @@ ________________________________________________________________________________
                 //Creates the directory
                 FileHandler.CreateDirectory();
 
-                Console.WriteLine("A folder called 'Linear Program Solver' has been created in My Documents, please place your files here");
-
-                Console.WriteLine();
-                Console.WriteLine("Press any key to continue");
+                Console.WriteLine("A folder called 'Linear Program Solver' has been created in My Documents, please place your files here" +
+                    "\n" +
+                    "\nPress any key to continue");
 
                 Console.ReadKey();
-
                 Console.Clear();
             }
 
             do
             {
                 //Displys the menu
-                Console.WriteLine("Enter the location of your input and output files which need to be processed inside the 'Linear Program Solver' folder the is located in My Documents");
-                Console.WriteLine("Enter the command in the following format:");
-                Console.WriteLine();
-                Console.WriteLine("Solve <input file> <output file> - Note, the files must be in the format .txt, and the file extension must NOT be added");
-                Console.WriteLine("E.g. Solve <input> <output>");
+                Console.WriteLine("Enter the location of your input and output files which need to be processed inside the 'Linear Program Solver' folder the is located in My Documents" +
+                    "\nEnter the command in the following format:" +
+                    "\n" +
+                    "\nSolve <input file> <output file> - Note, the files must be in the format .txt, and the file extension must NOT be added" +
+                    "\nE.g. Solve <input> <output>");
 
                 string userCommand = Console.ReadLine();
 
@@ -259,9 +249,9 @@ ________________________________________________________________________________
                 //Makes sure the user enters correct data
                 if (splitCommand[0].ToLower() != "solve" || splitCommand.Length != 3)
                 {
-                    Console.WriteLine("The command you entered is incorrect!");
-                    Console.WriteLine("Enter the command in the following format:");
-                    Console.WriteLine("Solve <input file> <output file>");
+                    Console.WriteLine("The command you entered is incorrect!" +
+                        "\nEnter the command in the following format:" +
+                        "\nSolve <input file> <output file>");
                 }
                 else
                 {
@@ -277,12 +267,12 @@ ________________________________________________________________________________
                     //Gives error if not found
                     if (!fileFound)
                     {
-                        Console.WriteLine("The input file you listed cannot be found. Please ensure that:");
-                        Console.WriteLine("\tThe name is spelt correctly");
-                        Console.WriteLine("\tThe command is in the correct format");
-                        Console.WriteLine("\tThat the file does NOT include the file extension");
-                        Console.WriteLine("\tThat the file is a textfile(.txt)");
-                        Console.WriteLine("\tThat the file is located in the 'Linear Program Solver' folder in My Documents");
+                        Console.WriteLine("The input file you listed cannot be found. Please ensure that:" +
+                            "\n\tThe name is spelt correctly" +
+                            "\n\tThe command is in the correct format" +
+                            "\n\tThat the file does NOT include the file extension" +
+                            "\n\tThat the file is a textfile(.txt)" +
+                            "\n\tThat the file is located in the 'Linear Program Solver' folder in My Documents");
                     }
                     else
                     {
@@ -295,12 +285,11 @@ ________________________________________________________________________________
                     }
                 }
 
-                Console.WriteLine();
-                Console.WriteLine("Press any key to continue...");
+                Console.WriteLine("\nPress any key to continue...");
                 Console.ReadKey();
 
                 Console.Clear();
-            } while (isValid == false);
+            } while (!isValid);
         }
     }
 }

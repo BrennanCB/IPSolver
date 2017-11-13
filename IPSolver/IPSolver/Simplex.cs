@@ -22,7 +22,7 @@ namespace IPSolver
         }
 
         public abstract bool CheckIfContinue();
-        public abstract bool RatioTest(out int pivotCol, out int pivotRow);
+        public abstract bool RatioTest(out int pivotRow, out int pivotCol);
         public abstract LinearProgram Solve();
 
         public void CalculateNewCellValues(int pivotRow, int pivotCol)
