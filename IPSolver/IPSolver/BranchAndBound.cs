@@ -122,7 +122,10 @@ namespace IPSolver
                     break;
 
                 if (LpTools.IsSpecialCase(currentProblem.Problem))
+                {
+                    currentProblem.Solved = true;
                     continue;
+                }
 
                 Dual dual = new Dual(currentProblem.Problem);
                 currentProblem.Problem =  dual.Solve();
@@ -137,9 +140,9 @@ namespace IPSolver
                 currentProblem.Solved = true;
 
                 for (int i = 0; i < xValues.Length; i++)
-                    xValues[i] = currentProblem.Problem.LinearProgramMatrix[i+1, currentProblem.Problem.ColumnCount-1];
-
-                
+                    xValues[i] = Math.Round(currentProblem.Problem.LinearProgramMatrix[i+1, currentProblem.Problem.ColumnCount-1],9);
+                Console.WriteLine("\n\nAdding Constraints:");
+                Console.WriteLine("===================================================================");
                 for (int i = 0; i < xValues.Length; i++)
                 {
                     if((xValues[i] % 1) != 0)
@@ -150,12 +153,14 @@ namespace IPSolver
                         problems.Add(new ProblemNode(
                             LpTools.AddBasicConstraint(currentProblem.Problem, i+1, LpTools.GREATER_THAN, (int)xValues[i]+1),
                             false, null, 0));
+                        break;
                     }
                         
                 }
+                Console.WriteLine("===================================================================");
                 //todo: check for infinte loop when initial problem cannot be solved
 
-                
+
                 if ((type == LPType.Max && currentProblem.ZValue > currentOptimal.ZValue)
                     || (type == LPType.Min && currentOptimal.ZValue > currentProblem.ZValue))
                 { 

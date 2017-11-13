@@ -47,15 +47,14 @@ namespace IPSolver
         private static bool IsInfeasable(LinearProgram LinearProgram)
         {
             //Check infeasable
-            double minValue = LinearProgram.LinearProgramMatrix
-                [LinearProgram.RowCount - 1, LinearProgram.ColumnCount - 2];
-            int minLocation = LinearProgram.RowCount - 1;
+            double minValue = double.MaxValue;
+            int minLocation = 0;
 
-            for (int j = 0; j < LinearProgram.RowCount; j++)
+            for (int j = 1; j < LinearProgram.RowCount; j++)
             {
-                if (LinearProgram.LinearProgramMatrix[j, LinearProgram.ColumnCount - 2] < minValue)
+                if (LinearProgram.LinearProgramMatrix[j, LinearProgram.ColumnCount - 1] < minValue)
                 {
-                    minValue = LinearProgram.LinearProgramMatrix[j, LinearProgram.ColumnCount - 2];
+                    minValue = LinearProgram.LinearProgramMatrix[j, LinearProgram.ColumnCount - 1];
                     minLocation = j;
                 }
 
@@ -65,7 +64,7 @@ namespace IPSolver
                 return false;
 
             bool valid = false;
-            for (int i = 0; i < LinearProgram.ColumnCount; i++)
+            for (int i = 0; i < LinearProgram.ColumnCount-1; i++)
             {
                 if (LinearProgram.LinearProgramMatrix[minLocation, i] < 0)
                 {
@@ -113,7 +112,10 @@ namespace IPSolver
                 }
             }
             if (!valid)
-                throw new SpecialCaseException(SpecialCaseException.Type.Unbounded);
+            {
+                Console.WriteLine("Lp is unbounded");
+                return true;
+            }
             return false;
         }
 
@@ -147,10 +149,8 @@ namespace IPSolver
             newArray[constraintRow, linearProgram.ColumnCount] = rhs;
 
             newArray[constraintRow, linearProgram.ColumnCount - 1] = 1;
-               // (ConstraintType == GREATER_THAN) ? -1 : 1;
 
             
-
             //Constraint has been added, now check vilidity
             int conflictingRow = 0;
             for (int i = 0; i < linearProgram.RowCount; i++)
@@ -167,8 +167,8 @@ namespace IPSolver
                 for (int i = 0; i < linearProgram.ColumnCount + 1; i++)
                 {
                     newArray[constraintRow, i] = newArray[constraintRow, i] - newArray[conflictingRow, i];
-                    newArray[constraintRow, linearProgram.ColumnCount - 1] *= -1;
                 }
+                    newArray[constraintRow, linearProgram.ColumnCount - 1] *= -1;
             }
             else
             {
@@ -185,9 +185,9 @@ namespace IPSolver
                     newArray[constraintRow, i] *= -1;
                 }
             tempLp.LinearProgramMatrix = newArray;
-            Console.WriteLine("===================================================================");
+            
             tempLp.DisplayCurrentTable();
-            Console.WriteLine("===================================================================");
+            
             return tempLp;
         }
 
