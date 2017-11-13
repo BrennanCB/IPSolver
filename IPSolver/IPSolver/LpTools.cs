@@ -13,7 +13,7 @@ namespace IPSolver
 
         public static bool CheckIfLpIsSolved(LinearProgram LinearProgram)
         {
-            if (CheckSpecialCases(LinearProgram))
+            if (IsSpecialCase(LinearProgram))
                 return false;
 
             double[,] problemMatrix = LinearProgram.LinearProgramMatrix;
@@ -34,7 +34,7 @@ namespace IPSolver
             return true;
         }
 
-        public static bool CheckSpecialCases(LinearProgram LinearProgram)
+        public static bool IsSpecialCase(LinearProgram LinearProgram)
         {
             if (IsInfeasable(LinearProgram))
                 return true;
@@ -73,9 +73,13 @@ namespace IPSolver
                     break;
                 }
             }
-            if (!valid)
-                throw new SpecialCaseException(SpecialCaseException.Type.Infeasable);
 
+            if (!valid)
+            {
+                Console.WriteLine("===== Lp is infeasable =====");
+                return true;
+            }
+          
             return false;
         }
 

@@ -121,6 +121,9 @@ namespace IPSolver
                 if (solved)
                     break;
 
+                if (LpTools.IsSpecialCase(currentProblem.Problem))
+                    continue;
+
                 Dual dual = new Dual(currentProblem.Problem);
                 currentProblem.Problem =  dual.Solve();
 
