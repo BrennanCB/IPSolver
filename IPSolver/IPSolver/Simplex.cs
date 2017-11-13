@@ -12,15 +12,8 @@ namespace IPSolver
 
         public LinearProgram LinearProgram
         {
-            get
-            {
-                return linearProgram;
-            }
-
-            set
-            {
-                linearProgram = value;
-            }
+            get { return linearProgram; }
+            set { linearProgram = value; }
         }
 
         public Simplex(LinearProgram linearProgram)

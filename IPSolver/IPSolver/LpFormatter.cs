@@ -67,9 +67,7 @@ namespace IPSolver
         private void FormatLPDual()
         {
             //Gets z equation
-            string zEquation = unformattedLP[0];
-
-            string[] tempZ = zEquation.Split(' ');
+            string[] tempZ = unformattedLP[0].Split(' ');
 
             //Gets the type of LP from the first line
             String LPTypeString = tempZ[0].ToUpper();

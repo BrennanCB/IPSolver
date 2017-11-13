@@ -13,7 +13,7 @@ namespace IPSolver
         private LPType type;
         private bool isTwoPhase;
 
-        private List<int> listOfA, colOfA, colY;
+        private List<int> listOfA, colOfA, colY, colINTRestricted;
 
         private List<String> canonicalForm;
 
@@ -56,212 +56,75 @@ namespace IPSolver
 
         public int CountS
         {
-            get
-            {
-                return countS;
-            }
-
-            set
-            {
-                countS = value;
-            }
+            get { return countS; }
+            set { countS = value; }
         }
 
         public int CountE
         {
-            get
-            {
-                return countE;
-            }
-
-            set
-            {
-                countE = value;
-            }
+            get { return countE; }
+            set { countE = value; } 
         }
 
         public int CountA
         {
-            get
-            {
-                return countA;
-            }
-
-            set
-            {
-                countA = value;
-            }
+            get {  return countA; }
+            set { countA = value; }
         }
 
         public int CountX
         {
-            get
-            {
-                return countX;
-            }
-
-            set
-            {
-                countX = value;
-            }
+            get { return countX; }
+            set { countX = value; }
         }
 
         public LPType Type
         {
-            get
-            {
-                return type;
-            }
-
-            set
-            {
-                type = value;
-            }
+            get { return type; }
+            set { type = value; }
         }
 
         public bool IsTwoPhase
         {
-            get
-            {
-                return isTwoPhase;
-            }
-
-            set
-            {
-                isTwoPhase = value;
-            }
+            get { return isTwoPhase; }
+            set { isTwoPhase = value; }
         }
 
         public List<int> ListOfA
         {
-            get
-            {
-                return listOfA;
-            }
-
-            set
-            {
-                listOfA = value;
-            }
+            get { return listOfA; }
+            set { listOfA = value; }
         }
 
         public List<int> ColOfA
         {
-            get
-            {
-                return colOfA;
-            }
-
-            set
-            {
-                colOfA = value;
-            }
+            get { return colOfA; }
+            set { colOfA = value; }
         }
 
         public List<int> ColY
         {
-            get
-            {
-                return colY;
-            }
+            get { return colY; }
+            set { colY = value; }
+        }
 
-            set
-            {
-                colY = value;
-            }
+        public List<int> ColINTRestricted
+        {
+            get { return colINTRestricted; }
+            set { colINTRestricted = value; }
         }
 
         public List<string> CanonicalForm
         {
-            get
-            {
-                return canonicalForm;
-            }
-
-            set
-            {
-                canonicalForm = value;
-            }
+            get { return canonicalForm; } 
+            set { canonicalForm = value; }
         }
 
         public double[,] LinearProgramMatrix
         {
-            get
-            {
-                return linearProgramMatrix;
-            }
-
-            set
-            {
-                linearProgramMatrix = value;
-            }
+            get { return linearProgramMatrix; }
+            set { linearProgramMatrix = value; }
         }
-
-        //public bool IsTwoPhase
-        //{
-        //    get => isTwoPhase;
-        //    set => isTwoPhase = value;
-        //}
-
-        //public LPType Type
-        //{
-        //    get => type;
-        //    set => type = value;
-        //}
-
-        //public List<String> CanonicalForm
-        //{
-        //    get => canonicalForm;
-        //    set => canonicalForm = value;
-        //}
-
-        //public double[,] LinearProgramMatrix
-        //{
-        //    get => linearProgramMatrix;
-        //    set => linearProgramMatrix = value;
-        //}
-
-        //public int CountA
-        //{
-        //    get => countA;
-        //    set => countA = value;
-        //}
-
-        //public int CountS
-        //{
-        //    get => countS;
-        //    set => countS = value;
-        //}
-
-        //public int CountE
-        //{
-        //    get => countE;
-        //    set => countE = value;
-        //}
-
-        //public int CountX
-        //{
-        //    get => countX;
-        //    set => countX = value;
-        //}
-
-        //public List<int> ListOfA
-        //{
-        //    get => listOfA;
-        //    set => listOfA = value;
-        //}
-
-        //public List<int> ColOfA
-        //{
-        //    get => colOfA;
-        //    set => colOfA = value;
-        //}
-
-        //public List<int> ColY
-        //{
-        //    get => colY;
-        //    set => colY = value;
-        //}
         #endregion
 
         public double[] GetBasicVariables()
