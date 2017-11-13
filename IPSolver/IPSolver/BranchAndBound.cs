@@ -97,7 +97,7 @@ namespace IPSolver
             type = problem.Type;
         }
 
-        public LinearProgram Sovle()
+        public LinearProgram Solve()
         {
             bool solved = false;
             ProblemNode currentOptimal = problems.ElementAt(0);
