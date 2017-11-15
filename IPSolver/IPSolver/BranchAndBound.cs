@@ -137,10 +137,10 @@ namespace IPSolver
 
                 currentProblem.Solved = true;
 
-                double[] xValues = new double[currentProblem.Problem.CountX];
-                
-                for (int i = 0; i < xValues.Length; i++)
-                    xValues[i] = Math.Round(currentProblem.Problem.LinearProgramMatrix[i+1, currentProblem.Problem.ColumnCount-1],9);
+                //double[] xValues = new double[currentProblem.Problem.CountX];
+                double[] xValues = LpTools.findXValues(currentProblem.Problem); 
+                //for (int i = 0; i < xValues.Length; i++)
+                //    xValues[i] = Math.Round(currentProblem.Problem.LinearProgramMatrix[i+1, currentProblem.Problem.ColumnCount-1],5);
 
                 currentProblem.XValues = xValues;
                 
@@ -153,6 +153,7 @@ namespace IPSolver
                         problems.Add(new ProblemNode(
                             LpTools.AddBasicConstraint(currentProblem.Problem, i+1, LpTools.LESS_THAN, (int)xValues[i]),
                             false, null, 0 ));
+                        Console.WriteLine("\n");
                         problems.Add(new ProblemNode(
                             LpTools.AddBasicConstraint(currentProblem.Problem, i+1, LpTools.GREATER_THAN, (int)xValues[i]+1),
                             false, null, 0));

@@ -70,6 +70,8 @@ namespace IPSolver
 
             while (!LpTools.CheckIfIPIsSolved(solvedLp, true))
             {
+                if (LpTools.IsSpecialCase(solvedLp))
+                    return solvedLp;
                 solvedLp = new CuttingPlane(solvedLp).Solve();
             }
             return solvedLp;

@@ -16,7 +16,7 @@ namespace IPSolver
           
             double[,] problemMatrix = LinearProgram.LinearProgramMatrix;
 
-            for (int i = 0; i < LinearProgram.ColumnCount; i++)
+            for (int i = 1; i < LinearProgram.ColumnCount-1; i++)
             {
                 double tempValue = Math.Round(problemMatrix[0, i],5);
                 if (tempValue < 0 && LinearProgram.Type == LPType.Max)
@@ -42,10 +42,10 @@ namespace IPSolver
             if (!Integer)
                 return true;
 
-            double[] xValues = new double[LinearProgram.CountX];
+            double[] xValues = findXValues(LinearProgram);
             //TODO: OPTIMIZE THIS
-            for (int i = 0; i < xValues.Length; i++)
-                xValues[i] = Math.Round(LinearProgram.LinearProgramMatrix[i + 1, LinearProgram.ColumnCount - 1], 5);
+            //for (int i = 0; i < xValues.Length; i++)
+            //    xValues[i] = Math.Round(LinearProgram.LinearProgramMatrix[i + 1, LinearProgram.ColumnCount - 1], 5);
 
             for (int i = 0; i < xValues.Length; i++)
             {
@@ -62,7 +62,6 @@ namespace IPSolver
                 return true;
             if (IsUnbounded(LinearProgram))
                 return true;
-            //TODO: CHECK DEGENERATES. HOW ARE WE HANDELING NULL VALUES?
             return false;
         }
 
@@ -237,6 +236,31 @@ namespace IPSolver
                 newArray[linearProgram.RowCount , i] = row[i];
             }
             return newArray;
+        }
+
+        public static double[] findXValues(LinearProgram lp)
+        {
+            double[] xValues = new double[lp.CountX];
+            for (int c = 1; c < lp.CountX + 1; c++)
+            {
+                double x = 0;
+                bool basic = true;
+                int count1 = 0;
+                for (int r = 1; r < lp.RowCount; r++)
+                {
+                    double currentValue = lp.LinearProgramMatrix[r, c];
+                    if (currentValue != 1 && currentValue != 0)
+                        basic = false;
+                    if (currentValue == 1)
+                    {
+                        x = Math.Round(lp.LinearProgramMatrix[r, lp.ColumnCount - 1], 5);
+                        count1++;
+                    }
+                }
+                if (basic && count1 == 1)
+                    xValues[c - 1] = x;
+            }
+            return xValues;
         }
     }
 
