@@ -188,6 +188,10 @@ ________________________________________________________________________________
             {
                 case SensitivityMenu.display1:
                     //TODO Display the range of a selected Non-Basic Variable.
+                    //SensivitityAnalysis.GetNonBasicVariables(linearProgram);
+                    Console.WriteLine("Ranges for Non Basic Variables");
+                    SensivitityAnalysis.GetRangesForNBV(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix));
+                    Console.ReadKey();
 
                     break;
                 case SensitivityMenu.display2:
@@ -195,12 +199,18 @@ ________________________________________________________________________________
                     break;
                 case SensitivityMenu.display3:
                     //TODO Display the range of a selected Basic Variable.
+                    Console.WriteLine("Ranges for Basic variables");
+                    SensivitityAnalysis.GetRangesForBV(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix));
+                    Console.ReadKey();
                     break;
                 case SensitivityMenu.display4:
                     //TODO Apply and display a change of a selected Basic Variable.
                     break;
                 case SensitivityMenu.display5:
                     //TODO Display the range of a selected constraint right-hand-side value.
+                    Console.WriteLine("Ranges for RHS variables");
+                    SensivitityAnalysis.GetRangesForRHS(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix), linearProgram);
+                    Console.ReadKey();
                     break;
                 case SensitivityMenu.display6:
                     //TODO Apply and display a change of a selected constraint right-hand-side value.
@@ -219,6 +229,9 @@ ________________________________________________________________________________
                     break;
                 case SensitivityMenu.display11:
                     //TODO Display the shadow prices.
+                    Console.WriteLine("shadow prices.");
+                    SensivitityAnalysis.GetShadowPrices(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix), linearProgram);
+                    Console.ReadKey();
                     break;
                 case SensitivityMenu.display12:
                     //TODO Duality
