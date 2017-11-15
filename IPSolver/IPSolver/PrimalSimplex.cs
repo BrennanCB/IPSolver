@@ -98,12 +98,12 @@ namespace IPSolver
             int tableauNumber = 0;
 
             bool done = true;
-            bool answerFound = true;
+            //bool answerFound = true;
 
             if (CheckIfContinue())
             {
                 done = false;
-                answerFound = false;
+                //answerFound = false;
             }
 
             //Loops till final table
@@ -126,25 +126,25 @@ namespace IPSolver
                 LinearProgram.DisplayCurrentTable();
 
                 done = true;
-                answerFound = true;
+                //answerFound = true;
 
                 if (CheckIfContinue())
                 {
                     done = false;
-                    answerFound = false;
+                    //answerFound = false;
                 }
             }
 
             //Checks if there is an answer
             //TODO Handle the case when there is no solution found, as currently it will display no solution but still return the lp
-            if (answerFound == true)
-            {
+            //if (answerFound == true)
+            //{
 
-            }
-            else
-            {
-                Console.WriteLine("No Solution");
-            }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("No Solution");
+            //}
 
             return LinearProgram;
         }

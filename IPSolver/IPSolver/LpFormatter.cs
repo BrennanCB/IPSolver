@@ -59,9 +59,9 @@ namespace IPSolver
                     break;
                 case Algorithm.Dual: FormatLPDual();
                     break;
-                case Algorithm.BranchAndBound:
+                case Algorithm.BranchAndBound: FormatLPDual();
                     break;
-                case Algorithm.CuttingPlane:
+                case Algorithm.CuttingPlane: FormatLPDual();
                     break;
                 default:
                     break;

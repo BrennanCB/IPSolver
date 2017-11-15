@@ -301,7 +301,7 @@ namespace IPSolver
             if (CountX == 2)
             {
                 //Draws graph
-                //Graph();
+                UserInterfaceHandler.Graph();
             }
             else
                 Console.WriteLine("This LP has more than two variables, cannot draw this graph");

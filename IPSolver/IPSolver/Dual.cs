@@ -144,14 +144,14 @@ namespace IPSolver
 
             //Checks if there is an answer
             //TODO Handle the case when there is no solution found, as currently it will display no solution but still return the lp
-            if (answerFound == true)
-            {
+            //if (answerFound == true)
+            //{
 
-            }
-            else
-            {
-                Console.WriteLine("No Solution");
-            }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("No Solution");
+            //}
 
             return LinearProgram;
         }

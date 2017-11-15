@@ -289,17 +289,15 @@ namespace IPSolver
                     Console.WriteLine("No Solution");
                 }
             }
-            else
-            {
-                if (pivotRow == 0)
-                {
-                    Console.WriteLine("This LP is unbounded and has no solution");
-                }
+            //else
+            //{
+            //    if (pivotRow == 0)
+            //    {
+            //        Console.WriteLine("This LP is unbounded and has no solution");
+            //    }
 
-                Console.WriteLine("No Solution");
-
-                Console.WriteLine("");
-            }
+            //    Console.WriteLine("No Solution");
+            //}
 
             return LinearProgram;
         }

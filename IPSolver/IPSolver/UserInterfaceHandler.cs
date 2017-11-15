@@ -9,6 +9,7 @@ namespace IPSolver
 {
     static class UserInterfaceHandler
     {
+        private static double[,] coordindates;
         private static LinearProgram linearProgram;
 
         //Enum for Sensitivity Analysis
@@ -87,8 +88,6 @@ ________________________________________________________
                         PrimalSimplex simplex = new PrimalSimplex(linearProgram);
 
                         linearProgram = simplex.Solve();
-                        linearProgram.DisplaySolution();
-
                         break;
                     case Algorithm.TwoPhase:
 
@@ -98,11 +97,8 @@ ________________________________________________________
                         TwoPhase twoPhase = new TwoPhase(linearProgram);
 
                         linearProgram.DisplayCanonicalForm();
-
-                        //Runs Two Phase
+                        
                         linearProgram = twoPhase.Solve();
-                        linearProgram.DisplaySolution();
-
                         break;
                     case Algorithm.Dual:
 
@@ -113,8 +109,6 @@ ________________________________________________________
                         Dual dual = new Dual(linearProgram);
 
                         linearProgram = dual.Solve();
-
-                        linearProgram.DisplaySolution();
                         break;
                     case Algorithm.BranchAndBound:
 
@@ -128,12 +122,6 @@ ________________________________________________________
 
                         BranchAndBound BB = new BranchAndBound(linearProgram);
                         linearProgram = BB.Solve();
-
-                        linearProgram.DisplaySolution();
-
-                        //TODO Insert Method to return solved Branch & Bound Simplex
-
-
                         break;
                     case Algorithm.CuttingPlane:
                         linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
@@ -146,26 +134,22 @@ ________________________________________________________
 
                         CuttingPlane cutingPlane = new CuttingPlane(linearProgram);
                         linearProgram = cutingPlane.Solve();
-
-                        linearProgram.DisplaySolution();
-
-                        //TODO Insert Method to Return solved Cutting Plane Simpelex
-
-
                         break;
                     default:
                         break;
                 }
-
-
-
+                
                 //todo check for input errors, set done to false if there arent any
                 done = true;
             } while (!done);
 
+            if (LpTools.CheckIfIPIsSolved(linearProgram))
+                linearProgram.DisplaySolution();
+
             Console.Clear();
 
-            SensitivityAnalysisMenu();
+            if (LpTools.CheckIfIPIsSolved(linearProgram))
+                SensitivityAnalysisMenu();
         }
 
         //Loop this?
@@ -321,6 +305,49 @@ ________________________________________________________________________________
 
                 Console.Clear();
             } while (!isValid);
+        }
+
+        public static void Graph()
+        {
+            //Instantiates the graph form
+            
+
+            List<string> unformatedLP = FileHandler.ReadLP();
+
+            //Sets size of array
+            coordindates = new double[unformatedLP.Count(), 2];
+
+            //Loops through all the constraints
+            for (int i = 1; i < unformatedLP.Count() - 1; i++)
+            {
+                //Splits the equation
+                string[] tempEquation = unformatedLP[i].Split(' ');
+
+                //Gets the coordinates of the constraints
+                if (Convert.ToDouble(tempEquation[0]) == 0)
+                {
+
+                }
+                else if (Convert.ToDouble(tempEquation[1]) == 0)
+                {
+
+                }
+                else
+                {
+                    coordindates[i - 1, 0] = Convert.ToDouble(tempEquation[tempEquation.Count() - 1]) / Convert.ToDouble(tempEquation[0]);
+                    coordindates[i - 1, 1] = Convert.ToDouble(tempEquation[tempEquation.Count() - 1]) / Convert.ToDouble(tempEquation[1]);
+                }
+            }
+
+            //double[] bvs = linearProgram.GetBasicVariables();
+
+            //coordindates[coordindates.GetLength(0) - 1, 0] = bvs[1];
+            //coordindates[coordindates.GetLength(0) - 1, 1] = bvs[2];
+
+            frmGraph graph = new frmGraph(coordindates);
+
+            //Opens the Form
+            graph.ShowDialog();
         }
     }
 }
