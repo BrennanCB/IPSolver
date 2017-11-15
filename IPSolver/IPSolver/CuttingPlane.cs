@@ -9,6 +9,7 @@ namespace IPSolver
     class CuttingPlane
     {
         LinearProgram linearProgram;
+
         public CuttingPlane(LinearProgram linearProgram)
         {
             this.linearProgram = linearProgram;
@@ -42,19 +43,7 @@ namespace IPSolver
             if (fractionDifferance == 1)
                 return linearProgram;
 
-            //for (int r = 1; r < linearProgram.RowCount; r++)
-            //{
-            //    for (int c = 1; c < linearProgram.CountX +1; c++)
-            //    {
-            //        if (linearProgram.LinearProgramMatrix[r, c] == 1 
-            //            && linearProgram.LinearProgramMatrix[r, linearProgram.ColumnCount-1] > maxValue)
-            //        {
-            //            maxValue = linearProgram.LinearProgramMatrix[r, linearProgram.ColumnCount - 1];
-            //            targetRow = r;
-            //        }
-            //    }
-               
-            //}
+           
             double[] fractionArray = new double[linearProgram.ColumnCount+1];
             for (int i = 0; i < linearProgram.ColumnCount; i++)
             {
@@ -77,11 +66,13 @@ namespace IPSolver
 
             Dual dual = new Dual(linearProgram);
             LinearProgram solvedLp = dual.Solve();
+           
 
-            if (!LpTools.CheckIfIPIsSolved(solvedLp))
-                return new CuttingPlane(solvedLp).Solve();
-            else
-                return solvedLp;
+            while (!LpTools.CheckIfIPIsSolved(solvedLp, true))
+            {
+                solvedLp = new CuttingPlane(solvedLp).Solve();
+            }
+            return solvedLp;
         }
     }
 }

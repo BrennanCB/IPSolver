@@ -18,16 +18,18 @@ namespace IPSolver
 
             for (int i = 0; i < LinearProgram.ColumnCount; i++)
             {
-                if (problemMatrix[0, i] < 0 && LinearProgram.Type == LPType.Max)
+                double tempValue = Math.Round(problemMatrix[0, i],5);
+                if (tempValue < 0 && LinearProgram.Type == LPType.Max)
                     return false;
-                if (problemMatrix[0, i] > 0 && (LinearProgram.Type == LPType.Min || LinearProgram.IsTwoPhase))
+                if (tempValue> 0 && (LinearProgram.Type == LPType.Min || LinearProgram.IsTwoPhase))
                     return false;
             }
 
 
             for (int j = 0; j < LinearProgram.RowCount; j++)
             {
-                if (problemMatrix[j, LinearProgram.ColumnCount - 1] < 0)
+                double tempValue = Math.Round(problemMatrix[j, LinearProgram.ColumnCount - 1], 5);
+                if (tempValue < 0)
                     return false;
             }
             return true;
@@ -37,21 +39,20 @@ namespace IPSolver
         {
             if (!CheckIfIPIsSolved(LinearProgram))
                 return false;
-            for (int c = 1; c < LinearProgram.ColumnCount - 1; c++)
+            if (!Integer)
+                return true;
+
+            double[] xValues = new double[LinearProgram.CountX];
+            //TODO: OPTIMIZE THIS
+            for (int i = 0; i < xValues.Length; i++)
+                xValues[i] = Math.Round(LinearProgram.LinearProgramMatrix[i + 1, LinearProgram.ColumnCount - 1], 5);
+
+            for (int i = 0; i < xValues.Length; i++)
             {
-                for (int r = 1; r < LinearProgram.RowCount; r++)
-                {
-                    double currentCell = LinearProgram.LinearProgramMatrix[r, c];
-                    double currentValue = LinearProgram.LinearProgramMatrix[r, LinearProgram.ColumnCount - 1];
-
-                    if (currentCell != 0 && currentCell != 1)
-                        break;
-
-                    if (currentCell == 1 && currentValue % 1 != 0)
-                        return false;
-
-                }
+                if (xValues[i] % 1 != 0)
+                    return false;
             }
+           
             return true;
         }
 
@@ -75,7 +76,7 @@ namespace IPSolver
             {
                 if (LinearProgram.LinearProgramMatrix[j, LinearProgram.ColumnCount - 1] < minValue)
                 {
-                    minValue = LinearProgram.LinearProgramMatrix[j, LinearProgram.ColumnCount - 1];
+                    minValue = Math.Round(LinearProgram.LinearProgramMatrix[j, LinearProgram.ColumnCount - 1],5);
                     minLocation = j;
                 }
 
@@ -87,7 +88,7 @@ namespace IPSolver
             bool valid = false;
             for (int i = 1; i < LinearProgram.ColumnCount-1; i++)
             {
-                if (LinearProgram.LinearProgramMatrix[minLocation, i] < 0)
+                if (Math.Round(LinearProgram.LinearProgramMatrix[minLocation, i], 5) < 0)
                 {
                     valid = true;
                     break;
