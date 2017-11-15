@@ -13,9 +13,7 @@ namespace IPSolver
 
         public static bool CheckIfIPIsSolved(LinearProgram LinearProgram)
         {
-            if (IsSpecialCase(LinearProgram))
-                return true;
-
+          
             double[,] problemMatrix = LinearProgram.LinearProgramMatrix;
 
             for (int i = 0; i < LinearProgram.ColumnCount; i++)
@@ -32,10 +30,6 @@ namespace IPSolver
                 if (problemMatrix[j, LinearProgram.ColumnCount - 1] < 0)
                     return false;
             }
-
-         
-            
-
             return true;
         }
 
