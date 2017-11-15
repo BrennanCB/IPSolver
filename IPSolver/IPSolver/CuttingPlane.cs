@@ -16,20 +16,45 @@ namespace IPSolver
         public LinearProgram Solve()
         {
             int targetRow = 0;
-            double maxValue = -1;
-            for (int r = 1; r < linearProgram.RowCount; r++)
+            double fractionDifferance = 1;
+            for (int c = 1; c < linearProgram.CountX +1; c++)
             {
-                for (int c = 1; c < linearProgram.CountX +1; c++)
+                for (int r = 1; r < linearProgram.RowCount; r++)
                 {
-                    if (linearProgram.LinearProgramMatrix[r, c] == 1 
-                        && linearProgram.LinearProgramMatrix[r, linearProgram.ColumnCount-1] > maxValue)
+                    double currentCell = linearProgram.LinearProgramMatrix[r, c];
+                    double currentValue = linearProgram.LinearProgramMatrix[r, linearProgram.ColumnCount - 1];
+
+                    if (currentCell != 0 && currentCell != 1)
+                        break;
+
+                    if (currentCell == 1)
                     {
-                        maxValue = linearProgram.LinearProgramMatrix[r, linearProgram.ColumnCount - 1];
-                        targetRow = r;
+                        double thisFraction = Math.Abs(currentValue) - (int)Math.Abs(currentValue);
+                        double tempDiff = Math.Abs(0.5 - thisFraction);
+                        if(tempDiff < fractionDifferance)
+                        {
+                            targetRow = r;
+                            fractionDifferance = tempDiff;
+                        }
                     }
                 }
-               
             }
+            if (fractionDifferance == 1)
+                return linearProgram;
+
+            //for (int r = 1; r < linearProgram.RowCount; r++)
+            //{
+            //    for (int c = 1; c < linearProgram.CountX +1; c++)
+            //    {
+            //        if (linearProgram.LinearProgramMatrix[r, c] == 1 
+            //            && linearProgram.LinearProgramMatrix[r, linearProgram.ColumnCount-1] > maxValue)
+            //        {
+            //            maxValue = linearProgram.LinearProgramMatrix[r, linearProgram.ColumnCount - 1];
+            //            targetRow = r;
+            //        }
+            //    }
+               
+            //}
             double[] fractionArray = new double[linearProgram.ColumnCount+1];
             for (int i = 0; i < linearProgram.ColumnCount; i++)
             {
@@ -51,9 +76,12 @@ namespace IPSolver
             linearProgram.CountS++;
 
             Dual dual = new Dual(linearProgram);
-            return dual.Solve();
-        }
+            LinearProgram solvedLp = dual.Solve();
 
-     
+            if (!LpTools.CheckIfIPIsSolved(solvedLp))
+                return new CuttingPlane(solvedLp).Solve();
+            else
+                return solvedLp;
+        }
     }
 }

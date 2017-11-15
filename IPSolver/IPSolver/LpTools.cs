@@ -11,10 +11,10 @@ namespace IPSolver
         public static int GREATER_THAN = 1;
         public static int LESS_THAN= 0;
 
-        public static bool CheckIfLpIsSolved(LinearProgram LinearProgram)
+        public static bool CheckIfIPIsSolved(LinearProgram LinearProgram)
         {
             if (IsSpecialCase(LinearProgram))
-                return false;
+                return true;
 
             double[,] problemMatrix = LinearProgram.LinearProgramMatrix;
 
@@ -30,6 +30,23 @@ namespace IPSolver
                 if (problemMatrix[j, LinearProgram.ColumnCount - 1] < 0)
                     return false;
             }
+
+            for (int c = 1; c < LinearProgram.ColumnCount - 1; c++)
+            {
+                for (int r = 1; r < LinearProgram.RowCount; r++)
+                {
+                    double currentCell = LinearProgram.LinearProgramMatrix[r, c];
+                    double currentValue = LinearProgram.LinearProgramMatrix[r, LinearProgram.ColumnCount - 1];
+
+                    if (currentCell != 0 && currentCell != 1)
+                        break;
+
+                    if (currentCell == 1 && currentValue % 1 != 0)
+                        return false;
+                        
+                }
+            }
+            
 
             return true;
         }
