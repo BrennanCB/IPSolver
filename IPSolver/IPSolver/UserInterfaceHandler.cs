@@ -145,6 +145,11 @@ ________________________________________________________
 
             if (LpTools.CheckIfIPIsSolved(linearProgram))
                 linearProgram.DisplaySolution();
+            else
+            {
+                Console.WriteLine("No Solution!");
+                Console.ReadKey();
+            }
 
             Console.Clear();
 
@@ -309,9 +314,6 @@ ________________________________________________________________________________
 
         public static void Graph()
         {
-            //Instantiates the graph form
-            
-
             List<string> unformatedLP = FileHandler.ReadLP();
 
             //Sets size of array
@@ -324,15 +326,7 @@ ________________________________________________________________________________
                 string[] tempEquation = unformatedLP[i].Split(' ');
 
                 //Gets the coordinates of the constraints
-                if (Convert.ToDouble(tempEquation[0]) == 0)
-                {
-
-                }
-                else if (Convert.ToDouble(tempEquation[1]) == 0)
-                {
-
-                }
-                else
+                if (Convert.ToDouble(tempEquation[0]) != 0 && Convert.ToDouble(tempEquation[1]) != 0)
                 {
                     coordindates[i - 1, 0] = Convert.ToDouble(tempEquation[tempEquation.Count() - 1]) / Convert.ToDouble(tempEquation[0]);
                     coordindates[i - 1, 1] = Convert.ToDouble(tempEquation[tempEquation.Count() - 1]) / Convert.ToDouble(tempEquation[1]);
