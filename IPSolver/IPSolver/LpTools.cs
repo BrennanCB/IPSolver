@@ -33,6 +33,16 @@ namespace IPSolver
                     return false;
             }
 
+         
+            
+
+            return true;
+        }
+
+        public static bool CheckIfIPIsSolved(LinearProgram LinearProgram, bool Integer)
+        {
+            if (!CheckIfIPIsSolved(LinearProgram))
+                return false;
             for (int c = 1; c < LinearProgram.ColumnCount - 1; c++)
             {
                 for (int r = 1; r < LinearProgram.RowCount; r++)
@@ -45,11 +55,9 @@ namespace IPSolver
 
                     if (currentCell == 1 && currentValue % 1 != 0)
                         return false;
-                        
+
                 }
             }
-            
-
             return true;
         }
 
