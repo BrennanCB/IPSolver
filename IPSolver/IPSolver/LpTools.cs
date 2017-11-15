@@ -20,7 +20,9 @@ namespace IPSolver
 
             for (int i = 0; i < LinearProgram.ColumnCount; i++)
             {
-                if (problemMatrix[0, i] < 0)
+                if (problemMatrix[0, i] < 0 && LinearProgram.Type == LPType.Max)
+                    return false;
+                if (problemMatrix[0, i] > 0 && (LinearProgram.Type == LPType.Min || LinearProgram.IsTwoPhase))
                     return false;
             }
 
@@ -77,11 +79,11 @@ namespace IPSolver
 
             }
 
-            if (minValue > 0)
+            if (minValue >= 0)
                 return false;
 
             bool valid = false;
-            for (int i = 0; i < LinearProgram.ColumnCount-1; i++)
+            for (int i = 1; i < LinearProgram.ColumnCount-1; i++)
             {
                 if (LinearProgram.LinearProgramMatrix[minLocation, i] < 0)
                 {
