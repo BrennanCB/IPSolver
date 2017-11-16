@@ -55,6 +55,48 @@ namespace IPSolver
 
         }
 
+
+        public static void GetNBVRange(double[,] lpFormattedMatrix, int columnNumber)
+        {
+            double[,] zrow = lpFormattedMatrix;
+
+
+            if (zrow[0, columnNumber] != 0)
+            {
+                Console.Write(string.Format("R" + ((UserInterfaceHandler.linearProgram.Type == LPType.Max) ? "<="  : ">=") + "{0}\n", zrow[0, columnNumber]));
+            }
+            else
+            {
+                Console.WriteLine("That is not an NBV");
+            }
+
+            Console.Write(Environment.NewLine + Environment.NewLine);
+        }
+
+        public static void GetRangesForSelectedBV(double[,] lpFormmattedMatrix, int columnNumber)
+        {
+            double[,] matrix = lpFormmattedMatrix;
+
+            for (int i = 1; i < matrix.GetLength(0); i++)
+            {
+                //for (int j = 1; j < matrix.GetLength(1) - 1; j++)
+                //{
+
+                    double zrow = matrix[0, columnNumber];
+                    double range = matrix[i, columnNumber];
+
+                    if (range < 0)
+                        Console.Write(string.Format("R <= {0}  \n", zrow / (-1 * range)));
+                    else if (range != 0)
+                        Console.Write(string.Format("R >= {0}\n", zrow / (-1 * range)));
+
+                //}
+                Console.Write(Environment.NewLine + Environment.NewLine);
+            }
+        }
+
+
+
         public static void GetRangesForNBV(double[,] lpFormattedMatrix)
         {
             double[,] zrow = lpFormattedMatrix;
@@ -122,8 +164,8 @@ namespace IPSolver
         public static void GetShadowPrices(double[,] lpFormattedMatrix, LinearProgram lp)
         {
             double[,] matrix = lpFormattedMatrix;
-            for (int i = 1; i < matrix.GetLength(0); i++)
-            {
+            //for (int i = 1; i < matrix.GetLength(0); i++)
+            //{
                 for (int j = lp.CountX + 1; j < matrix.GetLength(1) - 1; j++)
                 {
                     double sprice = matrix[0, j];
@@ -131,7 +173,7 @@ namespace IPSolver
 
                 }
                 Console.Write(Environment.NewLine + Environment.NewLine);
-            }
+            //}
         }
 
 

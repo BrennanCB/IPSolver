@@ -10,7 +10,7 @@ namespace IPSolver
     static class UserInterfaceHandler
     {
         private static double[,] coordindates;
-        private static LinearProgram linearProgram;
+        public static LinearProgram linearProgram;
 
         //Enum for Sensitivity Analysis
         enum SensitivityMenu
@@ -50,18 +50,9 @@ namespace IPSolver
 
             do
             {
-                //Displays Menu For entering File Name
-                //                Console.WriteLine(String.Format(@"
-
-                //                                              IP SOLVER
-                //________________________________________________________________________________________________________________
-
-                //                                        PLEASE ENTER A FILE "));
-                //                string filename = Console.ReadLine();
-                //                Console.Clear();
-
-                //Menu For Selecting Algorithm
-                Console.WriteLine(@"
+                try
+                {
+                    Console.WriteLine(@"
                 IP SOLVER
 ________________________________________________________
 
@@ -74,73 +65,79 @@ ________________________________________________________
                 5.CUTTING PLANE
                 ");
 
-                int userinput = int.Parse(Console.ReadLine());
-                Algorithm menu = (Algorithm)userinput;
+                    int userinput = int.Parse(Console.ReadLine());
+                    Algorithm menu = (Algorithm)userinput;
 
-                switch (menu)
-                {
-                    case Algorithm.Primal:
+                    switch (menu)
+                    {
+                        case Algorithm.Primal:
 
-                        linearProgram = new LpFormatter(unformatedLP, Algorithm.Primal).GetLinearProgram();
+                            linearProgram = new LpFormatter(unformatedLP, Algorithm.Primal).GetLinearProgram();
 
-                        linearProgram.DisplayCanonicalForm();
+                            linearProgram.DisplayCanonicalForm();
 
-                        PrimalSimplex simplex = new PrimalSimplex(linearProgram);
+                            PrimalSimplex simplex = new PrimalSimplex(linearProgram);
 
-                        linearProgram = simplex.Solve();
-                        break;
-                    case Algorithm.TwoPhase:
+                            linearProgram = simplex.Solve();
+                            break;
+                        case Algorithm.TwoPhase:
 
-                        linearProgram = new LpFormatter(unformatedLP, Algorithm.TwoPhase).GetLinearProgram();
-                        linearProgram.IsTwoPhase = true;
+                            linearProgram = new LpFormatter(unformatedLP, Algorithm.TwoPhase).GetLinearProgram();
+                            linearProgram.IsTwoPhase = true;
 
-                        TwoPhase twoPhase = new TwoPhase(linearProgram);
+                            TwoPhase twoPhase = new TwoPhase(linearProgram);
 
-                        linearProgram.DisplayCanonicalForm();
-                        
-                        linearProgram = twoPhase.Solve();
-                        break;
-                    case Algorithm.Dual:
+                            linearProgram.DisplayCanonicalForm();
 
-                        linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
+                            linearProgram = twoPhase.Solve();
+                            break;
+                        case Algorithm.Dual:
 
-                        linearProgram.DisplayCanonicalForm();
+                            linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
 
-                        Dual dual = new Dual(linearProgram);
+                            linearProgram.DisplayCanonicalForm();
 
-                        linearProgram = dual.Solve();
-                        break;
-                    case Algorithm.BranchAndBound:
+                            Dual dual = new Dual(linearProgram);
 
-                        linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
+                            linearProgram = dual.Solve();
+                            break;
+                        case Algorithm.BranchAndBound:
 
-                        linearProgram.DisplayCanonicalForm();
+                            linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
 
-                        Dual bbDual = new Dual(linearProgram);
+                            linearProgram.DisplayCanonicalForm();
 
-                        linearProgram = bbDual.Solve();
+                            Dual bbDual = new Dual(linearProgram);
 
-                        BranchAndBound BB = new BranchAndBound(linearProgram);
-                        linearProgram = BB.Solve();
-                        break;
-                    case Algorithm.CuttingPlane:
-                        linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
+                            linearProgram = bbDual.Solve();
 
-                        linearProgram.DisplayCanonicalForm();
+                            BranchAndBound BB = new BranchAndBound(linearProgram);
+                            linearProgram = BB.Solve();
+                            break;
+                        case Algorithm.CuttingPlane:
+                            linearProgram = new LpFormatter(unformatedLP, Algorithm.Dual).GetLinearProgram();
 
-                        Dual cutDual = new Dual(linearProgram);
+                            linearProgram.DisplayCanonicalForm();
 
-                        linearProgram = cutDual.Solve();
+                            Dual cutDual = new Dual(linearProgram);
 
-                        CuttingPlane cutingPlane = new CuttingPlane(linearProgram);
-                        linearProgram = cutingPlane.Solve();
-                        break;
-                    default:
-                        break;
+                            linearProgram = cutDual.Solve();
+
+                            CuttingPlane cutingPlane = new CuttingPlane(linearProgram);
+                            linearProgram = cutingPlane.Solve();
+                            break;
+                        default:
+                            break;
+                    }
+
+                    //todo check for input errors, set done to false if there arent any
+                    done = true;
                 }
-                
-                //todo check for input errors, set done to false if there arent any
-                done = true;
+                catch (FormatException)
+                {
+                    done = false;
+                    Console.WriteLine("Invalid Input");
+                }
             } while (!done);
 
             if (LpTools.CheckIfIPIsSolved(linearProgram))
@@ -154,14 +151,22 @@ ________________________________________________________
             Console.Clear();
 
             if (LpTools.CheckIfIPIsSolved(linearProgram))
-                SensitivityAnalysisMenu();
+            {
+                do
+                {
+                    SensitivityAnalysisMenu();
+                } while (true);
+            }
+                
         }
 
         //Loop this?
         public static void SensitivityAnalysisMenu()
         {
-            //Sensitivity Analysis Menu
-            Console.WriteLine(@"
+            try
+            {
+                //Sensitivity Analysis Menu
+                Console.WriteLine(@"
                                   IP SOLVER
 ________________________________________________________________________________________
                                                                                         
@@ -181,69 +186,179 @@ ________________________________________________________________________________
              11. Display the shadow prices.
              12. Duality
 ");
-            int userInputSensitivityAnalysis = int.Parse(Console.ReadLine());
 
-            SensitivityMenu smenu = (SensitivityMenu)userInputSensitivityAnalysis;
-            switch (smenu)
+                Console.WriteLine("\nSolved LP\n");
+                linearProgram.DisplayCurrentTable();
+                Console.WriteLine();
+
+                int userInputSensitivityAnalysis = int.Parse(Console.ReadLine());
+
+                SensitivityMenu smenu = (SensitivityMenu)userInputSensitivityAnalysis;
+                switch (smenu)
+                {
+                    case SensitivityMenu.display1:
+                        //TODO Display the range of a selected Non-Basic Variable.
+                        //SensivitityAnalysis.GetNonBasicVariables(linearProgram);
+
+                        Console.WriteLine("Enter the column Number: (Z Column = Column 0)");
+
+                        int rowNumber = int.Parse(Console.ReadLine());
+
+                        Console.WriteLine("Ranges for Non Basic Variables");
+                        SensivitityAnalysis.GetNBVRange(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix), rowNumber);
+                        Console.ReadKey();
+
+                        break;
+                    case SensitivityMenu.display2:
+                        //TODO Display the range of a selected Non-Basic Variable.
+                        Console.WriteLine("Enter the column Number: (Z Column = Column 0)");
+
+                        int columnNumber = int.Parse(Console.ReadLine());
+
+                        Console.WriteLine("Enter the row Number: (Z Column = Column 0)");
+
+                        rowNumber = int.Parse(Console.ReadLine());
+
+                        if (linearProgram.GetBasicVariables()[columnNumber] != 0)
+                        {
+                            Console.WriteLine("Not NBV");
+                        }
+                        else
+                        {
+                            Console.WriteLine("ENter NEw Value:");
+
+                            int valuenew = int.Parse(Console.ReadLine());
+
+                            linearProgram.LinearProgramMatrix[rowNumber, columnNumber] = valuenew;
+
+                            linearProgram.DisplayCurrentTable();
+
+                            if (LpTools.CheckIfIPIsSolved(linearProgram))
+                            {
+                                Console.WriteLine("No Change");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                LinearProgram linearProgramNew = (LinearProgram)linearProgram.Clone();
+
+                                Dual dual2 = new Dual(linearProgramNew);
+
+                                dual2.Solve();
+
+                                if (LpTools.CheckIfIPIsSolved(linearProgramNew))
+                                {
+                                    linearProgramNew.DisplaySolution();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("No solution");
+                                    Console.ReadKey();
+                                }
+
+                            }
+                        }
+
+
+
+                        break;
+                    case SensitivityMenu.display3:
+                        //TODO Display the range of a selected Basic Variable.
+                        Console.WriteLine("Enter the column Number: (Z Column = Column 0)");
+
+                        rowNumber = int.Parse(Console.ReadLine());
+
+                        
+
+                        Console.WriteLine("Ranges for Basic variables");
+                        SensivitityAnalysis.GetRangesForSelectedBV(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix), rowNumber);
+                        Console.ReadKey();
+                        break;
+                    case SensitivityMenu.display4:
+                        //TODO Apply and display a change of a selected Basic Variable.
+                        break;
+                    case SensitivityMenu.display5:
+                        //TODO Display the range of a selected constraint right-hand-side value.
+                        //Console.WriteLine("Enter the row Number: (Z Row = Row 0)");
+
+                        //rowNumber = int.Parse(Console.ReadLine());
+
+                        Console.WriteLine("Ranges for RHS variables");
+                        SensivitityAnalysis.GetRangesForRHS(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix), linearProgram);
+                        Console.ReadKey();
+                        break;
+                    case SensitivityMenu.display6:
+                        //TODO Apply and display a change of a selected constraint right-hand-side value.
+                        break;
+                    case SensitivityMenu.display7:
+                        //TODO Display the range of a selected variable in a Non-Basic Variable column.
+                        break;
+                    case SensitivityMenu.display8:
+                        //TODO Apply and display a change of a selected variable in a Non-Basic Variable column.
+                        Console.WriteLine("Under Construction");
+                        Console.ReadKey();
+                        break;
+                    case SensitivityMenu.display9:
+                        //TODO Add a new activity to an optimal solution.
+                        break;
+                    case SensitivityMenu.display10:
+                        //TODO Add a new constraint to an optimal solution.
+                        Console.WriteLine("Enter the X Number: (Z Row = Row 0)");
+
+                        rowNumber = int.Parse(Console.ReadLine());
+
+                        Console.WriteLine("Type:\n1. <= \n2 . >=");
+
+                        int sign = int.Parse(Console.ReadLine());
+
+                        Console.WriteLine("RHS:");
+
+                        int rhs = int.Parse(Console.ReadLine());
+
+                        linearProgram = LpTools.AddBasicConstraint(linearProgram, rowNumber, sign - 1, rhs);
+
+                        Console.WriteLine("New Table");
+                        linearProgram.DisplayCurrentTable();
+
+                        LinearProgram newLP = (LinearProgram) linearProgram.Clone();
+
+                        Dual dual = new Dual(newLP);
+
+                        dual.Solve();
+
+                        if (LpTools.CheckIfIPIsSolved(newLP))
+                        {
+                            linearProgram.DisplaySolution();
+                        }
+                        else
+                        {
+                            Console.WriteLine("No solution");
+                            Console.ReadKey();
+                        }
+
+                        break;
+                    case SensitivityMenu.display11:
+                        //TODO Display the shadow prices.
+                        Console.WriteLine("shadow prices.");
+                        SensivitityAnalysis.GetShadowPrices(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix), linearProgram);
+                        Console.ReadKey();
+                        break;
+                    case SensitivityMenu.display12:
+                        //TODO Duality
+
+                        Duality duality = new Duality(linearProgram);
+
+                        duality.DeterminDuality();
+                        Console.ReadKey();
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (FormatException)
             {
-                case SensitivityMenu.display1:
-                    //TODO Display the range of a selected Non-Basic Variable.
-                    //SensivitityAnalysis.GetNonBasicVariables(linearProgram);
-                    Console.WriteLine("Ranges for Non Basic Variables");
-                    SensivitityAnalysis.GetRangesForNBV(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix));
-                    Console.ReadKey();
-
-                    break;
-                case SensitivityMenu.display2:
-                    //TODO Display the range of a selected Non-Basic Variable.
-                    break;
-                case SensitivityMenu.display3:
-                    //TODO Display the range of a selected Basic Variable.
-                    Console.WriteLine("Ranges for Basic variables");
-                    SensivitityAnalysis.GetRangesForBV(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix));
-                    Console.ReadKey();
-                    break;
-                case SensitivityMenu.display4:
-                    //TODO Apply and display a change of a selected Basic Variable.
-                    break;
-                case SensitivityMenu.display5:
-                    //TODO Display the range of a selected constraint right-hand-side value.
-                    Console.WriteLine("Ranges for RHS variables");
-                    SensivitityAnalysis.GetRangesForRHS(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix), linearProgram);
-                    Console.ReadKey();
-                    break;
-                case SensitivityMenu.display6:
-                    //TODO Apply and display a change of a selected constraint right-hand-side value.
-                    break;
-                case SensitivityMenu.display7:
-                    //TODO Display the range of a selected variable in a Non-Basic Variable column.
-                    break;
-                case SensitivityMenu.display8:
-                    //TODO Apply and display a change of a selected variable in a Non-Basic Variable column.
-                    break;
-                case SensitivityMenu.display9:
-                    //TODO Add a new activity to an optimal solution.
-                    break;
-                case SensitivityMenu.display10:
-                    //TODO Add a new constraint to an optimal solution.
-                    break;
-                case SensitivityMenu.display11:
-                    //TODO Display the shadow prices.
-                    Console.WriteLine("shadow prices.");
-                    SensivitityAnalysis.GetShadowPrices(SensivitityAnalysis.GetFormatedSensistivityMatrix(linearProgram.LinearProgramMatrix), linearProgram);
-                    Console.ReadKey();
-                    break;
-                case SensitivityMenu.display12:
-                    //TODO Duality
-
-                    Duality duality = new Duality(linearProgram);
-
-                    duality.DeterminDuality();
-                    Console.ReadKey();
-
-                    break;
-                default:
-                    break;
+                Console.WriteLine("Invalid Input");
             }
         }
 
